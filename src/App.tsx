@@ -1,74 +1,239 @@
 import { useState } from 'react';
-import svgPaths from "./imports/svg-uo6jg4qcws";
-import { ButtonPrimary } from './components/button-primary';
-import { ButtonSecondary } from './components/button-secondary';
-import { ButtonIcon } from './components/button-icon';
-import { Checkbox } from './components/checkbox';
-import { TextInput } from './components/text-input';
-import { Select, SelectOption } from './components/select';
-import { SheetNavigationLeft } from './components/sheet-navigation-left';
-import { SheetNavigationRight } from './components/sheet-navigation-right';
-import { SheetPreview } from './components/sheet-preview';
-import { NoPreview } from './components/no-preview';
-import { LayoutEditor } from './components/layout-editor';
-import { PageLayoutManager } from './components/page-layout-manager';
 
 // ============================================
-// IMAGE ASSETS - Technical Drawing References
+// COMPONENT STUBS - Temporary placeholders
 // ============================================
 
-// Заглушки для Figma assets - заменить на реальные изображения
-const PLACEHOLDER_SHEET_IMAGE = "/placeholder-sheet.png";
-const PLACEHOLDER_BACKGROUND = "/placeholder-background.png";
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
+}
 
-// Используем заглушки вместо Figma assets
-const imgSheet1Drawing = PLACEHOLDER_SHEET_IMAGE;
-const imgSheet2Drawing = PLACEHOLDER_SHEET_IMAGE; 
-const imgMainBackground = PLACEHOLDER_BACKGROUND;
+interface ButtonIconProps {
+  icon: string;
+  onClick?: () => void;
+  variant?: 'default' | 'secondary';
+  disabled?: boolean;
+  className?: string;
+}
 
-// ============================================
-// SHEET CONFIGURATION
-// ============================================
+interface CheckboxProps {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+}
 
-// Layout options for the select dropdown
-const layoutOptions: SelectOption[] = [
-  { value: 'sheet1', label: 'Sheet' },
-  { value: 'sheet1_fit', label: 'Sheet 1 Layout (Fit to page)' },
-];
+interface TextInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  showSearchIcon?: boolean;
+}
 
-// Sheet data configuration
-const sheets = [
-  {
-    id: 1,
-    name: 'Sheet 1',
-    image: imgSheet1Drawing,
-    widthMm: '707',
-    heightMm: '500',
-    description: 'Horizontal Technical Drawing'
-  },
-  {
-    id: 2,
-    name: 'Sheet 2', 
-    image: imgSheet2Drawing,
-    widthMm: '841',
-    heightMm: '594',
-    description: 'A1 Vertical Technical Drawing'
-  }
-];
+interface SelectProps {
+  itemCount: number;
+  itemName1?: string;
+  itemName2?: string;
+  itemName3?: string;
+  headerText: string;
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+  disabled?: boolean;
+}
 
-// ============================================
-// LAYOUT MAPPING CONFIGURATION
-// ============================================
+export interface SelectOption {
+  value: string;
+  label: string;
+}
 
-const layoutValueToName = {
-  'item1': '*Sheet1*',
-  'item2': '*Sheet2*', 
-  'item3': 'Custom Layout'
-};
+// Component stubs
+export function ButtonPrimary({ children, onClick, disabled, className }: ButtonProps) {
+  return (
+    <button 
+      onClick={onClick} 
+      disabled={disabled}
+      className={`button-primary ${className || ''} ${disabled ? 'opacity-50' : ''}`}
+    >
+      {children}
+    </button>
+  );
+}
 
-const getLayoutNameFromValue = (value: string): string => {
-  return layoutValueToName[value as keyof typeof layoutValueToName] || 'Unknown Layout';
-};
+export function ButtonSecondary({ children, onClick, className }: ButtonProps) {
+  return (
+    <button 
+      onClick={onClick}
+      className={`button-secondary ${className || ''}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function ButtonIcon({ icon, onClick, variant = 'default', disabled, className }: ButtonIconProps) {
+  return (
+    <button 
+      onClick={onClick}
+      disabled={disabled}
+      className={`w-7 h-7 button-icon-${variant} ${className || ''} ${disabled ? 'opacity-50' : ''}`}
+    >
+      <div className="w-4 h-4 flex items-center justify-center text-white">
+        {icon === 'approve' && '✓'}
+        {icon === 'deactivate' && '✕'}
+        {icon === 'edit-layout' && '⚙'}
+        {!['approve', 'deactivate', 'edit-layout'].includes(icon) && '●'}
+      </div>
+    </button>
+  );
+}
+
+export function Checkbox({ checked, onChange, label }: CheckboxProps) {
+  return (
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="w-4 h-4 bg-[#141518] border border-[#333] rounded checked:bg-[#2160D3]"
+      />
+      <span className="text-[#d5d7e1] text-12px">{label}</span>
+    </label>
+  );
+}
+
+export function TextInput({ value, onChange, placeholder, showSearchIcon }: TextInputProps) {
+  return (
+    <div className="relative w-full">
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full h-7 bg-[#141518] border border-[#000] text-[#d5d7e1] text-12px px-2"
+      />
+      {showSearchIcon && (
+        <div className="absolute right-2 top-1 text-[#8e8f90]">🔍</div>
+      )}
+    </div>
+  );
+}
+
+export function Select({ itemName1, itemName2, itemName3, headerText, value, onChange, disabled, className }: SelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const options = [itemName1, itemName2, itemName3].filter(Boolean);
+  const values = ['item1', 'item2', 'item3'];
+  
+  const selectedLabel = value === 'item1' ? itemName1 : 
+                       value === 'item2' ? itemName2 : 
+                       value === 'item3' ? itemName3 : itemName1;
+
+  return (
+    <div className={`relative ${className || ''}`}>
+      <div 
+        className={`h-7 bg-[#141518] border border-[#000] px-2 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50' : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+      >
+        <span className="text-[#d5d7e1] text-12px">{selectedLabel}</span>
+        <span className="text-[#d5d7e1]">▼</span>
+      </div>
+      {isOpen && !disabled && (
+        <div className="absolute top-full left-0 right-0 bg-[#141518] border border-[#000] z-50">
+          {options.map((option, index) => (
+            <div
+              key={index}
+              className="px-2 py-1 hover:bg-[#2a2c2f] cursor-pointer text-[#d5d7e1] text-12px"
+              onClick={() => {
+                onChange(values[index]);
+                setIsOpen(false);
+              }}
+            >
+              {option}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function SheetNavigationLeft({ disabled, onClick }: { disabled: boolean; onClick: () => void }) {
+  return (
+    <button 
+      onClick={onClick}
+      disabled={disabled}
+      className={`w-7 h-7 bg-[#555] border border-[#000] flex items-center justify-center ${disabled ? 'opacity-50' : 'hover:opacity-80'}`}
+    >
+      <span className="text-white">←</span>
+    </button>
+  );
+}
+
+export function SheetNavigationRight({ disabled, onClick }: { disabled: boolean; onClick: () => void }) {
+  return (
+    <button 
+      onClick={onClick}
+      disabled={disabled}
+      className={`w-7 h-7 bg-[#555] border border-[#000] flex items-center justify-center ${disabled ? 'opacity-50' : 'hover:opacity-80'}`}
+    >
+      <span className="text-white">→</span>
+    </button>
+  );
+}
+
+export function SheetPreview({ image, sheetName, widthMm, heightMm }: { 
+  image: string; 
+  sheetName: string; 
+  widthMm: string; 
+  heightMm: string; 
+}) {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <div className="w-40 h-28 bg-[#333538] border border-[#666] flex items-center justify-center">
+        <span className="text-[#d5d7e1] text-sm">{sheetName}</span>
+      </div>
+      <div className="text-[#cfcfcf] text-xs">
+        {widthMm} × {heightMm} mm
+      </div>
+    </div>
+  );
+}
+
+export function NoPreview() {
+  return (
+    <div className="flex items-center justify-center h-full text-[#8e8f90]">
+      <span>No sheets selected</span>
+    </div>
+  );
+}
+
+export function LayoutEditor({ sheetName, onClose, onSave }: { 
+  sheetName: string; 
+  onClose: () => void; 
+  onSave: () => void; 
+}) {
+  return (
+    <div className="w-[571px] h-full bg-[#333538] flex flex-col items-center justify-center">
+      <div className="text-[#d5d7e1] text-lg mb-4">Layout Editor</div>
+      <div className="text-[#cfcfcf] mb-4">{sheetName}</div>
+      <div className="flex gap-2">
+        <ButtonSecondary onClick={onSave}>Save</ButtonSecondary>
+        <ButtonSecondary onClick={onClose}>Cancel</ButtonSecondary>
+      </div>
+    </div>
+  );
+}
+
+export function PageLayoutManager({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="w-full h-full bg-[#333538] flex flex-col items-center justify-center">
+      <div className="text-[#d5d7e1] text-lg mb-4">Page Layout Manager</div>
+      <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+    </div>
+  );
+}
 
 // ============================================
 // MAIN APPLICATION COMPONENT
@@ -91,10 +256,6 @@ export default function App() {
 
   // Activate all sheets functionality
   const [isActivateAllActive, setIsActivateAllActive] = useState(false);
-  const [originalLayoutValues, setOriginalLayoutValues] = useState<{
-    layout1: string;
-    layout2: string;
-  } | null>(null);
 
   // Calculate selected sheets
   const selectedSheets = [];
@@ -104,70 +265,10 @@ export default function App() {
   const selectedCount = selectedSheets.length;
   const isPrintDisabled = selectedCount === 0;
 
-  // Ensure current sheet is valid
-  const isCurrentSheetValid = selectedSheets.includes(currentSheet);
-  
-  if (!isCurrentSheetValid && selectedSheets.length > 0) {
-    setTimeout(() => {
-      setCurrentSheet(selectedSheets[0]);
-    }, 0);
-  }
-
-  // Get active layout name
-  const getActiveLayoutName = (): string | null => {
-    if (sheet1Checked && sheet2Checked) {
-      const layout1Name = getLayoutNameFromValue(layoutValue);
-      const layout2Name = getLayoutNameFromValue(layout2Value);
-      
-      if (layout1Name !== '*Sheet1*') return layout1Name;
-      if (layout2Name !== '*Sheet1*') return layout2Name;
-      return layout1Name;
-    } else if (sheet1Checked) {
-      return getLayoutNameFromValue(layoutValue);
-    } else if (sheet2Checked) {
-      return getLayoutNameFromValue(layout2Value);
-    }
-    
-    return null;
-  };
-
-  const isActivateAllDisabled = selectedCount === 0;
-
   // Event handlers
   const handleActivateAll = () => {
-    if (isActivateAllDisabled) return;
-
-    if (!isActivateAllActive) {
-      const activeLayoutName = getActiveLayoutName();
-      
-      if (activeLayoutName) {
-        setOriginalLayoutValues({
-          layout1: layoutValue,
-          layout2: layout2Value
-        });
-
-        let targetValue = 'item1';
-        
-        if (activeLayoutName === '*Sheet1*') targetValue = 'item1';
-        else if (activeLayoutName === '*Sheet2*') targetValue = 'item2';
-        else if (activeLayoutName === 'Custom Layout') targetValue = 'item3';
-
-        if (sheet1Checked) setLayoutValue(targetValue);
-        if (sheet2Checked) setLayout2Value(targetValue);
-
-        setIsActivateAllActive(true);
-        console.log(`✅ Activated all sheets with layout: ${activeLayoutName}`);
-      }
-    } else {
-      if (originalLayoutValues) {
-        setLayoutValue(originalLayoutValues.layout1);
-        setLayout2Value(originalLayoutValues.layout2);
-        setOriginalLayoutValues(null);
-      }
-      
-      setIsActivateAllActive(false);
-      console.log('🔄 Deactivated all sheets');
-    }
+    setIsActivateAllActive(!isActivateAllActive);
+    console.log(`✅ Activate all: ${!isActivateAllActive}`);
   };
 
   const handleSelectAllClick = (checked: boolean) => {
@@ -175,212 +276,125 @@ export default function App() {
     setSheet1Checked(checked);
     setSheet2Checked(checked);
     if (checked) setCurrentSheet(1);
-
-    if (isActivateAllActive) {
-      setIsActivateAllActive(false);
-      if (originalLayoutValues) {
-        setLayoutValue(originalLayoutValues.layout1);
-        setLayout2Value(originalLayoutValues.layout2);
-        setOriginalLayoutValues(null);
-      }
-    }
   };
 
   const handleSheet1Click = (checked: boolean) => {
     setSheet1Checked(checked);
     setSelectAllChecked(checked && sheet2Checked);
-
-    if (checked) {
-      if (currentSheet === 0 || (!sheet2Checked && currentSheet !== 1)) {
-        setCurrentSheet(1);
-      }
-    } else if (currentSheet === 1 && sheet2Checked) {
-      setCurrentSheet(2);
-    }
-
-    if (isActivateAllActive) {
-      setIsActivateAllActive(false);
-      if (originalLayoutValues) {
-        setLayoutValue(originalLayoutValues.layout1);
-        setLayout2Value(originalLayoutValues.layout2);
-        setOriginalLayoutValues(null);
-      }
+    if (checked && (!sheet2Checked || currentSheet !== 2)) {
+      setCurrentSheet(1);
     }
   };
 
   const handleSheet2Click = (checked: boolean) => {
     setSheet2Checked(checked);
     setSelectAllChecked(checked && sheet1Checked);
-
-    if (checked) {
-      if (currentSheet === 0 || (!sheet1Checked && currentSheet !== 2)) {
-        setCurrentSheet(2);
-      }
-    } else if (currentSheet === 2 && sheet1Checked) {
-      setCurrentSheet(1);
-    }
-
-    if (isActivateAllActive) {
-      setIsActivateAllActive(false);
-      if (originalLayoutValues) {
-        setLayoutValue(originalLayoutValues.layout1);
-        setLayout2Value(originalLayoutValues.layout2);
-        setOriginalLayoutValues(null);
-      }
+    if (checked && (!sheet1Checked || currentSheet !== 1)) {
+      setCurrentSheet(2);
     }
   };
 
-  const appliedLayoutName = isActivateAllActive ? getActiveLayoutName() : undefined;
-
   if (!isDialogOpen) {
     return (
-      <div className="size-full flex items-center justify-center bg-gray-100">
-        <button 
-          onClick={() => setIsDialogOpen(true)}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
+      <div className="size-full flex items-center justify-center">
+        <ButtonPrimary onClick={() => setIsDialogOpen(true)}>
           Open Print Dialog
-        </button>
+        </ButtonPrimary>
       </div>
     );
   }
 
   if (isPageLayoutManagerOpen) {
     return (
-      <div className="relative size-full" data-name="Page Layout Manager">
-        <div
-          className="bg-main-image absolute h-[813px] left-0 top-0 w-[1496px] bg-gradient-overlay"
-          data-name="image"
-          style={{ '--bg-image': `url('${imgMainBackground}')` } as React.CSSProperties}
-        />
-        <div className="absolute top-[226px] translate-x-[-50%] print-dialog-position h-[362px] w-[770px]">
-          <PageLayoutManager 
-            onClose={() => setIsPageLayoutManagerOpen(false)}
-          />
+      <div className="relative size-full">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1e2023] to-[#333538]" />
+        <div className="absolute top-[20%] left-1/2 transform -translate-x-1/2 w-[770px] h-[360px]">
+          <PageLayoutManager onClose={() => setIsPageLayoutManagerOpen(false)} />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative size-full" data-name="Print current sheet">
-      <div
-        className="bg-main-image absolute h-[813px] left-0 top-0 w-[1496px] bg-gradient-overlay"
-        data-name="image"
-        style={{ '--bg-image': `url('${imgMainBackground}')` } as React.CSSProperties}
-      />
+    <div className="relative size-full">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1e2023] to-[#333538]" />
       
       {/* Print Dialog */}
-      <div
-        className="absolute box-border content-stretch flex flex-col h-[591px] items-start justify-between p-0 shadow-[0px_4px_64px_0px_rgba(0,0,0,0.25)] top-[147.5px] translate-x-[-50%] w-[971px] print-dialog-position"
-        style={{ backgroundColor: 'var(--color-dialog-bg-darker)' }}
-        data-name="Print to PDF"
-      >
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[971px] h-[591px] bg-[#333538] shadow-dialog flex flex-col">
+        
         {/* Dialog Header */}
-        <div className="box-border content-stretch flex flex-col gap-px items-start justify-start p-0 relative shrink-0 w-full">
-          <div className="relative shrink-0 w-full" style={{ backgroundColor: 'var(--color-dialog-bg-dark)' }}>
-            <div className="flex flex-row items-center relative size-full">
-              <div className="box-border content-stretch flex flex-row items-center justify-between px-2.5 py-0 relative w-full">
-                <div className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[11px] text-left text-nowrap uppercase" style={{ color: 'var(--color-text-light)' }}>
-                  <p className="block leading-[normal] whitespace-pre">Print to pdf</p>
-                </div>
-                <div className="relative shrink-0 size-[37px] cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setIsDialogOpen(false)}>
-                  <div className="absolute inset-2 flex items-center justify-center text-[#DFDFDF]">✕</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="bg-[#1e2023] flex items-center justify-between px-3 py-2">
+          <div className="text-[#d5d7e1] text-xs uppercase font-bold">Print to PDF</div>
+          <button 
+            onClick={() => setIsDialogOpen(false)}
+            className="w-9 h-9 flex items-center justify-center hover:opacity-80 text-[#dfdfdf]"
+          >
+            ✕
+          </button>
         </div>
 
         {/* Main Content */}
-        <div className="basis-0 box-border content-stretch flex flex-row grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0 w-full">
+        <div className="flex flex-1">
           
           {/* Left Preview Panel */}
-          <div className="box-border content-stretch flex flex-row gap-2.5 h-full items-center justify-start p-[20px] relative shrink-0 w-[400px]" style={{ backgroundColor: 'var(--color-dialog-bg-dark)' }}>
-            <div className="basis-0 box-border content-stretch flex flex-col grow h-full items-center justify-center min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0">
-              {selectedCount === 0 ? (
-                <NoPreview />
-              ) : (
-                <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow h-full items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0">
-                  {(() => {
-                    const currentSheetData = sheets.find(sheet => sheet.id === currentSheet);
-                    return currentSheetData ? (
-                      <SheetPreview 
-                        image={currentSheetData.image}
-                        sheetName={currentSheetData.name}
-                        widthMm={currentSheetData.widthMm}
-                        heightMm={currentSheetData.heightMm}
-                      />
-                    ) : null;
-                  })()}
-                </div>
-              )}
-            </div>
+          <div className="w-[400px] bg-[#1e2023] p-5 flex items-center justify-center">
+            {selectedCount === 0 ? (
+              <NoPreview />
+            ) : (
+              <SheetPreview 
+                image="/placeholder-sheet.png"
+                sheetName={`Sheet ${currentSheet}`}
+                widthMm={currentSheet === 1 ? "707" : "841"}
+                heightMm={currentSheet === 1 ? "500" : "594"}
+              />
+            )}
           </div>
 
           {/* Right Config Panel */}
-          <div className="box-border content-stretch flex flex-col-reverse gap-5 h-full items-start justify-start pb-0 pt-5 px-0 relative shrink-0 w-[571px]">
-            
-            {/* Sheets Configuration */}
-            <div className="box-border content-stretch flex flex-col gap-5 items-start justify-start order-2 p-0 relative shrink-0 w-full">
+          {isLayoutEditorOpen ? (
+            <LayoutEditor 
+              sheetName={editingLayoutSheet}
+              onClose={() => setIsLayoutEditorOpen(false)}
+              onSave={() => setIsLayoutEditorOpen(false)}
+            />
+          ) : (
+            <div className="flex-1 flex flex-col">
               
-              {/* Search Section */}
-              <div className="relative shrink-0 w-full">
-                <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-5 py-0 relative w-full">
-                  <div className="content-section">
-                    <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-center p-0 relative shrink-0">
-                      <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[12px] text-left text-nowrap" style={{ color: 'var(--color-text-light)' }}>
-                        <p className="block leading-[normal] whitespace-pre">Sheets</p>
-                      </div>
-                    </div>
-                    <TextInput 
-                      value={searchValue} 
-                      onChange={setSearchValue} 
-                      placeholder="Search sheets" 
-                      showSearchIcon={true}
-                    />
-                  </div>
+              {/* Main Config Area */}
+              <div className="flex-1 p-5 space-y-5">
+                
+                {/* Search Section */}
+                <div>
+                  <div className="text-[#d5d7e1] text-xs font-semibold mb-2">Sheets</div>
+                  <TextInput 
+                    value={searchValue} 
+                    onChange={setSearchValue} 
+                    placeholder="Search sheets" 
+                    showSearchIcon={true}
+                  />
                 </div>
-              </div>
 
-              {/* Checkboxes and Selects */}
-              <div className="relative shrink-0 w-full">
-                <div className="box-border content-stretch flex flex-col-reverse gap-2.5 items-start justify-start px-5 py-0 relative w-full">
+                {/* Checkboxes and Selects */}
+                <div className="space-y-3">
                   
-                  {/* Select All */}
-                  <div className="checkbox-row order-3">
-                    <Checkbox 
-                      checked={selectAllChecked} 
-                      onChange={handleSelectAllClick} 
-                      label="Select all sheets"
-                    />
-                  </div>
-
                   {/* Sheet 1 */}
-                  <div className="sheet-layout-row">
-                    <div className="basis-grow-container">
-                      <div className="flex-center-container">
-                        <div className="padded-content">
-                          <div className="checkbox-row">
-                            <Checkbox 
-                              checked={sheet1Checked} 
-                              onChange={handleSheet1Click} 
-                              label="Sheet 1"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                      <Checkbox 
+                        checked={sheet1Checked} 
+                        onChange={handleSheet1Click} 
+                        label="Sheet 1"
+                      />
                     </div>
-                    <div className="select-container">
+                    <div className="flex-1">
                       <Select 
                         itemCount={3}
-                        itemName1={appliedLayoutName && appliedLayoutName.startsWith('*') && appliedLayoutName.endsWith('*') ? appliedLayoutName : "*Sheet1*"}
-                        itemName2={appliedLayoutName && appliedLayoutName.startsWith('*') && appliedLayoutName.endsWith('*') ? appliedLayoutName : "*Sheet2*"}
-                        itemName3={appliedLayoutName && !appliedLayoutName?.startsWith('*') ? appliedLayoutName : "Custom Layout"}
+                        itemName1="*Sheet1*"
+                        itemName2="*Sheet2*"
+                        itemName3="Custom Layout"
                         headerText="Sheet 1 Layout"
                         value={layoutValue}
                         onChange={setLayoutValue}
-                        className="w-full"
                         disabled={!sheet1Checked}
                       />
                     </div>
@@ -395,30 +409,23 @@ export default function App() {
                   </div>
 
                   {/* Sheet 2 */}
-                  <div className="sheet-layout-row-2">
-                    <div className="basis-grow-container">
-                      <div className="flex-center-container">
-                        <div className="padded-content">
-                          <div className="checkbox-row">
-                            <Checkbox 
-                              checked={sheet2Checked} 
-                              onChange={handleSheet2Click} 
-                              label="Sheet 2"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                      <Checkbox 
+                        checked={sheet2Checked} 
+                        onChange={handleSheet2Click} 
+                        label="Sheet 2"
+                      />
                     </div>
-                    <div className="select-container">
+                    <div className="flex-1">
                       <Select 
                         itemCount={3}
-                        itemName1={appliedLayoutName && appliedLayoutName.startsWith('*') && appliedLayoutName.endsWith('*') ? appliedLayoutName : "*Sheet1*"}
-                        itemName2={appliedLayoutName && appliedLayoutName.startsWith('*') && appliedLayoutName.endsWith('*') ? appliedLayoutName : "*Sheet2*"}
-                        itemName3={appliedLayoutName && !appliedLayoutName?.startsWith('*') ? appliedLayoutName : "Custom Layout"}
+                        itemName1="*Sheet1*"
+                        itemName2="*Sheet2*"
+                        itemName3="Custom Layout"
                         headerText="Sheet 2 Layout"
                         value={layout2Value}
                         onChange={setLayout2Value}
-                        className="w-full"
                         disabled={!sheet2Checked}
                       />
                     </div>
@@ -431,40 +438,38 @@ export default function App() {
                       disabled={!sheet2Checked}
                     />
                   </div>
+
+                  {/* Select All */}
+                  <Checkbox 
+                    checked={selectAllChecked} 
+                    onChange={handleSelectAllClick} 
+                    label="Select all sheets"
+                  />
                 </div>
               </div>
-            </div>
 
-            {/* Bottom Toolbar */}
-            <div style={{
-              display: 'flex',
-              padding: '10px 20px',
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end', 
-              gap: '10px',
-              flex: '1 0 0',
-              alignSelf: 'stretch'
-            }}>
-              <ButtonSecondary onClick={() => setIsPageLayoutManagerOpen(true)}>
-                Page layout manager
-              </ButtonSecondary>
-              
-              <ButtonPrimary onClick={() => console.log('Print clicked')} disabled={isPrintDisabled}>
-                Print
-              </ButtonPrimary>
+              {/* Bottom Toolbar */}
+              <div className="p-5 flex justify-end gap-3 bg-[#1e2023]">
+                <ButtonSecondary onClick={() => setIsPageLayoutManagerOpen(true)}>
+                  Page layout manager
+                </ButtonSecondary>
+                
+                <ButtonPrimary onClick={() => console.log('Print clicked')} disabled={isPrintDisabled}>
+                  Print
+                </ButtonPrimary>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
       {/* Bottom Action Toolbar */}
-      <div className="absolute box-border content-stretch flex flex-row items-center justify-between left-[497px] p-[10px] top-[520px] w-[501px]" style={{ backgroundColor: 'var(--color-dialog-bg-dark)' }}>
-        <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0">
+      <div className="absolute bottom-[100px] left-1/2 transform -translate-x-1/2 bg-[#1e2023] p-3 flex items-center justify-between w-[500px]">
+        <div className="flex gap-2">
           <ButtonIcon 
             icon="approve"
             onClick={handleActivateAll}
             variant="secondary"
-            disabled={isActivateAllDisabled}
             className={isActivateAllActive ? 'activate-all-active' : ''}
           />
           <ButtonIcon 
@@ -477,11 +482,9 @@ export default function App() {
             variant="secondary"
           />
         </div>
-        <div className="w-[107px]">
-          <ButtonSecondary onClick={() => console.log('Export PDF clicked')}>
-            Export PDF
-          </ButtonSecondary>
-        </div>
+        <ButtonSecondary onClick={() => console.log('Export PDF clicked')}>
+          Export PDF
+        </ButtonSecondary>
       </div>
     </div>
   );
