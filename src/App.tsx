@@ -1,306 +1,270 @@
-import { useState } from 'react';
-
-// Import real components instead of stubs
-import { ButtonPrimary } from '../components/button-primary';
-import { ButtonSecondary } from '../components/button-secondary';
-import { ButtonIcon } from '../components/button-icon';
-import { Checkbox } from '../components/checkbox';
-import { TextInput } from '../components/text-input';
-import { Select } from '../components/select';
-import { SheetNavigationLeft } from '../components/sheet-navigation-left';
-import { SheetNavigationRight } from '../components/sheet-navigation-right';
-import { SheetPreview } from '../components/sheet-preview';
-import { NoPreview } from '../components/no-preview';
-import { LayoutEditor } from '../components/layout-editor';
-import { PageLayoutManager } from '../components/page-layout-manager';
-
-// Import styles
+import React, { useState } from 'react';
 import './styles/globals.css';
+
+// Types
+interface Sheet {
+  id: string;
+  name: string;
+  widthMm: number;
+  heightMm: number;
+  layout: string;
+  selected: boolean;
+}
 
 export default function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(true);
   const [searchValue, setSearchValue] = useState('');
-  const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [sheet1Checked, setSheet1Checked] = useState(false);
-  const [sheet2Checked, setSheet2Checked] = useState(false);
-  const [layoutValue, setLayoutValue] = useState('item1');
-  const [layout2Value, setLayout2Value] = useState('item1');
-  const [currentSheet, setCurrentSheet] = useState(1);
-
-  // Layout editor states
-  const [isLayoutEditorOpen, setIsLayoutEditorOpen] = useState(false);
-  const [editingLayoutSheet, setEditingLayoutSheet] = useState<string>('');
-  const [isPageLayoutManagerOpen, setIsPageLayoutManagerOpen] = useState(false);
-
-  // Activate all sheets functionality
-  const [isActivateAllActive, setIsActivateAllActive] = useState(false);
-
-  // Calculate selected sheets
-  const selectedSheets = [];
-  if (sheet1Checked) selectedSheets.push(1);
-  if (sheet2Checked) selectedSheets.push(2);
+  const [currentSheetIndex, setCurrentSheetIndex] = useState(0);
+  const [selectAll, setSelectAll] = useState(false);
   
-  const selectedCount = selectedSheets.length;
-  const isPrintDisabled = selectedCount === 0;
+  const [sheets, setSheets] = useState<Sheet[]>([
+    { id: '1', name: 'Sheet 1', widthMm: 707, heightMm: 500, layout: '*Sheet1*', selected: false },
+    { id: '2', name: 'Sheet 2', widthMm: 841, heightMm: 594, layout: '*Sheet2*', selected: false },
+    { id: '3', name: 'Sheet 3', widthMm: 297, heightMm: 210, layout: 'Custom Layout', selected: false },
+  ]);
 
-  // Navigation handlers
+  const selectedSheets = sheets.filter(sheet => sheet.selected);
+  const currentSheet = selectedSheets[currentSheetIndex] || sheets[0];
+
+  // Event handlers
+  const handleSheetSelect = (sheetId: string, selected: boolean) => {
+    setSheets(prev => prev.map(sheet => 
+      sheet.id === sheetId ? { ...sheet, selected } : sheet
+    ));
+    
+    if (selected && selectedSheets.length === 0) {
+      setCurrentSheetIndex(0);
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    setSelectAll(checked);
+    setSheets(prev => prev.map(sheet => ({ ...sheet, selected: checked })));
+    if (checked) setCurrentSheetIndex(0);
+  };
+
+  const handleLayoutChange = (sheetId: string, layout: string) => {
+    setSheets(prev => prev.map(sheet => 
+      sheet.id === sheetId ? { ...sheet, layout } : sheet
+    ));
+  };
+
   const handlePrevSheet = () => {
-    if (selectedSheets.length > 0) {
-      const currentIndex = selectedSheets.indexOf(currentSheet);
-      if (currentIndex > 0) {
-        setCurrentSheet(selectedSheets[currentIndex - 1]);
-      }
+    if (currentSheetIndex > 0) {
+      setCurrentSheetIndex(currentSheetIndex - 1);
     }
   };
 
   const handleNextSheet = () => {
-    if (selectedSheets.length > 0) {
-      const currentIndex = selectedSheets.indexOf(currentSheet);
-      if (currentIndex < selectedSheets.length - 1) {
-        setCurrentSheet(selectedSheets[currentIndex + 1]);
-      }
+    if (currentSheetIndex < selectedSheets.length - 1) {
+      setCurrentSheetIndex(currentSheetIndex + 1);
     }
   };
 
-  // Event handlers
-  const handleActivateAll = () => {
-    setIsActivateAllActive(!isActivateAllActive);
-    console.log(`✅ Activate all: ${!isActivateAllActive}`);
-  };
-
-  const handleSelectAllClick = (checked: boolean) => {
-    setSelectAllChecked(checked);
-    setSheet1Checked(checked);
-    setSheet2Checked(checked);
-    if (checked) setCurrentSheet(1);
-  };
-
-  const handleSheet1Click = (checked: boolean) => {
-    setSheet1Checked(checked);
-    setSelectAllChecked(checked && sheet2Checked);
-    if (checked && (!sheet2Checked || currentSheet !== 2)) {
-      setCurrentSheet(1);
-    }
-  };
-
-  const handleSheet2Click = (checked: boolean) => {
-    setSheet2Checked(checked);
-    setSelectAllChecked(checked && sheet1Checked);
-    if (checked && (!sheet1Checked || currentSheet !== 1)) {
-      setCurrentSheet(2);
-    }
+  const handlePrint = () => {
+    console.log('Printing sheets:', selectedSheets);
   };
 
   if (!isDialogOpen) {
     return (
-      <div className="size-full flex items-center justify-center">
-        <ButtonPrimary onClick={() => setIsDialogOpen(true)}>
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <button 
+          onClick={() => setIsDialogOpen(true)}
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
           Open Print Dialog
-        </ButtonPrimary>
-      </div>
-    );
-  }
-
-  if (isPageLayoutManagerOpen) {
-    return (
-      <div className="relative size-full">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1e2023] to-[#333538]" />
-        <div className="absolute top-[20%] left-1/2 transform -translate-x-1/2 w-[770px] h-[360px]">
-          <PageLayoutManager onClose={() => setIsPageLayoutManagerOpen(false)} />
-        </div>
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="relative size-full">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1e2023] to-[#333538]" />
-      
-      {/* Print Dialog */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[971px] h-[591px] bg-[#333538] shadow-dialog flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-lg shadow-2xl w-full max-w-6xl h-[600px] flex flex-col overflow-hidden">
         
-        {/* Dialog Header */}
-        <div className="bg-[#1e2023] flex items-center justify-between px-3 py-2">
-          <div className="text-[#d5d7e1] text-xs uppercase font-bold">Print to PDF</div>
+        {/* Header */}
+        <div className="bg-gray-900 px-6 py-3 flex justify-between items-center border-b border-gray-700">
+          <h1 className="text-gray-100 font-semibold text-sm uppercase tracking-wide">Print to PDF</h1>
           <button 
             onClick={() => setIsDialogOpen(false)}
-            className="w-9 h-9 flex items-center justify-center hover:opacity-80 text-[#dfdfdf]"
+            className="text-gray-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center"
           >
-            ✕
+            ×
           </button>
         </div>
 
-        {/* Main Content */}
         <div className="flex flex-1">
           
-          {/* Left Preview Panel */}
-          <div className="w-[400px] bg-[#1e2023] p-5 flex flex-col items-center justify-center">
-            {selectedCount === 0 ? (
-              <NoPreview />
+          {/* Preview Panel */}
+          <div className="w-96 bg-gray-900 p-6 flex flex-col">
+            <h2 className="text-gray-300 text-sm font-medium mb-4">Preview</h2>
+            
+            {selectedSheets.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gray-700 rounded-lg flex items-center justify-center">
+                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <p className="text-sm">Select sheets to preview</p>
+                </div>
+              </div>
             ) : (
-              <>
-                <SheetPreview 
-                  image="/placeholder-sheet.png"
-                  sheetName={`Sheet ${currentSheet}`}
-                  widthMm={currentSheet === 1 ? "707" : "841"}
-                  heightMm={currentSheet === 1 ? "500" : "594"}
-                />
-                
-                {/* Navigation arrows if multiple sheets selected */}
-                {selectedCount > 1 && (
-                  <div className="flex items-center gap-2 mt-4">
-                    <SheetNavigationLeft 
-                      disabled={selectedSheets.indexOf(currentSheet) === 0}
+              <div className="flex-1 flex flex-col items-center">
+                {/* Sheet Preview */}
+                <div className="bg-white rounded-lg shadow-lg mb-4" style={{
+                  width: '280px',
+                  height: '200px',
+                  aspectRatio: `${currentSheet.widthMm}/${currentSheet.heightMm}`
+                }}>
+                  <div className="w-full h-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                    <div className="text-center text-gray-600">
+                      <p className="font-medium">{currentSheet.name}</p>
+                      <p className="text-sm">{currentSheet.widthMm} × {currentSheet.heightMm} mm</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sheet Info */}
+                <div className="text-center mb-4">
+                  <h3 className="text-white font-medium">{currentSheet.name}</h3>
+                  <p className="text-gray-400 text-sm">{currentSheet.widthMm} × {currentSheet.heightMm} mm</p>
+                </div>
+
+                {/* Navigation */}
+                {selectedSheets.length > 1 && (
+                  <div className="flex items-center gap-3">
+                    <button
                       onClick={handlePrevSheet}
-                    />
-                    <span className="text-[#cfcfcf] text-xs px-2">
-                      {selectedSheets.indexOf(currentSheet) + 1} of {selectedCount}
+                      disabled={currentSheetIndex === 0}
+                      className="w-8 h-8 rounded bg-gray-700 flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
+                    >
+                      ‹
+                    </button>
+                    <span className="text-gray-300 text-sm px-2">
+                      {currentSheetIndex + 1} of {selectedSheets.length}
                     </span>
-                    <SheetNavigationRight 
-                      disabled={selectedSheets.indexOf(currentSheet) === selectedCount - 1}
+                    <button
                       onClick={handleNextSheet}
-                    />
+                      disabled={currentSheetIndex === selectedSheets.length - 1}
+                      className="w-8 h-8 rounded bg-gray-700 flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
+                    >
+                      ›
+                    </button>
                   </div>
                 )}
-              </>
+              </div>
             )}
           </div>
 
-          {/* Right Config Panel */}
-          {isLayoutEditorOpen ? (
-            <LayoutEditor 
-              sheetName={editingLayoutSheet}
-              onClose={() => setIsLayoutEditorOpen(false)}
-              onSave={() => setIsLayoutEditorOpen(false)}
-            />
-          ) : (
-            <div className="flex-1 flex flex-col">
-              
-              {/* Main Config Area */}
-              <div className="flex-1 p-5 space-y-5">
-                
-                {/* Search Section */}
-                <div>
-                  <div className="text-[#d5d7e1] text-xs font-semibold mb-2">Sheets</div>
-                  <TextInput 
-                    value={searchValue} 
-                    onChange={setSearchValue} 
-                    placeholder="Search sheets" 
-                    showSearchIcon={true}
-                  />
-                </div>
-
-                {/* Checkboxes and Selects */}
-                <div className="space-y-3">
-                  
-                  {/* Sheet 1 */}
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1">
-                      <Checkbox 
-                        checked={sheet1Checked} 
-                        onChange={handleSheet1Click} 
-                        label="Sheet 1"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <Select 
-                        itemCount={3}
-                        itemName1="*Sheet1*"
-                        itemName2="*Sheet2*"
-                        itemName3="Custom Layout"
-                        headerText="Sheet 1 Layout"
-                        value={layoutValue}
-                        onChange={setLayoutValue}
-                        disabled={!sheet1Checked}
-                      />
-                    </div>
-                    <ButtonIcon 
-                      icon="edit-layout"
-                      onClick={() => {
-                        setEditingLayoutSheet('Sheet 1');
-                        setIsLayoutEditorOpen(true);
-                      }} 
-                      disabled={!sheet1Checked}
-                    />
-                  </div>
-
-                  {/* Sheet 2 */}
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1">
-                      <Checkbox 
-                        checked={sheet2Checked} 
-                        onChange={handleSheet2Click} 
-                        label="Sheet 2"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <Select 
-                        itemCount={3}
-                        itemName1="*Sheet1*"
-                        itemName2="*Sheet2*"
-                        itemName3="Custom Layout"
-                        headerText="Sheet 2 Layout"
-                        value={layout2Value}
-                        onChange={setLayout2Value}
-                        disabled={!sheet2Checked}
-                      />
-                    </div>
-                    <ButtonIcon 
-                      icon="edit-layout"
-                      onClick={() => {
-                        setEditingLayoutSheet('Sheet 2');
-                        setIsLayoutEditorOpen(true);
-                      }} 
-                      disabled={!sheet2Checked}
-                    />
-                  </div>
-
-                  {/* Select All */}
-                  <Checkbox 
-                    checked={selectAllChecked} 
-                    onChange={handleSelectAllClick} 
-                    label="Select all sheets"
-                  />
-                </div>
-              </div>
-
-              {/* Bottom Toolbar */}
-              <div className="p-5 flex justify-end gap-3 bg-[#1e2023]">
-                <ButtonSecondary onClick={() => setIsPageLayoutManagerOpen(true)}>
-                  Page layout manager
-                </ButtonSecondary>
-                
-                <ButtonPrimary onClick={() => console.log('Print clicked')} disabled={isPrintDisabled}>
-                  Print
-                </ButtonPrimary>
+          {/* Configuration Panel */}
+          <div className="flex-1 p-6 flex flex-col">
+            <h2 className="text-gray-300 text-sm font-medium mb-4">Configuration</h2>
+            
+            {/* Search */}
+            <div className="mb-6">
+              <label className="block text-gray-400 text-xs font-medium mb-2">Search Sheets</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  placeholder="Search sheets..."
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                />
+                <svg className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
               </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Bottom Action Toolbar */}
-      <div className="absolute bottom-[100px] left-1/2 transform -translate-x-1/2 bg-[#1e2023] p-3 flex items-center justify-between w-[500px]">
-        <div className="flex gap-2">
-          <ButtonIcon 
-            icon="approve"
-            onClick={handleActivateAll}
-            variant="secondary"
-            className={isActivateAllActive ? 'activate-all-active' : ''}
-          />
-          <ButtonIcon 
-            icon="deactivate"
-            onClick={() => {
-              setSelectAllChecked(false);
-              setSheet1Checked(false);
-              setSheet2Checked(false);
-            }}
-            variant="secondary"
-          />
+            {/* Sheet List */}
+            <div className="flex-1 space-y-3 mb-6">
+              {sheets
+                .filter(sheet => sheet.name.toLowerCase().includes(searchValue.toLowerCase()))
+                .map(sheet => (
+                <div key={sheet.id} className="flex items-center gap-3 p-3 bg-gray-700 rounded-lg">
+                  <label className="flex items-center gap-2 flex-1 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={sheet.selected}
+                      onChange={(e) => handleSheetSelect(sheet.id, e.target.checked)}
+                      className="w-4 h-4 text-blue-600 bg-gray-600 border-gray-500 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-white">{sheet.name}</span>
+                  </label>
+                  
+                  <select
+                    value={sheet.layout}
+                    onChange={(e) => handleLayoutChange(sheet.id, e.target.value)}
+                    disabled={!sheet.selected}
+                    className="px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-sm disabled:opacity-50 focus:border-blue-500 focus:outline-none"
+                  >
+                    <option value="*Sheet1*">*Sheet1*</option>
+                    <option value="*Sheet2*">*Sheet2*</option>
+                    <option value="Custom Layout">Custom Layout</option>
+                  </select>
+                  
+                  <button
+                    disabled={!sheet.selected}
+                    className="w-8 h-8 bg-gray-600 border border-gray-500 rounded flex items-center justify-center text-white disabled:opacity-50 hover:bg-gray-500 transition-colors"
+                  >
+                    ⚙
+                  </button>
+                </div>
+              ))}
+              
+              {/* Select All */}
+              <div className="pt-3 border-t border-gray-600">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectAll}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 bg-gray-600 border-gray-500 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-gray-300">Select all sheets</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex justify-between">
+              <button className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors">
+                Page Layout Manager
+              </button>
+              <button
+                onClick={handlePrint}
+                disabled={selectedSheets.length === 0}
+                className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Print ({selectedSheets.length})
+              </button>
+            </div>
+          </div>
         </div>
-        <ButtonSecondary onClick={() => console.log('Export PDF clicked')}>
-          Export PDF
-        </ButtonSecondary>
+
+        {/* Bottom Toolbar */}
+        <div className="bg-gray-900 px-6 py-3 border-t border-gray-700 flex justify-between items-center">
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleSelectAll(true)}
+              className="w-8 h-8 bg-green-600 rounded flex items-center justify-center text-white hover:bg-green-700 transition-colors"
+            >
+              ✓
+            </button>
+            <button
+              onClick={() => handleSelectAll(false)}
+              className="w-8 h-8 bg-red-600 rounded flex items-center justify-center text-white hover:bg-red-700 transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+          <button className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors">
+            Export PDF
+          </button>
+        </div>
       </div>
     </div>
   );
