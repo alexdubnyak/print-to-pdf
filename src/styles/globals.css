@@ -2,25 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Modern dark theme variables */
 :root {
   --font-size: 14px;
   
-  /* Print Dialog Color Variables */
-  --color-dialog-bg-dark: #1e2023;
-  --color-dialog-bg-darker: #333538;
-  --color-text-light: #d5d7e1;
-  --color-text-muted: #cfcfcf;
-  --color-text-secondary: #8e8f90;
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-border-muted: #acacac;
-  --color-arrow-bg: #555555;
-  --color-icon-fill: #dfdfdf;
-  --color-icon-disabled: #8e8f90;
-
-  /* Activate All Button Colors */
-  --color-activate-all-active: #2160D3;
-  --color-activate-all-hover: #1a4fb8;
+  /* Updated modern color palette */
+  --color-bg-primary: #111827;      /* gray-900 */
+  --color-bg-secondary: #1f2937;    /* gray-800 */
+  --color-bg-tertiary: #374151;     /* gray-700 */
+  --color-bg-quaternary: #4b5563;   /* gray-600 */
+  
+  --color-text-primary: #f9fafb;    /* gray-50 */
+  --color-text-secondary: #d1d5db;  /* gray-300 */
+  --color-text-tertiary: #9ca3af;   /* gray-400 */
+  --color-text-muted: #6b7280;      /* gray-500 */
+  
+  --color-border-primary: #374151;  /* gray-700 */
+  --color-border-secondary: #4b5563; /* gray-600 */
+  
+  --color-accent-blue: #3b82f6;     /* blue-500 */
+  --color-accent-blue-hover: #2563eb; /* blue-600 */
+  --color-accent-green: #10b981;    /* emerald-500 */
+  --color-accent-green-hover: #059669; /* emerald-600 */
+  --color-accent-red: #ef4444;      /* red-500 */
+  --color-accent-red-hover: #dc2626; /* red-600 */
+  
+  --shadow-dialog: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
 @layer base {
@@ -28,240 +36,276 @@
     box-sizing: border-box;
   }
 
+  html {
+    font-size: var(--font-size);
+  }
+
   body {
     margin: 0;
     padding: 0;
-    background-color: var(--color-dialog-bg-dark);
-    font-family: 'Open Sans', sans-serif;
-    color: var(--color-text-light);
-    overflow: hidden;
+    background-color: var(--color-bg-primary);
+    font-family: 'Inter', 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  html {
-    font-size: var(--font-size);
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-bg-quaternary);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
   }
 }
 
 @layer components {
-  /* Button Primary styles */
-  .button-primary {
-    background-color: #254ca9 !important;
-    height: 36px !important;
-    padding: 8px 16px !important;
-    white-space: nowrap !important;
-    border: none !important;
-    border-radius: 4px !important;
-    color: white !important;
-    font-size: 12px !important;
-    cursor: pointer !important;
-    transition: background-color 0.2s ease !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  
-  .button-primary:hover:not(:disabled) {
-    background-color: #2859bb !important;
+  /* Modern button styles */
+  .btn-primary {
+    @apply px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  .button-primary:disabled {
-    background-color: #254ca9 !important;
-    opacity: 0.5 !important;
-    cursor: not-allowed !important;
+  .btn-secondary {
+    @apply px-4 py-2 bg-gray-700 text-white font-medium rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200;
   }
 
-  /* Button Secondary styles */
-  .button-secondary {
-    background-color: #141518 !important;
-    height: 36px !important;
-    padding: 8px 16px !important;
-    color: white !important;
-    border: 1px solid #333 !important;
-    border-radius: 4px !important;
-    font-size: 12px !important;
-    cursor: pointer !important;
-    transition: background-color 0.2s ease !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+  .btn-icon {
+    @apply w-8 h-8 bg-gray-700 border border-gray-600 rounded flex items-center justify-center text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  .button-secondary:hover {
-    background-color: #2a2c2f !important;
+  .btn-icon-success {
+    @apply w-8 h-8 bg-green-600 rounded flex items-center justify-center text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200;
   }
 
-  /* Button Icon styles */
-  .button-icon-default {
-    background-color: #141518 !important;
-    border: 1px solid #000 !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: background-color 0.2s ease !important;
-    width: 28px !important;
-    height: 28px !important;
-  }
-
-  .button-icon-secondary {
-    background-color: #2c2e31 !important;
-    border: 1px solid #000 !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: background-color 0.2s ease !important;
-    width: 28px !important;
-    height: 28px !important;
-  }
-
-  /* Activate All Active State */
-  .activate-all-active.button-icon-secondary {
-    background-color: var(--color-activate-all-active, #2160D3) !important;
-  }
-
-  .activate-all-active.button-icon-secondary:hover {
-    background-color: var(--color-activate-all-hover, #1a4fb8) !important;
-  }
-
-  /* Hover states */
-  .button-icon-default:not([disabled]):not(.disabled):hover {
-    background-color: #2a2c2f !important;
-  }
-
-  .button-icon-secondary:not([disabled]):not(.disabled):not(.activate-all-active):hover {
-    background-color: #3a3c3f !important;
-  }
-
-  /* Disabled states */
-  .button-icon-default:disabled,
-  .button-icon-secondary:disabled {
-    opacity: 0.5 !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
-  }
-
-  /* Shadow for dialog */
-  .shadow-dialog {
-    box-shadow: 0px 4px 64px 0px rgba(0, 0, 0, 0.25) !important;
-  }
-
-  /* Text sizes */
-  .text-12px {
-    font-size: 12px !important;
-  }
-
-  .text-xs {
-    font-size: 11px !important;
+  .btn-icon-danger {
+    @apply w-8 h-8 bg-red-600 rounded flex items-center justify-center text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200;
   }
 
   /* Input styles */
-  input[type="text"] {
-    background-color: #141518 !important;
-    border: 1px solid #000 !important;
-    color: #d5d7e1 !important;
-    padding: 4px 8px !important;
-    outline: none !important;
+  .input-primary {
+    @apply w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-all duration-200;
   }
 
-  input[type="text"]:focus {
-    border-color: #2160D3 !important;
+  .select-primary {
+    @apply px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   /* Checkbox styles */
-  input[type="checkbox"] {
-    background-color: #141518 !important;
-    border: 1px solid #333 !important;
-    border-radius: 2px !important;
-    width: 16px !important;
-    height: 16px !important;
-    appearance: none !important;
-    cursor: pointer !important;
-    position: relative !important;
+  .checkbox-primary {
+    @apply w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200;
   }
 
-  input[type="checkbox"]:checked {
-    background-color: #2160D3 !important;
-    border-color: #2160D3 !important;
+  /* Card styles */
+  .card {
+    @apply bg-gray-800 rounded-lg shadow-xl border border-gray-700;
   }
 
-  input[type="checkbox"]:checked::after {
-    content: "✓" !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    color: white !important;
-    font-size: 10px !important;
-    font-weight: bold !important;
+  .card-content {
+    @apply p-6;
   }
 
-  /* Select dropdown custom styles */
-  .select-dropdown {
-    background-color: #141518 !important;
+  .card-header {
+    @apply px-6 py-4 border-b border-gray-700;
+  }
+
+  .card-footer {
+    @apply px-6 py-4 border-t border-gray-700;
+  }
+
+  /* Preview area */
+  .preview-area {
+    @apply bg-gray-900 rounded-lg p-6 min-h-0 flex flex-col;
+  }
+
+  .preview-sheet {
+    @apply bg-white rounded-lg shadow-lg overflow-hidden;
+  }
+
+  .preview-sheet-placeholder {
+    @apply bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-600;
+  }
+
+  .preview-empty {
+    @apply flex-1 flex items-center justify-center text-gray-500;
+  }
+
+  /* Sheet list item */
+  .sheet-item {
+    @apply flex items-center gap-3 p-3 bg-gray-700 rounded-lg hover:bg-gray-650 transition-colors duration-200;
+  }
+
+  .sheet-item-selected {
+    @apply bg-blue-600 bg-opacity-20 border border-blue-500;
+  }
+
+  /* Navigation controls */
+  .nav-control {
+    @apply w-8 h-8 rounded bg-gray-700 flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200;
+  }
+
+  /* Dialog styles */
+  .dialog {
+    @apply bg-gray-800 rounded-lg shadow-2xl w-full max-w-6xl flex flex-col overflow-hidden;
+    box-shadow: var(--shadow-dialog);
+  }
+
+  .dialog-header {
+    @apply bg-gray-900 px-6 py-3 flex justify-between items-center border-b border-gray-700;
+  }
+
+  .dialog-title {
+    @apply text-gray-100 font-semibold text-sm uppercase tracking-wide;
+  }
+
+  .dialog-close {
+    @apply text-gray-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded hover:bg-gray-700 transition-all duration-200;
+  }
+
+  /* Toolbar styles */
+  .toolbar {
+    @apply bg-gray-900 px-6 py-3 border-t border-gray-700 flex justify-between items-center;
+  }
+
+  /* Animation classes */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Focus states */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800;
+  }
+
+  /* Text styles */
+  .text-heading {
+    @apply text-gray-100 font-semibold;
+  }
+
+  .text-subheading {
+    @apply text-gray-300 font-medium;
+  }
+
+  .text-body {
+    @apply text-gray-300;
+  }
+
+  .text-caption {
+    @apply text-gray-400 text-sm;
+  }
+
+  .text-muted {
+    @apply text-gray-500;
+  }
+
+  /* Layout utilities */
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-spacing {
+    @apply space-y-6;
+  }
+
+  /* Status indicators */
+  .status-active {
+    @apply bg-green-500 text-white;
+  }
+
+  .status-inactive {
+    @apply bg-gray-500 text-white;
+  }
+
+  .status-warning {
+    @apply bg-yellow-500 text-white;
+  }
+
+  .status-error {
+    @apply bg-red-500 text-white;
+  }
+}
+
+/* Responsive design improvements */
+@media (max-width: 1024px) {
+  .dialog {
+    @apply h-full max-h-none;
+  }
+}
+
+@media (max-width: 768px) {
+  .dialog {
+    @apply mx-4 max-w-none;
+  }
+  
+  .dialog .flex {
+    @apply flex-col;
+  }
+  
+  .preview-area {
+    @apply min-h-64;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-primary: #ffffff;
+    --color-border-secondary: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .dialog {
+    box-shadow: none !important;
     border: 1px solid #000 !important;
-    color: #d5d7e1 !important;
-    position: relative !important;
   }
-
-  .select-dropdown-menu {
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    background-color: #141518 !important;
-    border: 1px solid #000 !important;
-    border-top: none !important;
-    z-index: 1000 !important;
-    max-height: 200px !important;
-    overflow-y: auto !important;
-  }
-
-  .select-dropdown-option {
-    padding: 8px !important;
-    cursor: pointer !important;
-    color: #d5d7e1 !important;
-    font-size: 12px !important;
-  }
-
-  .select-dropdown-option:hover {
-    background-color: #2a2c2f !important;
-  }
-}
-
-/* Dark theme overrides */
-.dark {
-  background-color: var(--color-dialog-bg-dark) !important;
-  color: var(--color-text-light) !important;
-}
-
-/* Utility classes */
-.size-full {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.flex-1 {
-  flex: 1 !important;
-}
-
-.w-7 {
-  width: 28px !important;
-}
-
-.h-7 {
-  height: 28px !important;
-}
-
-.w-9 {
-  width: 36px !important;
-}
-
-.h-9 {
-  height: 36px !important;
-}
-
-/* Make sure all elements inherit proper styling */
-* {
-  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
 }
