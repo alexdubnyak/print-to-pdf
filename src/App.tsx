@@ -1,243 +1,21 @@
 import { useState } from 'react';
 
-// ============================================
-// COMPONENT STUBS - Temporary placeholders
-// ============================================
+// Import real components instead of stubs
+import { ButtonPrimary } from '../components/button-primary';
+import { ButtonSecondary } from '../components/button-secondary';
+import { ButtonIcon } from '../components/button-icon';
+import { Checkbox } from '../components/checkbox';
+import { TextInput } from '../components/text-input';
+import { Select } from '../components/select';
+import { SheetNavigationLeft } from '../components/sheet-navigation-left';
+import { SheetNavigationRight } from '../components/sheet-navigation-right';
+import { SheetPreview } from '../components/sheet-preview';
+import { NoPreview } from '../components/no-preview';
+import { LayoutEditor } from '../components/layout-editor';
+import { PageLayoutManager } from '../components/page-layout-manager';
 
-interface ButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-  className?: string;
-}
-
-interface ButtonIconProps {
-  icon: string;
-  onClick?: () => void;
-  variant?: 'default' | 'secondary';
-  disabled?: boolean;
-  className?: string;
-}
-
-interface CheckboxProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label: string;
-}
-
-interface TextInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  showSearchIcon?: boolean;
-}
-
-interface SelectProps {
-  itemCount: number;
-  itemName1?: string;
-  itemName2?: string;
-  itemName3?: string;
-  headerText: string;
-  value: string;
-  onChange: (value: string) => void;
-  className?: string;
-  disabled?: boolean;
-}
-
-export interface SelectOption {
-  value: string;
-  label: string;
-}
-
-// Component stubs
-export function ButtonPrimary({ children, onClick, disabled, className }: ButtonProps) {
-  return (
-    <button 
-      onClick={onClick} 
-      disabled={disabled}
-      className={`button-primary ${className || ''} ${disabled ? 'opacity-50' : ''}`}
-    >
-      {children}
-    </button>
-  );
-}
-
-export function ButtonSecondary({ children, onClick, className }: ButtonProps) {
-  return (
-    <button 
-      onClick={onClick}
-      className={`button-secondary ${className || ''}`}
-    >
-      {children}
-    </button>
-  );
-}
-
-export function ButtonIcon({ icon, onClick, variant = 'default', disabled, className }: ButtonIconProps) {
-  return (
-    <button 
-      onClick={onClick}
-      disabled={disabled}
-      className={`w-7 h-7 button-icon-${variant} ${className || ''} ${disabled ? 'opacity-50' : ''}`}
-    >
-      <div className="w-4 h-4 flex items-center justify-center text-white">
-        {icon === 'approve' && '✓'}
-        {icon === 'deactivate' && '✕'}
-        {icon === 'edit-layout' && '⚙'}
-        {!['approve', 'deactivate', 'edit-layout'].includes(icon) && '●'}
-      </div>
-    </button>
-  );
-}
-
-export function Checkbox({ checked, onChange, label }: CheckboxProps) {
-  return (
-    <label className="flex items-center gap-2 cursor-pointer">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="w-4 h-4 bg-[#141518] border border-[#333] rounded checked:bg-[#2160D3]"
-      />
-      <span className="text-[#d5d7e1] text-12px">{label}</span>
-    </label>
-  );
-}
-
-export function TextInput({ value, onChange, placeholder, showSearchIcon }: TextInputProps) {
-  return (
-    <div className="relative w-full">
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full h-7 bg-[#141518] border border-[#000] text-[#d5d7e1] text-12px px-2"
-      />
-      {showSearchIcon && (
-        <div className="absolute right-2 top-1 text-[#8e8f90]">🔍</div>
-      )}
-    </div>
-  );
-}
-
-export function Select({ itemName1, itemName2, itemName3, headerText, value, onChange, disabled, className }: SelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const options = [itemName1, itemName2, itemName3].filter(Boolean);
-  const values = ['item1', 'item2', 'item3'];
-  
-  const selectedLabel = value === 'item1' ? itemName1 : 
-                       value === 'item2' ? itemName2 : 
-                       value === 'item3' ? itemName3 : itemName1;
-
-  return (
-    <div className={`relative ${className || ''}`}>
-      <div 
-        className={`h-7 bg-[#141518] border border-[#000] px-2 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50' : ''}`}
-        onClick={() => !disabled && setIsOpen(!isOpen)}
-      >
-        <span className="text-[#d5d7e1] text-12px">{selectedLabel}</span>
-        <span className="text-[#d5d7e1]">▼</span>
-      </div>
-      {isOpen && !disabled && (
-        <div className="absolute top-full left-0 right-0 bg-[#141518] border border-[#000] z-50">
-          {options.map((option, index) => (
-            <div
-              key={index}
-              className="px-2 py-1 hover:bg-[#2a2c2f] cursor-pointer text-[#d5d7e1] text-12px"
-              onClick={() => {
-                onChange(values[index]);
-                setIsOpen(false);
-              }}
-            >
-              {option}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-export function SheetNavigationLeft({ disabled, onClick }: { disabled: boolean; onClick: () => void }) {
-  return (
-    <button 
-      onClick={onClick}
-      disabled={disabled}
-      className={`w-7 h-7 bg-[#555] border border-[#000] flex items-center justify-center ${disabled ? 'opacity-50' : 'hover:opacity-80'}`}
-    >
-      <span className="text-white">←</span>
-    </button>
-  );
-}
-
-export function SheetNavigationRight({ disabled, onClick }: { disabled: boolean; onClick: () => void }) {
-  return (
-    <button 
-      onClick={onClick}
-      disabled={disabled}
-      className={`w-7 h-7 bg-[#555] border border-[#000] flex items-center justify-center ${disabled ? 'opacity-50' : 'hover:opacity-80'}`}
-    >
-      <span className="text-white">→</span>
-    </button>
-  );
-}
-
-export function SheetPreview({ image, sheetName, widthMm, heightMm }: { 
-  image: string; 
-  sheetName: string; 
-  widthMm: string; 
-  heightMm: string; 
-}) {
-  return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="w-40 h-28 bg-[#333538] border border-[#666] flex items-center justify-center">
-        <span className="text-[#d5d7e1] text-sm">{sheetName}</span>
-      </div>
-      <div className="text-[#cfcfcf] text-xs">
-        {widthMm} × {heightMm} mm
-      </div>
-    </div>
-  );
-}
-
-export function NoPreview() {
-  return (
-    <div className="flex items-center justify-center h-full text-[#8e8f90]">
-      <span>No sheets selected</span>
-    </div>
-  );
-}
-
-export function LayoutEditor({ sheetName, onClose, onSave }: { 
-  sheetName: string; 
-  onClose: () => void; 
-  onSave: () => void; 
-}) {
-  return (
-    <div className="w-[571px] h-full bg-[#333538] flex flex-col items-center justify-center">
-      <div className="text-[#d5d7e1] text-lg mb-4">Layout Editor</div>
-      <div className="text-[#cfcfcf] mb-4">{sheetName}</div>
-      <div className="flex gap-2">
-        <ButtonSecondary onClick={onSave}>Save</ButtonSecondary>
-        <ButtonSecondary onClick={onClose}>Cancel</ButtonSecondary>
-      </div>
-    </div>
-  );
-}
-
-export function PageLayoutManager({ onClose }: { onClose: () => void }) {
-  return (
-    <div className="w-full h-full bg-[#333538] flex flex-col items-center justify-center">
-      <div className="text-[#d5d7e1] text-lg mb-4">Page Layout Manager</div>
-      <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-    </div>
-  );
-}
-
-// ============================================
-// MAIN APPLICATION COMPONENT
-// ============================================
+// Import styles
+import './styles/globals.css';
 
 export default function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(true);
@@ -264,6 +42,25 @@ export default function App() {
   
   const selectedCount = selectedSheets.length;
   const isPrintDisabled = selectedCount === 0;
+
+  // Navigation handlers
+  const handlePrevSheet = () => {
+    if (selectedSheets.length > 0) {
+      const currentIndex = selectedSheets.indexOf(currentSheet);
+      if (currentIndex > 0) {
+        setCurrentSheet(selectedSheets[currentIndex - 1]);
+      }
+    }
+  };
+
+  const handleNextSheet = () => {
+    if (selectedSheets.length > 0) {
+      const currentIndex = selectedSheets.indexOf(currentSheet);
+      if (currentIndex < selectedSheets.length - 1) {
+        setCurrentSheet(selectedSheets[currentIndex + 1]);
+      }
+    }
+  };
 
   // Event handlers
   const handleActivateAll = () => {
@@ -337,16 +134,35 @@ export default function App() {
         <div className="flex flex-1">
           
           {/* Left Preview Panel */}
-          <div className="w-[400px] bg-[#1e2023] p-5 flex items-center justify-center">
+          <div className="w-[400px] bg-[#1e2023] p-5 flex flex-col items-center justify-center">
             {selectedCount === 0 ? (
               <NoPreview />
             ) : (
-              <SheetPreview 
-                image="/placeholder-sheet.png"
-                sheetName={`Sheet ${currentSheet}`}
-                widthMm={currentSheet === 1 ? "707" : "841"}
-                heightMm={currentSheet === 1 ? "500" : "594"}
-              />
+              <>
+                <SheetPreview 
+                  image="/placeholder-sheet.png"
+                  sheetName={`Sheet ${currentSheet}`}
+                  widthMm={currentSheet === 1 ? "707" : "841"}
+                  heightMm={currentSheet === 1 ? "500" : "594"}
+                />
+                
+                {/* Navigation arrows if multiple sheets selected */}
+                {selectedCount > 1 && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <SheetNavigationLeft 
+                      disabled={selectedSheets.indexOf(currentSheet) === 0}
+                      onClick={handlePrevSheet}
+                    />
+                    <span className="text-[#cfcfcf] text-xs px-2">
+                      {selectedSheets.indexOf(currentSheet) + 1} of {selectedCount}
+                    </span>
+                    <SheetNavigationRight 
+                      disabled={selectedSheets.indexOf(currentSheet) === selectedCount - 1}
+                      onClick={handleNextSheet}
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
 
