@@ -1,0 +1,70 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://alexdubnyak.github.io/print-to-pdf/sitemap.xml
+
+# Crawl delay (be respectful to crawlers)
+Crawl-delay: 1
+
+# Allow common crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block unwanted bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+# Specific instructions for PWA files
+User-agent: *
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /icons/
+Allow: /screenshots/
+
+# Performance optimization - allow caching of static assets
+User-agent: *
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.woff$
+Allow: /*.woff2$
+Allow: /*.ttf$
+Allow: /*.eot$
