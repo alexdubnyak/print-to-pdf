@@ -2,13 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --font-size: 14px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-
+  
   /* Print Dialog Color Variables */
   --color-dialog-bg-dark: #1e2023;
   --color-dialog-bg-darker: #333538;
@@ -46,88 +42,77 @@
   }
 }
 
-/* Custom positioning classes for the print dialog components */
 @layer components {
-  .print-dialog-position {
-    left: calc(50% - 7.25px);
-  }
-
-  /* Background image utilities */
-  .bg-main-image {
-    background-size: auto, cover;
-    background-position: 0% 0%, 50% 50%;
-  }
-
-  .bg-gradient-overlay {
-    background-image: linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.8) 0%,
-        rgba(0, 0, 0, 0.8) 100%
-      ),
-      var(--bg-image);
-  }
-
   /* Button Primary styles */
   .button-primary {
-    background-color: #254ca9;
+    background-color: #254ca9 !important;
     height: 36px !important;
     padding: 8px 16px !important;
     white-space: nowrap !important;
-    box-sizing: border-box !important;
-    transition: background-color 0.2s ease;
-    border: none;
-    border-radius: 4px;
-    color: var(--color-white);
-    font-size: 12px;
-    cursor: pointer;
+    border: none !important;
+    border-radius: 4px !important;
+    color: white !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   
   .button-primary:hover:not(:disabled) {
-    background-color: #2859bb;
+    background-color: #2859bb !important;
   }
 
   .button-primary:disabled {
-    background-color: #254ca9;
-    opacity: 0.5;
-    cursor: not-allowed;
+    background-color: #254ca9 !important;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
   }
 
   /* Button Secondary styles */
   .button-secondary {
-    background-color: #141518;
+    background-color: #141518 !important;
     height: 36px !important;
     padding: 8px 16px !important;
-    color: var(--color-white);
-    border: 1px solid #333;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+    color: white !important;
+    border: 1px solid #333 !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .button-secondary:hover {
-    background-color: #2a2c2f;
+    background-color: #2a2c2f !important;
   }
 
   /* Button Icon styles */
   .button-icon-default {
-    background-color: #141518;
-    border: 1px solid #000;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease;
+    background-color: #141518 !important;
+    border: 1px solid #000 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background-color 0.2s ease !important;
+    width: 28px !important;
+    height: 28px !important;
   }
 
   .button-icon-secondary {
-    background-color: #2c2e31;
-    border: 1px solid #000;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease;
+    background-color: #2c2e31 !important;
+    border: 1px solid #000 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background-color 0.2s ease !important;
+    width: 28px !important;
+    height: 28px !important;
   }
 
   /* Activate All Active State */
@@ -141,153 +126,142 @@
 
   /* Hover states */
   .button-icon-default:not([disabled]):not(.disabled):hover {
-    background-color: #2a2c2f;
+    background-color: #2a2c2f !important;
   }
 
   .button-icon-secondary:not([disabled]):not(.disabled):not(.activate-all-active):hover {
-    background-color: #3a3c3f;
+    background-color: #3a3c3f !important;
   }
 
   /* Disabled states */
   .button-icon-default:disabled,
   .button-icon-secondary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
   }
 
-  /* Common layout patterns */
-  .content-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
+  /* Shadow for dialog */
+  .shadow-dialog {
+    box-shadow: 0px 4px 64px 0px rgba(0, 0, 0, 0.25) !important;
   }
 
-  /* Settings info styles */
-  .settings-info-row {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 12px;
-    color: var(--color-text-muted);
+  /* Text sizes */
+  .text-12px {
+    font-size: 12px !important;
   }
 
-  .settings-info-label {
-    width: 80px;
-    flex-shrink: 0;
+  .text-xs {
+    font-size: 11px !important;
   }
 
-  .settings-info-value {
-    flex: 1;
+  /* Input styles */
+  input[type="text"] {
+    background-color: #141518 !important;
+    border: 1px solid #000 !important;
+    color: #d5d7e1 !important;
+    padding: 4px 8px !important;
+    outline: none !important;
   }
 
-  /* Checkbox row */
-  .checkbox-row {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
+  input[type="text"]:focus {
+    border-color: #2160D3 !important;
   }
 
-  /* Sheet layout rows */
-  .sheet-layout-row,
-  .sheet-layout-row-2 {
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 6px;
-    align-items: flex-start;
-    width: 100%;
+  /* Checkbox styles */
+  input[type="checkbox"] {
+    background-color: #141518 !important;
+    border: 1px solid #333 !important;
+    border-radius: 2px !important;
+    width: 16px !important;
+    height: 16px !important;
+    appearance: none !important;
+    cursor: pointer !important;
+    position: relative !important;
   }
 
-  .basis-grow-container {
-    flex: 1;
-    background-color: var(--color-dialog-bg-dark);
+  input[type="checkbox"]:checked {
+    background-color: #2160D3 !important;
+    border-color: #2160D3 !important;
   }
 
-  .flex-center-container {
-    display: flex;
-    align-items: center;
-    height: 100%;
+  input[type="checkbox"]:checked::after {
+    content: "✓" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    color: white !important;
+    font-size: 10px !important;
+    font-weight: bold !important;
   }
 
-  .padded-content {
-    padding: 6px 10px;
-    width: 100%;
+  /* Select dropdown custom styles */
+  .select-dropdown {
+    background-color: #141518 !important;
+    border: 1px solid #000 !important;
+    color: #d5d7e1 !important;
+    position: relative !important;
   }
 
-  .select-container {
-    flex: 1;
+  .select-dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background-color: #141518 !important;
+    border: 1px solid #000 !important;
+    border-top: none !important;
+    z-index: 1000 !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
   }
 
-  /* Collapsible section styles */
-  .collapsible-section-header {
-    background-color: var(--color-dialog-bg-dark);
-    transition: background-color 0.2s ease;
-    position: relative;
-    z-index: 10;
+  .select-dropdown-option {
+    padding: 8px !important;
+    cursor: pointer !important;
+    color: #d5d7e1 !important;
+    font-size: 12px !important;
   }
 
-  .collapsible-section-header:hover {
-    background-color: #252729;
+  .select-dropdown-option:hover {
+    background-color: #2a2c2f !important;
   }
+}
 
-  .collapsible-section-content {
-    background-color: var(--color-dialog-bg-darker);
-    border-left: 1px solid var(--color-dialog-bg-dark);
-    border-right: 1px solid var(--color-dialog-bg-dark);
-    border-bottom: 1px solid var(--color-dialog-bg-dark);
-    position: relative;
-    z-index: 5;
-    overflow: visible;
-  }
+/* Dark theme overrides */
+.dark {
+  background-color: var(--color-dialog-bg-dark) !important;
+  color: var(--color-text-light) !important;
+}
 
-  .layout-settings-section {
-    position: relative;
-    z-index: auto;
-    overflow: visible;
-  }
-  
-  .layout-settings-section-content {
-    overflow: visible;
-    position: relative;
-  }
+/* Utility classes */
+.size-full {
+  width: 100% !important;
+  height: 100% !important;
+}
 
-  /* Print styles dropdown */
-  .print-styles-dropdown {
-    background-color: #141518;
-    border: 1px solid #000000;
-    color: var(--color-text-light);
-  }
+.flex-1 {
+  flex: 1 !important;
+}
 
-  .print-styles-dropdown:hover {
-    background-color: #1a1c1f;
-  }
+.w-7 {
+  width: 28px !important;
+}
 
-  /* Dropdown utilities */
-  .dropdown-visible {
-    overflow: visible !important;
-    z-index: 9999 !important;
-  }
-  
-  .dropdown-container {
-    position: relative;
-    z-index: 100;
-  }
-  
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    max-height: 200px;
-    overflow-y: auto;
-    background: #141518;
-    border: 1px solid #000000;
-    border-top: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
+.h-7 {
+  height: 28px !important;
+}
+
+.w-9 {
+  width: 36px !important;
+}
+
+.h-9 {
+  height: 36px !important;
+}
+
+/* Make sure all elements inherit proper styling */
+* {
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
 }
