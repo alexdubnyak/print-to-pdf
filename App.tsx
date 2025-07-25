@@ -19,9 +19,9 @@ import { PageLayoutManager } from "./components/page-layout-manager";
 
 // Technical Drawing Images
 const TECHNICAL_DRAWING_SHEET_1 =
-  "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png"; // 707x500mm Horizontal
+  "https://dwgmodels.com/uploads/posts/2023-12/reception-desks-for-hotels_m.jpg"; // 707x500mm Horizontal
 const TECHNICAL_DRAWING_SHEET_2 =
-  "figma:asset/0cc96cd8916e1803db15b3d52193be720f65c57c.png"; // 841x594mm A1 Vertical
+  "https://dwgmodels.com/uploads/posts/2023-12/reception-desks-for-hotels_m.jpg"; // 841x594mm A1 Vertical
 
 // Background Images
 const BACKGROUND_IMAGE_MAIN =
@@ -31,6 +31,34 @@ const BACKGROUND_IMAGE_MAIN =
 import imgSheet1Drawing from "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png";
 import imgSheet2Drawing from "figma:asset/0cc96cd8916e1803db15b3d52193be720f65c57c.png";
 import imgMainBackground from "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png";
+
+// 🔍 ОТЛАДКА ИМПОРТОВ: Добавляем отладочную информацию
+console.log('🖼️ ==============================================');
+console.log('🖼️ ИМПОРТ ИЗОБРАЖЕНИЙ - ОТЛАДКА');
+console.log('🖼️ ==============================================');
+console.log('Sheet 1 Drawing:', imgSheet1Drawing);
+console.log('Sheet 2 Drawing:', imgSheet2Drawing);
+console.log('Main Background:', imgMainBackground);
+
+// Проверяем типы
+console.log('🔍 ТИПЫ:');
+console.log('Sheet 1 type:', typeof imgSheet1Drawing);
+console.log('Sheet 2 type:', typeof imgSheet2Drawing);
+
+// Проверяем являются ли они blob URL
+console.log('🔍 BLOB URL CHECK:');
+console.log('Sheet 1 is blob?', imgSheet1Drawing.startsWith('blob:'));
+console.log('Sheet 2 is blob?', typeof imgSheet2Drawing === 'string' ? imgSheet2Drawing.startsWith('blob:') : 'NOT A STRING');
+
+// Проверяем длину строк
+console.log('🔍 ДЛИНА:');
+console.log('Sheet 1 length:', typeof imgSheet1Drawing === 'string' ? imgSheet1Drawing.length : 'NOT A STRING');
+console.log('Sheet 2 length:', typeof imgSheet2Drawing === 'string' ? imgSheet2Drawing.length : 'NOT A STRING');
+
+// Проверяем содержимое первых 50 символов
+console.log('🔍 ПЕРВЫЕ 50 СИМВОЛОВ:');
+console.log('Sheet 1 start:', typeof imgSheet1Drawing === 'string' ? imgSheet1Drawing.substring(0, 50) : 'NOT A STRING');
+console.log('Sheet 2 start:', typeof imgSheet2Drawing === 'string' ? imgSheet2Drawing.substring(0, 50) : 'NOT A STRING');
 
 // ============================================
 // SHEET CONFIGURATION
@@ -58,12 +86,24 @@ const sheets = [
   {
     id: 2,
     name: "Sheet 2",
-    image: imgSheet2Drawing, // 841x594mm A1 Vertical Technical Drawing
+    image: imgSheet1Drawing, // 🔧 ВРЕМЕННО: используем первое изображение для проверки
     widthMm: "841",
     heightMm: "594",
     description: "A1 Vertical Technical Drawing",
   },
 ];
+
+// 🔍 ОТЛАДКА МАССИВА SHEETS
+console.log('📋 ==============================================');
+console.log('📋 SHEETS ARRAY - ОТЛАДКА');
+console.log('📋 ==============================================');
+console.log('Full sheets array:', sheets);
+console.log('Sheet 1 image URL:', sheets[0].image);
+console.log('Sheet 2 image URL:', sheets[1].image);
+console.log('🔧 ВРЕМЕННОЕ ИСПРАВЛЕНИЕ: Sheet 2 использует изображение Sheet 1');
+console.log('Sheet 1 dimensions:', `${sheets[0].widthMm}x${sheets[0].heightMm}`);
+console.log('Sheet 2 dimensions:', `${sheets[1].widthMm}x${sheets[1].heightMm}`);
+console.log('📋 ==============================================');
 
 // ============================================
 // LAYOUT MAPPING CONFIGURATION
@@ -354,6 +394,15 @@ function PreviewArea({
   );
   const currentIndex = selectedSheets.indexOf(currentSheet);
 
+  // 🔍 ОТЛАДКА PREVIEW AREA
+  console.log('🎭 PREVIEW AREA DEBUG:', {
+    selectedCount,
+    currentSheet,
+    selectedSheets,
+    currentSheetData,
+    currentIndex
+  });
+
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow h-full items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0">
       {currentSheetData && (
@@ -419,7 +468,7 @@ function SheetsHeader() {
         style={{ color: "var(--color-text-light)" }}
       >
         <p className="block leading-[normal] whitespace-pre">
-          Search sheets
+          SearchSheets
         </p>
       </div>
     </div>
@@ -1448,6 +1497,14 @@ export default function App() {
         setOriginalLayoutValues(null);
       }
     }
+
+    // 🔍 ОТЛАДКА: Логируем когда выбирается Sheet 2
+    console.log('🎯 SHEET 2 SELECTED! Current state:', {
+      checked,
+      currentSheet,
+      selectedSheets,
+      sheet2Data: sheets.find(s => s.id === 2)
+    });
   };
 
   const handleLayoutChange = (value: string) => {
@@ -1490,7 +1547,12 @@ export default function App() {
 
   const handleSheetChange = (sheet: number) => {
     setCurrentSheet(sheet);
-    console.log(`Switched to sheet ${sheet}`);
+    console.log(`🔄 ПЕРЕКЛЮЧЕНИЕ НА SHEET ${sheet}`);
+    
+    // 🔍 ОТЛАДКА: Подробная информация при переключении
+    const sheetData = sheets.find(s => s.id === sheet);
+    console.log('📊 Sheet data:', sheetData);
+    console.log('🖼️ Image URL for this sheet:', sheetData?.image);
   };
 
   // Layout editor handlers
