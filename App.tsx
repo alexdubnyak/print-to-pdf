@@ -17,24 +17,24 @@ import { PageLayoutManager } from "./components/page-layout-manager";
 // IMAGE ASSETS - Technical Drawing References
 // ============================================
 
-// Technical Drawing Images
+// Technical Drawing Images - Direct GitHub URLs
 const TECHNICAL_DRAWING_SHEET_1 =
   "https://dwgmodels.com/uploads/posts/2023-12/reception-desks-for-hotels_m.jpg"; // 707x500mm Horizontal
 const TECHNICAL_DRAWING_SHEET_2 =
   "https://dwgmodels.com/uploads/posts/2023-12/reception-desks-for-hotels_m.jpg"; // 841x594mm A1 Vertical
 
-// Background Images
+// Background Images - Direct URLs
 const BACKGROUND_IMAGE_MAIN =
-  "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png"; // Main dialog background
+  "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1496&h=813&q=80"; // Main dialog background
 
-// Import the actual assets using the constants
-import imgSheet1Drawing from "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png";
-import imgSheet2Drawing from "figma:asset/0cc96cd8916e1803db15b3d52193be720f65c57c.png";
-import imgMainBackground from "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png";
+// Direct image URLs replacing Figma assets
+const imgSheet1Drawing = TECHNICAL_DRAWING_SHEET_1;
+const imgSheet2Drawing = TECHNICAL_DRAWING_SHEET_2;
+const imgMainBackground = BACKGROUND_IMAGE_MAIN;
 
 // 🔍 ОТЛАДКА ИМПОРТОВ: Добавляем отладочную информацию
 console.log('🖼️ ==============================================');
-console.log('🖼️ ИМПОРТ ИЗОБРАЖЕНИЙ - ОТЛАДКА');
+console.log('🖼️ ПРЯМЫЕ ССЫЛКИ ИЗОБРАЖЕНИЙ - ОТЛАДКА');
 console.log('🖼️ ==============================================');
 console.log('Sheet 1 Drawing:', imgSheet1Drawing);
 console.log('Sheet 2 Drawing:', imgSheet2Drawing);
@@ -45,20 +45,20 @@ console.log('🔍 ТИПЫ:');
 console.log('Sheet 1 type:', typeof imgSheet1Drawing);
 console.log('Sheet 2 type:', typeof imgSheet2Drawing);
 
-// Проверяем являются ли они blob URL
-console.log('🔍 BLOB URL CHECK:');
-console.log('Sheet 1 is blob?', imgSheet1Drawing.startsWith('blob:'));
-console.log('Sheet 2 is blob?', typeof imgSheet2Drawing === 'string' ? imgSheet2Drawing.startsWith('blob:') : 'NOT A STRING');
+// Проверяем являются ли они HTTP URL
+console.log('🔍 HTTP URL CHECK:');
+console.log('Sheet 1 is HTTP?', imgSheet1Drawing.startsWith('http'));
+console.log('Sheet 2 is HTTP?', imgSheet2Drawing.startsWith('http'));
 
 // Проверяем длину строк
 console.log('🔍 ДЛИНА:');
-console.log('Sheet 1 length:', typeof imgSheet1Drawing === 'string' ? imgSheet1Drawing.length : 'NOT A STRING');
-console.log('Sheet 2 length:', typeof imgSheet2Drawing === 'string' ? imgSheet2Drawing.length : 'NOT A STRING');
+console.log('Sheet 1 length:', imgSheet1Drawing.length);
+console.log('Sheet 2 length:', imgSheet2Drawing.length);
 
 // Проверяем содержимое первых 50 символов
 console.log('🔍 ПЕРВЫЕ 50 СИМВОЛОВ:');
-console.log('Sheet 1 start:', typeof imgSheet1Drawing === 'string' ? imgSheet1Drawing.substring(0, 50) : 'NOT A STRING');
-console.log('Sheet 2 start:', typeof imgSheet2Drawing === 'string' ? imgSheet2Drawing.substring(0, 50) : 'NOT A STRING');
+console.log('Sheet 1 start:', imgSheet1Drawing.substring(0, 50));
+console.log('Sheet 2 start:', imgSheet2Drawing.substring(0, 50));
 
 // ============================================
 // SHEET CONFIGURATION
@@ -73,7 +73,7 @@ const layoutOptions: SelectOption[] = [
   },
 ];
 
-// Sheet data configuration with fixed asset references
+// Sheet data configuration with direct URLs
 const sheets = [
   {
     id: 1,
@@ -86,7 +86,7 @@ const sheets = [
   {
     id: 2,
     name: "Sheet 2",
-    image: imgSheet1Drawing, // 🔧 ВРЕМЕННО: используем первое изображение для проверки
+    image: imgSheet2Drawing, // 841x594mm A1 Vertical Technical Drawing
     widthMm: "841",
     heightMm: "594",
     description: "A1 Vertical Technical Drawing",
@@ -100,7 +100,7 @@ console.log('📋 ==============================================');
 console.log('Full sheets array:', sheets);
 console.log('Sheet 1 image URL:', sheets[0].image);
 console.log('Sheet 2 image URL:', sheets[1].image);
-console.log('🔧 ВРЕМЕННОЕ ИСПРАВЛЕНИЕ: Sheet 2 использует изображение Sheet 1');
+console.log('✅ ИСПРАВЛЕНИЕ: Sheet 2 теперь использует собственное изображение');
 console.log('Sheet 1 dimensions:', `${sheets[0].widthMm}x${sheets[0].heightMm}`);
 console.log('Sheet 2 dimensions:', `${sheets[1].widthMm}x${sheets[1].heightMm}`);
 console.log('📋 ==============================================');
@@ -1683,7 +1683,7 @@ export default function App() {
         onSheetChange={handleSheetChange}
         selectedSheets={selectedSheets}
         onLayoutEdit={handleLayoutEdit}
-        onLayout2Edit={handleLayout2Edit}
+        onLayout2Edit={onLayout2Edit}
         isLayoutEditorOpen={isLayoutEditorOpen}
         editingLayoutSheet={editingLayoutSheet}
         onLayoutEditorClose={handleLayoutEditorClose}
