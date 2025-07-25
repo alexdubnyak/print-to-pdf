@@ -1,6 +1,8 @@
 import svgPaths from "./svg-fozgx6zh3z";
-import imgImage9 from "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png";
-import imgImage from "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png";
+
+// Direct image URLs replacing Figma assets
+const imgImage9 = "https://dwgmodels.com/uploads/posts/2023-12/reception-desks-for-hotels_m.jpg";
+const imgImage = "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1496&h=813&q=80";
 
 function Frame206() {
   return (
