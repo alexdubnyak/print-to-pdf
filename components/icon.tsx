@@ -18,10 +18,14 @@ interface IconProps {
   type: IconType;
   disabled?: boolean;
   className?: string;
+  active?: boolean;        // ← НОВОЕ: для поддержки активного состояния
 }
 
-export function Icon({ type, disabled = false, className = "" }: IconProps) {
+export function Icon({ type, disabled = false, className = "", active = false }: IconProps) {
   const getIconColor = (baseColor: string) => {
+    if (active) {
+      return '#ffffff'; // Белый цвет для активного состояния
+    }
     return disabled ? 'var(--color-text-secondary, #8E8F90)' : baseColor;
   };
 
@@ -214,32 +218,25 @@ export function Icon({ type, disabled = false, className = "" }: IconProps) {
       case 'activate-all-sheets':
         return (
           <div className={`relative shrink-0 size-4 ${className}`} data-name="activate all sheets">
-            <div className="absolute bottom-[-0.006%] left-0 right-[-0.952%] top-0">
-              <svg
-                className="block size-full"
-                fill="none"
-                preserveAspectRatio="none"
-                viewBox="0 0 17 16"
-              >
-                <g id="activate all sheets">
-                  <path
-                    d={svgPaths.p228193f0}
-                    fill={getIconColor('var(--color-icon-fill, #CFCFCF)')}
-                    id="Subtract"
-                  />
-                  <path
-                    d={svgPaths.p2fb3bb00}
-                    fill={getIconColor('var(--color-icon-fill, #CFCFCF)')}
-                    id="Subtract_2"
-                  />
-                  <path
-                    d={svgPaths.p1817fa0}
-                    id="Vector 4"
-                    stroke={getIconColor('var(--color-icon-fill, #CFCFCF)')}
-                  />
-                </g>
-              </svg>
-            </div>
+            <svg
+              className="block size-full"
+              fill="none"
+              preserveAspectRatio="none"
+              viewBox="0 0 16 16"
+            >
+              <g id="activate all sheets">
+                <path
+                  d="M4.11572 10.4646L4.49561 10.0837L5.20264 10.7908L4.82275 11.1716L4.82568 11.1746L4.11865 11.8816L0.460449 8.22437L1.16846 7.51733L4.11572 10.4646ZM6.60205 9.39136L5.90967 10.0837L5.20264 9.37671L5.89502 8.68433L6.60205 9.39136ZM11.9497 4.04468L7.30908 8.68433L6.60205 7.97729L11.2427 3.33765L11.9497 4.04468Z"
+                  fill={getIconColor('#F5F5F6')}
+                  id="checkmark-1"
+                />
+                <path
+                  d="M15.5396 4.04443L8.4126 11.1714L8.41553 11.1743L7.7085 11.8813L4.05127 8.22412L4.7583 7.51709L7.70557 10.4644L14.8325 3.3374L15.5396 4.04443Z"
+                  fill={getIconColor('#F5F5F6')}
+                  id="checkmark-2"
+                />
+              </g>
+            </svg>
           </div>
         );
 

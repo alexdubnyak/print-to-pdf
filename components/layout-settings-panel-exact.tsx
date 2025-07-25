@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { PaperAndScaleSection, OrientationType } from './paper-and-scale-section';
-import { OffsetSectionExact } from './offset-section-exact';
-import { PrintStylesSectionExact } from './print-styles-section-exact';
-import { RangeSectionExact, RangeType } from './range-section-exact';
+import { SettingsWrapper } from './settings-wrapper';
+import { PaperAndScaleContent, OrientationType } from './paper-and-scale-content';
+import { OffsetContent } from './offset-content';
+import { PrintStylesContent } from './print-styles-content';
+import { RangeContent, RangeType } from './range-content';
 
 export interface LayoutSettingsStateExact {
   // Paper and Scale settings
@@ -82,10 +83,10 @@ export function LayoutSettingsPanelExact({
   };
 
   return (
-    <div className={`flex flex-col gap-0 w-full ${className}`}>
+    <div className={`flex flex-col gap-1 w-full ${className}`}>
       {/* Paper and Scale Section */}
-      <div className="layout-settings-section">
-        <PaperAndScaleSection 
+      <SettingsWrapper title="Paper and Scale" isInitiallyOpen={true}>
+        <PaperAndScaleContent 
           orientation={settings.orientation}
           paperSize={settings.paperSize}
           scaleType={settings.scaleType}
@@ -100,45 +101,41 @@ export function LayoutSettingsPanelExact({
           onUnitsValueChange={(value) => updateSettings({ unitsValue: value })}
           onScaleLineWeightsChange={(checked) => updateSettings({ scaleLineWeights: checked })}
           onFitToPaperSizeChange={(checked) => updateSettings({ fitToPaperSize: checked })}
-          isInitiallyOpen={true}
         />
-      </div>
+      </SettingsWrapper>
       
       {/* Offset Section */}
-      <div className="layout-settings-section">
-        <OffsetSectionExact 
+      <SettingsWrapper title="Offset" isInitiallyOpen={true}>
+        <OffsetContent 
           printOnCenter={settings.printOnCenter}
           xOffset={settings.xOffset}
           yOffset={settings.yOffset}
           onPrintOnCenterChange={(checked) => updateSettings({ printOnCenter: checked })}
           onXOffsetChange={(value) => updateSettings({ xOffset: value })}
           onYOffsetChange={(value) => updateSettings({ yOffset: value })}
-          isInitiallyOpen={true}
         />
-      </div>
+      </SettingsWrapper>
       
       {/* Print Styles Section */}
-      <div className="layout-settings-section">
-        <PrintStylesSectionExact 
+      <SettingsWrapper title="Print Styles" isInitiallyOpen={true}>
+        <PrintStylesContent 
           selectedPrintStyle={settings.selectedPrintStyle}
           availablePrintStyles={availablePrintStyles}
           onPrintStyleChange={(value) => updateSettings({ selectedPrintStyle: value })}
-          isInitiallyOpen={true}
         />
-      </div>
+      </SettingsWrapper>
       
       {/* Range Section */}
-      <div className="layout-settings-section">
-        <RangeSectionExact 
+      <SettingsWrapper title="Range" isInitiallyOpen={true}>
+        <RangeContent 
           selectedRange={settings.selectedRange}
           selectedNamedView={settings.selectedNamedView}
           availableNamedViews={availableNamedViews}
           onRangeChange={(value) => updateSettings({ selectedRange: value })}
           onNamedViewChange={(value) => updateSettings({ selectedNamedView: value })}
           onSpecifyWindowClick={handleSpecifyWindowClick}
-          isInitiallyOpen={true}
         />
-      </div>
+      </SettingsWrapper>
     </div>
   );
 }

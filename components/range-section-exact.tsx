@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CollapsibleSection } from './collapsible-section';
 import { Select } from './select';
-import { RadioButton } from './radio-group';
+import { RadioButton } from './radio-button';
 // Image removed to clean up component
 
 export type RangeType = 'all-geometry' | 'sheet' | 'specify' | 'named-view' | 'current-view';

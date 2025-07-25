@@ -1,5 +1,6 @@
-import { useState, MouseEvent, useMemo, useRef, useEffect } from "react";
+import { useState, MouseEvent, useMemo, useRef, useEffect, forwardRef } from "react";
 import svgPaths from "../imports/svg-uo6jg4qcws";
+import { DropdownPortal } from './dropdown-portal';
 
 // Green checkmark SVG component
 function GreenCheckmark({ isVisible = true }: { isVisible?: boolean }) {
@@ -221,7 +222,7 @@ interface Frame273Props {
   disabled?: boolean;
 }
 
-function Frame273({ isOpen, toggleDropdown, displayText, disabled = false }: Frame273Props) {
+const Frame273 = forwardRef<HTMLButtonElement, Frame273Props>(({ isOpen, toggleDropdown, displayText, disabled = false }, ref) => {
   const [isHeaderHovered, setIsHeaderHovered] = useState(false);
   const [isHeaderPressed, setIsHeaderPressed] = useState(false);
   
@@ -261,7 +262,9 @@ function Frame273({ isOpen, toggleDropdown, displayText, disabled = false }: Fra
 
   return (
     <button 
-      className={`${headerBgColor} cursor-pointer h-7 relative shrink-0 w-full transition-colors duration-150`}
+      ref={ref}
+      className={`${headerBgColor} cursor-pointer relative shrink-0 w-full transition-colors duration-150 input-height-standard`}
+      style={{ height: '28px', minHeight: '28px' }}
       onClick={disabled ? undefined : toggleDropdown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -270,7 +273,7 @@ function Frame273({ isOpen, toggleDropdown, displayText, disabled = false }: Fra
       disabled={disabled}
     >
       <div className="flex flex-row items-center relative size-full">
-        <div className="box-border content-stretch flex flex-row h-7 items-center justify-between p-[10px] relative w-full">
+        <div className="box-border content-stretch flex flex-row items-center justify-between p-[8px] relative w-full" style={{ height: '28px' }}>
           <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#d5d7e1] text-[12px] text-left text-nowrap">
             <p className="block leading-[normal] whitespace-pre">
               {displayText}
@@ -303,7 +306,9 @@ function Frame273({ isOpen, toggleDropdown, displayText, disabled = false }: Fra
       </div>
     </button>
   );
-}
+});
+
+Frame273.displayName = 'Frame273';
 
 interface DropdownMenuProps {
   activeItem: string;
@@ -313,11 +318,12 @@ interface DropdownMenuProps {
 
 function DropdownMenu({ activeItem, setActiveItem, menuItems }: DropdownMenuProps) {
   return (
-    <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 bg-[#333538] border border-[#000000] shadow-lg">
+    <>
       {menuItems.map((item) => (
         <div
           key={item.value}
-          className="h-7 relative w-full"
+          className="relative w-full"
+          style={{ height: '28px', minHeight: '28px' }}
           data-name="menu item"
         >
           <MenuItem 
@@ -328,7 +334,7 @@ function DropdownMenu({ activeItem, setActiveItem, menuItems }: DropdownMenuProp
           />
         </div>
       ))}
-    </div>
+    </>
   );
 }
 
@@ -371,6 +377,7 @@ export function Select({
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Generate menu items based on itemCount and itemName props
   const generatedItems = useMemo(() => {
@@ -410,42 +417,60 @@ export function Select({
     }
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside or pressing Escape
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (event: Event) => {
+      const target = event.target as Node;
+      const isClickInsideSelect = selectRef.current && selectRef.current.contains(target);
+      const isClickInsidePortal = document.getElementById('portal-root')?.contains(target);
+      
+      if (!isClickInsideSelect && !isClickInsidePortal) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside as any);
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside as any);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 
   return (
-    <div 
-      ref={selectRef}
-      className={`relative ${className}`}
-      data-name="dropdown"
-    >
-      <Frame273 
-        isOpen={isOpen} 
-        toggleDropdown={toggleDropdown} 
-        displayText={displayText}
-        disabled={disabled}
-      />
-      {isOpen && !disabled && (
+    <>
+      <div 
+        ref={selectRef}
+        className={`relative ${className}`}
+        data-name="dropdown"
+      >
+        <Frame273 
+          ref={triggerRef}
+          isOpen={isOpen} 
+          toggleDropdown={toggleDropdown} 
+          displayText={displayText}
+          disabled={disabled}
+        />
+      </div>
+      <DropdownPortal
+        isOpen={isOpen && !disabled}
+        triggerRef={triggerRef}
+      >
         <DropdownMenu 
           activeItem={value || ''} 
           setActiveItem={handleItemSelect} 
           menuItems={menuItems} 
         />
-      )}
-    </div>
+      </DropdownPortal>
+    </>
   );
 }

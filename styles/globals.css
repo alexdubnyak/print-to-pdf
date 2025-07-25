@@ -1,0 +1,1216 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 14px;
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Print Dialog Color Variables */
+  --color-dialog-bg-dark: #1e2023;
+  --color-dialog-bg-darker: #333538;
+  --color-text-light: #d5d7e1;
+  --color-text-muted: #cfcfcf;
+  --color-text-secondary: #8e8f90;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-border-muted: #acacac;
+  --color-arrow-bg: #555555;
+  --color-icon-fill: #dfdfdf;
+  --color-icon-disabled: #8e8f90;
+
+  /* Activate All Button Colors */
+  --color-activate-all-active: #2160D3;
+  --color-activate-all-hover: #1a4fb8;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(
+    --sidebar-primary-foreground
+  );
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(
+    --sidebar-accent-foreground
+  );
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(
+    :not(:has([class*=" text-"]), :not(:has([class^="text-"])))
+  ) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* Custom positioning classes for the print dialog components */
+@layer components {
+  .arrow-container-position {
+    left: calc(50% + 2.99784px);
+  }
+
+  .sheet-preview-center-1 {
+    top: calc(50% - 0.105309px);
+    left: calc(50% + 0.256451px);
+  }
+
+  .sheet-preview-center-2 {
+    top: calc(50% - 0.105301px);
+    left: calc(50% + 0.256451px);
+  }
+
+  .sheet-label-position {
+    left: calc(50% - 18.4765px);
+  }
+
+  .sheet-dimension-position {
+    left: calc(50% + 164.621px);
+  }
+
+  .sheet-preview-image {
+    top: calc(50% - 0.105305px);
+    left: calc(50% + 0.256424px);
+  }
+
+  .print-dialog-position {
+    left: calc(50% - 7.25px);
+  }
+
+  /* Background image utilities */
+  .bg-main-image {
+    background-size: auto, cover;
+    background-position:
+      0% 0%,
+      50% 50%;
+  }
+
+  .bg-sheet-preview {
+    background-size: 167.12% 118.26%;
+    background-position: 52.7% 33.61%;
+  }
+
+  /* Checkbox border styles */
+  .checkbox-border {
+    stroke: var(--color-black);
+    stroke-width: 0px;
+  }
+
+  /* Text input border styles */
+  .text-input-border {
+    border: 0px solid var(--color-black);
+  }
+
+  .button-primary {
+    background-color: #254ca9;
+    width: auto !important;
+    min-width: auto !important; /* Убираем минимальную ширину */
+    max-width: none !important; /* Убираем максимальную ширину */
+    height: 36px !important;
+    flex-shrink: 0 !important; /* Не сжиматься */
+    flex-grow: 0 !important; /* Не растягиваться */
+    padding: 8px 16px !important; /* Фиксированные отступы */
+    white-space: nowrap !important; /* Текст в одну строку */
+    box-sizing: border-box !important; /* Учитывать padding в размерах */
+    transition: background-color 0.2s ease;
+  }
+  
+  .button-primary:hover:not(.opacity-50) {
+    background-color: #2859bb;
+  }
+
+  .button-primary.opacity-50 {
+    background-color: #254ca9;
+    pointer-events: none;
+  }
+
+  /* Button Secondary styles */
+  .button-secondary {
+    background-color: #141518;
+    height: 36px !important;
+    width: auto !important;
+   
+    
+    color: var(--color-white);
+  }
+
+  .button-secondary:hover {
+    background-color: #2a2c2f;
+  }
+
+ 
+
+  /* ============================================= */
+  /* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ КНОПОК С ИКОНКАМИ */
+  /* ============================================= */
+
+  /* Button Icon Default - базовые стили */
+  .button-icon-default {
+    background-color: #141518;
+    border-width: 0px;
+    cursor: pointer;
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+  }
+
+  /* Button Icon Secondary - базовые стили */
+  .button-icon-secondary {
+    background-color: #2c2e31;
+    cursor: pointer;
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+  }
+
+  /* ============================================= */
+  /* АКТИВНОЕ СОСТОЯНИЕ КНОПКИ ACTIVATE ALL SHEETS */
+  /* ============================================= */
+
+  /* Стили для активного состояния кнопки activate all */
+  .activate-all-active.button-icon-secondary {
+    background-color: var(--color-activate-all-active, #2160D3) !important;
+  }
+
+  /* Hover для активной кнопки */
+  .activate-all-active.button-icon-secondary:not([disabled]):not(.opacity-50):not(.disabled):hover {
+    background-color: var(--color-activate-all-hover, #1a4fb8) !important;
+  }
+
+  /* Убираем стан����артные hover эффекты для активной кнопки */
+  .activate-all-active.button-icon-secondary:hover {
+    background-color: var(--color-activate-all-active, #2160D3) !important;
+  }
+
+  /* Иконка внутри активной кнопки остается белой */
+  .activate-all-active * {
+    fill: var(--color-white) !important;
+    color: var(--color-white) !important;
+    stroke: var(--color-white) !important;
+  }
+
+  /* Hover ТОЛЬКО для активных кнопок (НЕ disabled) */
+  .button-icon-default:not([disabled]):not(.opacity-50):not(
+      .disabled
+    ):hover {
+    background-color: #2a2c2f;
+  }
+
+  .button-icon-secondary:not([disabled]):not(.opacity-50):not(
+      .disabled
+    ):not(.activate-all-active):hover {
+    background-color: #3a3c3f;
+  }
+
+  /* DISABLED состояние - применяем ко всем вариантам disabled */
+  .button-icon-default[disabled],
+  .button-icon-default.opacity-50,
+  .button-icon-default.disabled,
+  .button-icon-secondary[disabled],
+  .button-icon-secondary.opacity-50,
+  .button-icon-secondary.disabled {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+  }
+
+  /* Убираем фон только для default в disabled состоянии */
+  .button-icon-default[disabled],
+  .button-icon-default.opacity-50,
+  .button-icon-default.disabled {
+    background-color: #141518 !important;
+  }
+
+  /* Убираем фон только для secondary в disabled состоянии */
+  .button-icon-secondary[disabled],
+  .button-icon-secondary.opacity-50,
+  .button-icon-secondary.disabled {
+    background-color: #2c2e31 !important;
+  }
+
+  /* Disabled состояние перебивает активное состояние */
+  .activate-all-active.button-icon-secondary[disabled],
+  .activate-all-active.button-icon-secondary.opacity-50,
+  .activate-all-active.button-icon-secondary.disabled {
+    background-color: #2c2e31 !important;
+    opacity: 0.5 !important;
+  }
+
+  /* Полная блокировка всех интерактивных состояний для disabled */
+  .button-icon-default[disabled]:hover,
+  .button-icon-default.opacity-50:hover,
+  .button-icon-default.disabled:hover,
+  .button-icon-default[disabled]:active,
+  .button-icon-default.opacity-50:active,
+  .button-icon-default.disabled:active,
+  .button-icon-default[disabled]:focus,
+  .button-icon-default.opacity-50:focus,
+  .button-icon-default.disabled:focus,
+  .button-icon-secondary[disabled]:hover,
+  .button-icon-secondary.opacity-50:hover,
+  .button-icon-secondary.disabled:hover,
+  .button-icon-secondary[disabled]:active,
+  .button-icon-secondary.opacity-50:active,
+  .button-icon-secondary.disabled:active,
+  .button-icon-secondary[disabled]:focus,
+  .button-icon-secondary.opacity-50:focus,
+  .button-icon-secondary.disabled:focus {
+    background-color: inherit !important;
+    transform: none !important;
+    outline: none !important;
+    cursor: not-allowed !important;
+  }
+
+  /* Универсальные селекторы для цвета иконок в disabled состоянии */
+  .button-icon-default[disabled] *,
+  .button-icon-default.opacity-50 *,
+  .button-icon-default.disabled *,
+  .button-icon-secondary[disabled] *,
+  .button-icon-secondary.opacity-50 *,
+  .button-icon-secondary.disabled * {
+    fill: #8e8f90 !important;
+    color: #8e8f90 !important;
+    stroke: #8e8f90 !important;
+  }
+
+  /* Если Icon компонент использует currentColor */
+  .button-icon-default[disabled],
+  .button-icon-default.opacity-50,
+  .button-icon-default.disabled,
+  .button-icon-secondary[disabled],
+  .button-icon-secondary.opacity-50,
+  .button-icon-secondary.disabled {
+    color: #8e8f90 !important;
+  }
+
+  .button-icon-border {
+    border-color: inherit;
+  }
+
+  /* Sheet Navigation styles - unified based on right button design */
+  .sheet-navigation {
+    @apply cursor-pointer transition-opacity duration-200;
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+  }
+
+  .sheet-navigation:hover:not(.disabled) {
+    opacity: 0.8;
+  }
+
+  .sheet-navigation.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .sheet-navigation:active:not(.disabled) {
+    opacity: 0.6;
+  }
+
+  /* Unified background and icon colors for both buttons */
+  .sheet-navigation svg rect {
+    fill: var(--color-arrow-bg, #555555);
+  }
+
+  .sheet-navigation svg path {
+    fill: var(--color-text-light, #d5d7e1);
+  }
+
+  /* ============================================= */
+  /* COMMON LAYOUT PATTERNS - REUSABLE CLASSES */
+  /* ============================================= */
+
+  /* Common container for forms/content sections */
+  .content-section {
+    @apply box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-0 relative shrink-0 w-full;
+  }
+
+  /* Settings-style info row (two columns with label and value) */
+  .settings-info-row {
+    @apply box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic px-0 py-2 relative shrink-0 text-[12px] text-left w-full;
+    color: var(--color-text-muted);
+  }
+
+  /* Settings info label column */
+  .settings-info-label {
+    @apply relative shrink-0 w-20;
+  }
+
+  /* Settings info value column */
+  .settings-info-value {
+    @apply basis-0 grow min-h-px min-w-px relative shrink-0;
+  }
+
+  /* Checkbox row container */
+  .checkbox-row {
+    @apply box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0;
+    height: 28px !important;
+    min-height: 28px !important;
+  }
+
+  /* Sheet layout row with reverse order */
+  .sheet-layout-row {
+    @apply box-border content-stretch flex flex-row-reverse gap-1.5 items-start justify-start order-2 p-0 relative shrink-0 w-full;
+  }
+
+  /* Sheet layout row for sheet 2 (different order) */
+  .sheet-layout-row-2 {
+    @apply box-border content-stretch flex flex-row-reverse gap-1.5 items-start justify-start order-1 p-0 relative shrink-0 w-full;
+  }
+
+  /* Basis-0 grow pattern used in many sheets/checkboxes */
+  .basis-grow-container {
+    @apply basis-0 grow min-h-px min-w-px order-3 relative shrink-0;
+    background-color: var(--color-dialog-bg-dark);
+    height: 28px !important;
+    min-height: 28px !important;
+  }
+
+  /* Standard center/stretch flex container */
+  .flex-center-container {
+    @apply flex flex-row items-center relative size-full;
+    height: 28px !important;
+  }
+
+  /* Padded content wrapper */
+  .padded-content {
+    @apply box-border content-stretch flex flex-row items-center justify-start px-2.5 py-1.5 relative w-full;
+    height: 28px !important;
+    padding: 6px 10px !important; /* Скорректированные отступы для 28px высоты */
+  }
+
+  /* Full-width select container */
+  .select-container {
+    @apply basis-0 grow min-h-px min-w-px order-2 relative shrink-0;
+  }
+
+  /* ============================================= */
+  /* UNIVERSAL INPUT AND FORM STYLES */
+  /* ============================================= */
+
+  /* Universal input heights - 28px standard */
+  .input-height-standard {
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+  }
+
+  /* Select height matching inputs */
+  .select-height-standard {
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+  }
+
+  /* Label to input spacing - 8px standard */
+  .label-input-spacing {
+    margin-bottom: 8px !important;
+  }
+
+  /* Content block horizontal spacing - 12px */
+  .content-block-spacing {
+    gap: 12px !important;
+  }
+
+  /* ============================================= */
+  /* SHEET ROW HEIGHT STANDARDIZATION */
+  /* ============================================= */
+
+  /* Sheet layout rows - standardize to 28px height */
+  .sheet-layout-row,
+  .sheet-layout-row-2 {
+    height: 28px !important;
+    min-height: 28px !important;
+    align-items: center !important;
+  }
+
+  /* All elements within sheet rows should be 28px */
+  .sheet-layout-row > *,
+  .sheet-layout-row-2 > *,
+  .checkbox-row > *,
+  .basis-grow-container > *,
+  .flex-center-container > *,
+  .padded-content > * {
+    height: 28px !important;
+    align-items: center !important;
+  }
+
+  /* Ensure checkboxes align properly in 28px height */
+  .checkbox-row input[type="checkbox"],
+  .checkbox-row .checkbox-base {
+    flex-shrink: 0 !important;
+  }
+
+  /* Select containers in sheet rows */
+  .select-container,
+  .select-container > * {
+    height: 28px !important;
+  }
+
+  /* ============================================= */
+  /* UNIFIED 28PX HEIGHT FOR ALL INTERACTIVE ELEMENTS */
+  /* ============================================= */
+
+  /* Ensure all buttons, inputs, selects are consistently 28px */
+  button,
+  input,
+  select,
+  .button-icon-default,
+  .button-icon-secondary,
+  .sheet-navigation,
+  .checkbox-row,
+  .select-height-standard button,
+  .input-height-standard {
+    height: 28px !important;
+    min-height: 28px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Button icons should be exactly 28x28 */
+  .button-icon-default,
+  .button-icon-secondary {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    padding: 6px !important;
+  }
+
+  /* Navigation buttons should be exactly 28x28 */
+  .sheet-navigation {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+  }
+
+  /* Force 28px height for all form inputs */
+  input.input-height-standard,
+  button.input-height-standard,
+  .select-height-standard,
+  .select-height-standard button {
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure padding doesn't affect height calculation */
+  .input-height-standard {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  /* Ensure select buttons maintain proper height */
+  .select-height-standard .h-7,
+  .select-height-standard button {
+    height: 28px !important;
+  }
+
+  /* Standard form input styling */
+  .form-input-base {
+    height: 28px;
+    background-color: #141518;
+    border: 1px solid #000000;
+    color: #d5d7e1;
+    font-family: 'Open_Sans:Regular', sans-serif;
+    font-size: 12px;
+    line-height: 0;
+    font-style: normal;
+    padding: 0 12px;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .form-input-base:hover:not(:disabled) {
+    border-color: #333;
+  }
+
+  .form-input-base:focus:not(:disabled) {
+    border-color: #2160D3;
+    box-shadow: 0 0 0 2px rgba(33, 96, 211, 0.2);
+  }
+
+  .form-input-base:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .form-input-base::placeholder {
+    color: #8e8f90;
+  }
+
+  /* ============================================= */
+  /* LAYOUT SETTINGS COMPONENTS STYLES */
+  /* ============================================= */
+
+  /* Settings block headers - universal 32px height */
+  .settings-block-header {
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* All elements within settings headers should fit 32px height - except arrows */
+  .settings-block-header > *:not(.flex):not([class*="arrow"]),
+  .settings-block-header .size-full,
+  .settings-block-header .flex-row {
+    height: 32px !important;
+    min-height: 32px !important;
+    align-items: center !important;
+  }
+
+  /* Preserve arrow container sizing */
+  .settings-block-header .flex.items-center.justify-center {
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  /* Preserve arrow SVG sizing */
+  .settings-block-header [data-name="Union"] {
+    height: 10.021px !important;
+    width: 10.948px !important;
+  }
+
+  /* Adjust padding for 32px header height */
+  .settings-block-header .px-5 {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* Override any conflicting height styles in settings headers */
+  .settings-header,
+  .collapsible-section-header,
+  .settings-wrapper > div:first-child {
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+  }
+
+  /* Exclude arrow containers from forced height */
+  .settings-block-header .flex-none,
+  .settings-block-header .settings-arrow,
+  .settings-arrow,
+  .settings-block-header [class*="transition-transform"],
+  .settings-block-header [data-name="Union"],
+  .settings-arrow [data-name="Union"],
+  .settings-arrow svg,
+  .settings-block-header .settings-arrow svg {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+  }
+
+  /* Force arrow elements to keep their natural dimensions */
+  .settings-arrow [data-name="Union"],
+  .settings-block-header [data-name="Union"] {
+    height: 10.021px !important;
+    width: 10.948px !important;
+  }
+
+  .settings-arrow svg,
+  .settings-block-header .settings-arrow svg {
+    height: 10.021px !important;
+    width: 10.948px !important;
+  }
+
+  /* Ensure text in headers remains properly aligned */
+  .settings-block-header [class*="font-"],
+  .settings-block-header p {
+    line-height: 16px !important;
+  }
+
+  /* Specific arrow container styles for settings headers */
+  .settings-block-header .settings-arrow div[data-name="Union"] {
+    height: 10.021px !important;
+    width: 10.948px !important;
+  }
+
+  .settings-block-header .settings-arrow svg {
+    width: 10.948px !important;
+    height: 10.021px !important;
+  }
+
+  /* Ensure arrow containers don't get stretched */
+  .settings-block-header .flex.items-center.justify-center.relative.shrink-0 {
+    flex-shrink: 0 !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  /* Collapsible section styles */
+  .collapsible-section-header {
+    background-color: var(--color-dialog-bg-dark);
+    transition: background-color 0.2s ease;
+    position: relative;
+    z-index: 1;
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+  }
+
+  .collapsible-section-header:hover {
+    background-color: #252729;
+  }
+
+  .collapsible-section-content {
+    background-color: var(--color-dialog-bg-darker);
+    border-left: 1px solid var(--color-dialog-bg-dark);
+    border-right: 1px solid var(--color-dialog-bg-dark);
+    border-bottom: 1px solid var(--color-dialog-bg-dark);
+    position: relative;
+    z-index: 0;
+  }
+
+  /* Ensure sections don't overlap each other */
+  .layout-settings-section {
+    position: relative;
+    z-index: auto;
+  }
+  
+  /* Fix for content overflow in sections */
+  .layout-settings-section-content {
+    overflow: visible;
+    position: relative;
+  }
+
+  /* ============================================= */
+  /* SETTINGS SIMPLE STYLES (NO COMPLEX ANIMATIONS) */
+  /* ============================================= */
+
+  /* Arrow rotation - simple */
+  .settings-arrow {
+    transition: transform 200ms ease;
+    transform-origin: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .settings-arrow.expanded {
+    transform: rotate(180deg);
+  }
+
+  /* Ensure arrow SVG keeps its natural size */
+  .settings-arrow svg,
+  .settings-arrow [data-name="Union"] {
+    width: 10.948px !important;
+    height: 10.021px !important;
+    flex-shrink: 0;
+  }
+
+  /* Simple content reveal */
+  .settings-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Simple header interactions */
+  .settings-header {
+    transition: background-color 200ms ease;
+    position: relative;
+    z-index: 2;
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+  }
+
+  .settings-header:hover {
+    background-color: #252729;
+  }
+
+  .settings-header:active {
+    background-color: #2a2c2f;
+  }
+
+  /* Simple expanded state styling */
+  .settings-header.expanded {
+    background-color: #1a1d20;
+    border-bottom: 1px solid #333;
+  }
+
+  .settings-header.expanded:hover {
+    background-color: #232629;
+  }
+
+  /* Ensure all settings headers use consistent styling */
+  .settings-wrapper > div:first-child,
+  .collapsible-section > div:first-child {
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+  }
+
+  /* Force correct padding calculation for 32px height */
+  .settings-wrapper .py-2,
+  .collapsible-section .py-2 {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* Simple content items - no animation */
+  .settings-content-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Offset section input field styles */
+  .offset-input-field {
+    background-color: #141518;
+    border: 1px solid #000000;
+    color: var(--color-text-light);
+    padding: 8px 12px;
+    border-radius: 0;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .offset-input-field:focus {
+    outline: none;
+    border-color: #2160D3;
+  }
+
+  .offset-input-field::placeholder {
+    color: #8e8f90;
+  }
+
+  /* Print styles dropdown styles */
+  .print-styles-dropdown {
+    background-color: #141518;
+    border: 1px solid #000000;
+    color: var(--color-text-light);
+  }
+
+  .print-styles-dropdown:hover {
+    background-color: #1a1c1f;
+  }
+
+  .print-styles-option {
+    background-color: #141518;
+    color: var(--color-text-light);
+    padding: 8px 10px;
+    border-bottom: 1px solid #333;
+  }
+
+  .print-styles-option:hover {
+    background-color: #2a2c2f;
+  }
+
+  .print-styles-option:last-child {
+    border-bottom: none;
+  }
+
+  /* ============================================= */
+  /* RADIO BUTTON UNIVERSAL STYLES */
+  /* ============================================= */
+
+  /* Base radio button styles */
+  .radio-button-base {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #666;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Circle radio button (default) */
+  .radio-button-circle {
+    border-radius: 50%;
+  }
+
+  /* Square radio button (for special cases like Inverse) */
+  .radio-button-square {
+    border-radius: 2px;
+  }
+
+  /* Checked state */
+  .radio-button-checked {
+    border-color: #2160D3;
+    background-color: #2160D3;
+    transform: scale(1.1);
+  }
+
+  /* Inner dot/square for checked state */
+  .radio-button-inner-circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    transition: all 0.15s ease-out;
+  }
+
+  .radio-button-inner-square {
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    background-color: white;
+    transition: all 0.15s ease-out;
+  }
+
+  /* Hover states */
+  .radio-button-base:hover:not(.radio-button-disabled) {
+    border-color: #4a90e2;
+    transform: scale(1.05);
+  }
+
+  .radio-button-checked:hover:not(.radio-button-disabled) {
+    background-color: #1a4fb8;
+    border-color: #1a4fb8;
+    transform: scale(1.15);
+  }
+
+  /* Disabled state */
+  .radio-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #8e8f90 !important;
+    background-color: transparent !important;
+    transform: none !important;
+  }
+
+  .radio-button-disabled .radio-button-inner-circle,
+  .radio-button-disabled .radio-button-inner-square {
+    background-color: #8e8f90;
+  }
+
+  /* Focus states for accessibility */
+  .radio-button-base:focus-visible {
+    outline: 2px solid #2160D3;
+    outline-offset: 2px;
+  }
+
+  /* Label hover effects */
+  .radio-button-label {
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+
+  .radio-button-label:hover:not(.radio-button-disabled) {
+    color: #ffffff;
+  }
+
+  /* Active state */
+  .radio-button-base:active:not(.radio-button-disabled) {
+    transform: scale(0.95);
+  }
+
+  .radio-button-checked:active:not(.radio-button-disabled) {
+    transform: scale(1.05);
+  }
+
+  /* Range section button styles */
+  .specify-window-button {
+    background-color: var(--color-dialog-bg-darker);
+    border: 1px solid #666;
+    color: var(--color-text-light);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .specify-window-button:hover:not(:disabled) {
+    background-color: #3a3c3f;
+  }
+
+  .specify-window-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--color-dialog-bg-darker);
+  }
+
+  /* ============================================= */
+  /* SELECT DROPDOWN PORTAL STYLES */
+  /* ============================================= */
+
+  /* Portal container for dropdown menus */
+  #portal-root {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+
+  /* Enable interactions for dropdown content */
+  #portal-root > * {
+    pointer-events: auto !important;
+    position: absolute !important;
+    z-index: 99999 !important;
+  }
+
+  /* Select dropdown styles in portal */
+  .select-dropdown-portal {
+    background-color: #333538;
+    border: 1px solid #000000;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 99999 !important;
+  }
+
+  /* Force dropdown portals to appear above all other content */
+  .dropdown-portal {
+    z-index: 99999 !important;
+    position: absolute !important;
+  }
+
+  /* Override any potential z-index conflicts */
+  .dropdown-portal,
+  .dropdown-portal * {
+    z-index: 99999 !important;
+  }
+
+  /* Ensure all dropdown elements appear above everything else */
+  [data-name="menu item"],
+  [data-name="dropdown"] .dropdown-portal {
+    z-index: 99999 !important;
+    position: relative !important;
+  }
+
+  /* Force specific styling for select dropdowns in layout settings */
+  .layout-settings-section .dropdown-portal,
+  .collapsible-section .dropdown-portal {
+    z-index: 99999 !important;
+    position: absolute !important;
+  }
+
+  /* ============================================= */
+  /* DROPDOWN SIMPLE STYLES (NO ANIMATION) */
+  /* ============================================= */
+
+  /* Basic dropdown portal styles without animation */
+  .dropdown-portal {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Enhanced hover transitions for menu items only */
+  [data-name="menu item"] > * {
+    transition: background-color 150ms ease;
+  }
+
+  /* ============================================= */
+  /* SETTINGS CONTENT SIMPLE STYLES */
+  /* ============================================= */
+
+  /* Form elements inside sections - no complex animations */
+  .settings-content input,
+  .settings-content select,
+  .settings-content button {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* Simple focus transitions for settings inputs */
+  .settings-content input:focus,
+  .settings-content select:focus {
+    box-shadow: 0 0 0 2px rgba(33, 96, 211, 0.3);
+  }
+}
+
+/* Dynamic background image classes that accept CSS variables */
+@layer utilities {
+  .bg-gradient-overlay {
+    background-image: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.8) 100%
+      ),
+      var(--bg-image);
+  }
+
+  .bg-dynamic-image {
+    background-image: var(--bg-image);
+  }
+}

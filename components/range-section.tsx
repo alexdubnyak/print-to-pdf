@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CollapsibleSection } from './collapsible-section';
-import { RadioGroup } from './radio-group';
+import { RadioButton } from './radio-button';
 import { Select } from './select';
 import imgImage6 from "figma:asset/a4fd5120b625ecf09a5fd56aaa254b7821704881.png";
 
@@ -37,8 +37,22 @@ export function RangeSection({
   };
 
   const handleNamedViewChange = (value: string) => {
-    setInternalSelectedNamedView(value);
-    onNamedViewChange?.(value);
+    // Map item values back to actual view names
+    const viewIndex = parseInt(value.replace('item', '')) - 1;
+    const selectedView = availableNamedViews[viewIndex] || '';
+    setInternalSelectedNamedView(selectedView);
+    onNamedViewChange?.(selectedView);
+  };
+
+  // Map selected view name to item value for Select
+  const getSelectedViewValue = () => {
+    const viewIndex = availableNamedViews.indexOf(internalSelectedNamedView);
+    return viewIndex >= 0 ? `item${viewIndex + 1}` : '';
+  };
+
+  const handleSpecifyWindowClick = () => {
+    console.log('Opening specify window dialog...');
+    onSpecifyWindowClick?.();
   };
 
   const rangeOptions = [
@@ -64,70 +78,44 @@ export function RangeSection({
         />
         
         {/* Range Options */}
-        <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-col gap-4 w-full">
           {rangeOptions.map((option) => (
-            <div key={option.value} className="flex flex-row gap-2 items-center w-full">
+            <div key={option.value} className="flex flex-col gap-2 w-full">
+              {/* Radio Button Row */}
               <div className="flex flex-row gap-2 items-center">
-                <label 
-                  className="flex flex-row gap-2 items-center cursor-pointer"
-                  onClick={() => handleRangeChange(option.value)}
-                >
-                  <input
-                    type="radio"
-                    name="range-selection"
-                    value={option.value}
-                    checked={internalSelectedRange === option.value}
-                    onChange={() => handleRangeChange(option.value)}
-                    className="sr-only"
-                  />
-                  
-                  {/* Custom radio button */}
-                  <div className="relative w-4 h-4 flex-shrink-0">
-                    <div className={`w-4 h-4 rounded-full border-2 transition-colors ${
-                      internalSelectedRange === option.value
-                        ? 'border-[#2160D3] bg-[#2160D3]' 
-                        : 'border-[#666] bg-transparent'
-                    } flex items-center justify-center`}>
-                      {internalSelectedRange === option.value && (
-                        <div className="w-2 h-2 rounded-full bg-white"></div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <span className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[12px] text-left select-none">
-                    {option.label}
-                  </span>
-                </label>
+                <RadioButton 
+                  value={option.value}
+                  checked={internalSelectedRange === option.value}
+                  onChange={handleRangeChange}
+                  label={option.label}
+                  name="range-selection"
+                />
               </div>
               
               {/* Additional controls for specific options */}
-              {option.value === 'specify' && (
-                <div className="flex-1 ml-6">
+              {option.value === 'specify' && internalSelectedRange === 'specify' && (
+                <div className="ml-6">
                   <button 
-                    className={`specify-window-button ${internalSelectedRange !== 'specify' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={onSpecifyWindowClick}
-                    disabled={internalSelectedRange !== 'specify'}
+                    className="bg-[#333538] border border-[#666] px-4 py-2 text-[#d5d7e1] text-[12px] hover:bg-[#3a3c3f] transition-colors cursor-pointer"
+                    onClick={handleSpecifyWindowClick}
                   >
                     Specify Window &gt;
                   </button>
                 </div>
               )}
               
-              {option.value === 'named-view' && (
-                <div className="flex-1 ml-6">
-                  <div className="w-full max-w-[200px]">
-                    <Select 
-                      itemCount={availableNamedViews.length}
-                      itemName1={availableNamedViews[0] || ''}
-                      itemName2={availableNamedViews[1] || ''}
-                      itemName3={availableNamedViews[2] || ''}
-                      headerText="Select Named View"
-                      value={internalSelectedNamedView}
-                      onChange={handleNamedViewChange}
-                      className="w-full"
-                      disabled={internalSelectedRange !== 'named-view'}
-                    />
-                  </div>
+              {option.value === 'named-view' && internalSelectedRange === 'named-view' && (
+                <div className="ml-6 max-w-[200px] relative z-40">
+                  <Select 
+                    itemCount={availableNamedViews.length}
+                    itemName1={availableNamedViews[0] || ''}
+                    itemName2={availableNamedViews[1] || ''}
+                    itemName3={availableNamedViews[2] || ''}
+                    headerText="Select Named View"
+                    value={getSelectedViewValue()}
+                    onChange={handleNamedViewChange}
+                    className="w-full"
+                  />
                 </div>
               )}
             </div>

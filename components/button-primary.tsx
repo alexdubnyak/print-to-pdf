@@ -4,14 +4,22 @@ interface ButtonPrimaryProps {
   children: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
+  tooltip?: string;        // ← ДОБАВИТЬ: поддержка тултипа
   className?: string;
 }
 
-export function ButtonPrimary({ children, onClick, disabled = false, className = '' }: ButtonPrimaryProps) {
+export function ButtonPrimary({ 
+  children, 
+  onClick, 
+  disabled = false, 
+  tooltip,                 // ← ДОБАВИТЬ: тултип
+  className = '' 
+}: ButtonPrimaryProps) {
   return (
     <div
       className={`basis-0 button-primary grow h-full min-h-px min-w-px relative shrink-0 cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
       onClick={disabled ? undefined : onClick}
+      title={tooltip}        // ← ДОБАВИТЬ: тултип
     >
       <div className="flex flex-row items-center justify-center relative size-full">
         <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-center px-3 py-1 relative size-full">

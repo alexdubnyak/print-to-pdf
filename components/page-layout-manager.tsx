@@ -1,4 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
+const handleLayoutSelect = (layout: string) => {
+    // Блокируем выбор других элементов в режиме удаления
+    if (isDeletingLayout) {
+      console.log('🚫 Выбор заблокирован: идет процесс удаления');
+      return;
+    }
+    
+    setSelectedLayout(layout);
+    
+    // Сбрасываем состояние кнопок при смене layout
+    setActivatedBy('none');
+    
+    console.log(`\n🔄 Выбран layout: "${layout}"`);
+    console.log(`Имеет звездочки: ${isLayoutEnclosedInStars(layout) ? 'ДА ⭐' : 'НЕТ ⚪'}`);
+  };import { useState, useRef, useEffect } from 'react';
 import svgPaths from "../imports/svg-uo6jg4qcws";
 import { ButtonSecondary } from './button-secondary';
 import { ButtonIcon } from './button-icon';
@@ -44,9 +58,6 @@ function SheetLayoutItem({
     >
       <div className="font-['Open_Sans_Hebrew:Regular',_sans-serif] leading-[0] not-italic relative text-[#cfcfcf] text-[12px] text-left flex items-center gap-1 w-full min-w-0">
         <p className="block leading-[normal] truncate flex-1">{displayText}</p>
-        {hasStars && !isDeletingThisItem && (
-          <span className="text-[#ffd700] text-[10px] flex-shrink-0" title="Название со звездочками">⭐</span>
-        )}
       </div>
     </div>
   );
@@ -74,7 +85,43 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
   
   // Состояние для LayoutCreator - выбранный "Based on" элемент
   const [layoutCreatorBasedOn, setLayoutCreatorBasedOn] = useState('*Sheet1*');
+
+  // Состояние для отслеживания, какая кнопка ответственна за активацию
+  const [activatedBy, setActivatedBy] = useState<'none' | 'activate' | 'activate-all'>('none');
+
+  // ПРОСТАЯ функция проверки звездочек (ASCII 42) - ТОЛЬКО ЭТО НУЖНО!
+  const isLayoutEnclosedInStars = (name: string): boolean => {
+    if (!name || name.length < 3) return false;
+    return name.charAt(0) === '*' && name.charAt(name.length - 1) === '*';
+  };
+
+  // ПРОСТАЯ логика disabled - ТОЛЬКО от selectedLayout зависит
+  const selectedLayoutHasStars = isLayoutEnclosedInStars(selectedLayout);
+
+  // Состояние для сохранения "Based on:" значений для каждого layout'а
+  const [layoutBasedOnHistory, setLayoutBasedOnHistory] = useState<Record<string, string>>({});
+
+  // НЕЗАВИСИМЫЕ состояния кнопок основаны на том, КТО активировал layout:
   
+  // 1. Кнопка "Activate" синяя только если ОНА активировала layout
+  const isActivateButtonActive = activatedBy === 'activate';
+  
+  // 2. Кнопка "Activate all sheets" синяя только если ОНА активировала layout  
+  const isActivateAllButtonActive = activatedBy === 'activate-all';
+  
+  // Кнопки create и import - create disabled когда создаем, редактируем или удаляем layout
+  const canCreateLayout = !isCreatingLayout && !isEditingLayout && !isDeletingLayout;
+  const canImportLayout = !isEditingLayout && !isDeletingLayout;
+  
+  // Кнопка edit-layout - ВСЕГДА активна (если что-то выбрано)
+  const canListLayout = !!selectedLayout;
+  
+  // ЭТИ 4 КНОПКИ disabled ТОЛЬКО если selectedLayout со звездочками или идет операция
+  const canActivate = !selectedLayoutHasStars && !isDeletingLayout;              // activate
+  const canActivateAllSheets = !selectedLayoutHasStars && !isDeletingLayout;     // activate-all-sheets  
+  const canEditLayout = !selectedLayoutHasStars && !isCreatingLayout && !isDeletingLayout;            // edit
+  const canDeleteLayout = !selectedLayoutHasStars && layouts.length > 1 && !isCreatingLayout && !isEditingLayout; // delete-layout
+
   // Автопрокрутка к inline элементам при их появлении
   useEffect(() => {
     if (listContainerRef.current) {
@@ -129,53 +176,6 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
       }
     }
   }, [isDeletingLayout, deletingLayoutName, isEditingLayout, editingLayoutName, isCreatingLayout, layouts]);
-
-  // Состояние для сохранения "Based on:" значений для каждого layout'а
-  const [layoutBasedOnHistory, setLayoutBasedOnHistory] = useState<Record<string, string>>({});
-
-  // ПРОСТАЯ функция проверки звездочек (ASCII 42) - ТОЛЬКО ЭТО НУЖНО!
-  const isLayoutEnclosedInStars = (name: string): boolean => {
-    if (!name || name.length < 3) return false;
-    return name.charAt(0) === '*' && name.charAt(name.length - 1) === '*';
-  };
-
-  // ПРОСТАЯ логика disabled - ТОЛЬКО от selectedLayout зависит
-  const selectedLayoutHasStars = isLayoutEnclosedInStars(selectedLayout);
-  
-  // Кнопки create и import - create disabled когда создаем, редактируем или удаляем layout
-  const canCreateLayout = !isCreatingLayout && !isEditingLayout && !isDeletingLayout;
-  const canImportLayout = !isEditingLayout && !isDeletingLayout;
-  
-  // Кнопка edit-layout - ВСЕГДА активна (если что-то выбрано)
-  const canListLayout = !!selectedLayout;
-  
-  // ЭТИ 4 КНОПКИ disabled ТОЛЬКО если selectedLayout со звездочками или идет операция
-  const canActivate = !selectedLayoutHasStars && !isDeletingLayout;              // activate
-  const canActivateAllSheets = !selectedLayoutHasStars && !isDeletingLayout;     // activate-all-sheets  
-  const canEditLayout = !selectedLayoutHasStars && !isCreatingLayout && !isDeletingLayout;            // edit
-  const canDeleteLayout = !selectedLayoutHasStars && layouts.length > 1 && !isCreatingLayout && !isEditingLayout; // delete-layout
-
-  // Отладочная информация
-  console.log('🎯 ПРАВИЛЬНАЯ ЛОГИКА (как вы просили):');
-  console.log({
-    selectedLayout,
-    selectedLayoutHasStars,
-    isCreatingLayout,
-    isEditingLayout,
-    isDeletingLayout,
-    editingLayoutName,
-    deletingLayoutName,
-    layoutBasedOnHistory,
-    currentBasedOn: layoutCreatorBasedOn,
-    '=== КНОПКИ ===': '---',
-    'create-layout': canCreateLayout ? '✅ АКТИВНА' : '❌ DISABLED (создание/редактирование/удаление)',
-    'import-layout': canImportLayout ? '✅ АКТИВНА' : '❌ DISABLED (редактирование/удаление)', 
-    'edit-layout': canListLayout ? '✅ АКТИВНА' : '❌ DISABLED',
-    'activate': canActivate ? '✅ АКТИВНА' : '❌ DISABLED (звездочки)',
-    'activate-all-sheets': canActivateAllSheets ? '✅ АКТИВНА' : '❌ DISABLED (звездочки)',
-    'edit': canEditLayout ? '✅ АКТИВНА' : '❌ DISABLED (звездочки)',
-    'delete-layout': canDeleteLayout ? '✅ АКТИВНА' : '❌ DISABLED (звездочки)'
-  });
 
   const handleLayoutSelect = (layout: string) => {
     // Блокируем выбор других элементов в режиме удаления
@@ -340,31 +340,14 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
   
   const handleImportLayout = () => console.log('Import layout');
   const handleListLayout = () => console.log('List layouts');
-  
-  // Проверяем, активирован ли уже layout для Sheet1
-  const isLayoutActive = layouts.some(layout => layout.includes('*Sheet1 (') && layout.includes(')*'));
-  
-  // Проверяем, активирован ли layout для всех листов
-  const isLayoutActiveForAllSheets = () => {
-    const sheetsWithStars = layouts.filter(layout => isLayoutEnclosedInStars(layout));
-    if (sheetsWithStars.length === 0) return false;
-    
-    // Проверяем, что все листы со звездочками содержат выбранный layout
-    return sheetsWithStars.every(layout => 
-      layout.includes(`(${selectedLayout})`) && selectedLayout && !selectedLayoutHasStars
-    );
-  };
-  
-  const allSheetsHaveLayout = isLayoutActiveForAllSheets();
-  
-  // Функция для активации/деактивации layout'а
+
+  // Функция для активации/деактивации layout'а ТОЛЬКО для Sheet1
   const handleActivateLayout = () => {
     if (selectedLayout && !selectedLayoutHasStars) {
-      if (isLayoutActive) {
-        // ДЕАКТИВАЦИЯ - возвращаем Sheet1 в исходное состояние
+      if (isActivateButtonActive) {
+        // ДЕАКТИВАЦИЯ Sheet1 - возвращаем Sheet1 в исходное состояние
         setLayouts(prevLayouts => 
           prevLayouts.map(layout => {
-            // Если это Sheet1 с активированным layout'ом, возвращаем к исходному виду
             if (layout.includes('*Sheet1 (') && layout.includes(')*')) {
               return '*Sheet1*';
             }
@@ -375,13 +358,14 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
         // Сбрасываем текущий layout в правой панели
         setCurrentSheetLayout('<None>');
         
-        console.log(`❌ Деактивирован layout для листа Sheet1`);
-        console.log(`📋 Sheet1 возвращен к исходному состоянию: "*Sheet1*"`);
+        // Сбрасываем состояние кнопки
+        setActivatedBy('none');
+        
+        console.log(`❌ Деактивирован layout для Sheet1`);
       } else {
-        // АКТИВАЦИЯ - добавляем название layout'а к Sheet1
+        // АКТИВАЦИЯ Sheet1 - добавляем название layout'а к Sheet1
         setLayouts(prevLayouts => 
           prevLayouts.map(layout => {
-            // Если это именно Sheet1 (со звездочками), добавляем к н��му название layout'а
             if (layout === '*Sheet1*') {
               return `*Sheet1 (${selectedLayout})*`;
             }
@@ -389,21 +373,23 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
           })
         );
         
-        // Формируем название для отображения в правой панели (без звездочек)
+        // Формируем название для отображения в правой панели
         const newLayoutName = `Sheet1 (${selectedLayout})`;
         setCurrentSheetLayout(newLayoutName);
         
-        console.log(`✅ Активирован layout: "${selectedLayout}" для листа Sheet1`);
-        console.log(`📋 Sheet1 обновлен в списке: "*Sheet1 (${selectedLayout})*"`);
+        // Устанавливаем, что кнопка "Activate" ответственна за активацию
+        setActivatedBy('activate');
+        
+        console.log(`✅ Активирован layout "${selectedLayout}" для Sheet1`);
       }
     }
   };
   
-  // Функция для активации/деактивации layout'а для всех листов
+  // Функция для активации/деактивации layout'а для ВСЕХ листов
   const handleActivateAllSheets = () => {
     if (selectedLayout && !selectedLayoutHasStars) {
-      if (allSheetsHaveLayout) {
-        // ДЕАКТИВАЦИЯ - возвращаем все листы к исходному состоянию
+      if (isActivateAllButtonActive) {
+        // ДЕАКТИВАЦИЯ - возвращаем ВСЕ листы к исходному состоянию
         setLayouts(prevLayouts => 
           prevLayouts.map(layout => {
             if (isLayoutEnclosedInStars(layout) && layout.includes(`(${selectedLayout})`)) {
@@ -418,30 +404,34 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
         // Сбрасываем текущий layout в правой панели
         setCurrentSheetLayout('<None>');
         
-        console.log(`❌ Деактивирован layout "${selectedLayout}" для всех листов`);
+        // Сбрасываем состояние кнопки
+        setActivatedBy('none');
+        
+        console.log(`❌ Деактивирован layout "${selectedLayout}" для ВСЕХ листов`);
       } else {
-        // АКТИВАЦИЯ - добавляем название layout'а ко всем листам со звездочками
+        // АКТИВАЦИЯ - добавляем название layout'а ко ВСЕМ листам со звездочками
         setLayouts(prevLayouts => 
           prevLayouts.map(layout => {
             if (isLayoutEnclosedInStars(layout) && !layout.includes(`(${selectedLayout})`)) {
               // Убираем последнюю звездочку, добавляем layout, возвращаем звездочку
-              const sheetName = layout.slice(0, -1); // Убираем последнюю *
+              const sheetName = layout.slice(0, -1);
               return `${sheetName} (${selectedLayout})*`;
             }
             return layout;
           })
         );
         
-        // Обновляем текущий layout для Sheet1 если он есть в списке
-        const sheet1WithLayout = `Sheet1 (${selectedLayout})`;
-        setCurrentSheetLayout(sheet1WithLayout);
+        // Обновляем текущий layout для Sheet1 в правой панели
+        const newLayoutName = `Sheet1 (${selectedLayout})`;
+        setCurrentSheetLayout(newLayoutName);
         
-        console.log(`✅ Активирован layout "${selectedLayout}" для всех листов`);
+        // Устанавливаем, что кнопка "Activate all sheets" ответственна за активацию
+        setActivatedBy('activate-all');
+        
+        console.log(`✅ Активирован layout "${selectedLayout}" для ВСЕХ листов (Sheet1 + Sheet2)`);
       }
     }
   };
-  
-  const handleCopyLayout = () => console.log('Copy layout');
   
   // Обработчик начала удаления layout (открытие inline компонента)
   const handleDeleteLayout = () => {
@@ -517,7 +507,12 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                 Page layout manager
               </p>
             </div>
-            <div className="relative shrink-0 size-[37px] cursor-pointer hover:opacity-80 transition-opacity" data-name="actions" onClick={onClose}>
+            <div 
+              className="relative shrink-0 size-[37px] cursor-pointer hover:opacity-80 transition-opacity" 
+              data-name="actions" 
+              onClick={onClose}
+              title="Закрыть"
+            >
               <svg
                 className="block size-full"
                 fill="none"
@@ -621,20 +616,22 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                     </div>
                   </div>
                   
-                  {/* Action Buttons - ПРАВИЛЬНАЯ ЛОГИКА */}
+                  {/* Action Buttons - НЕЗАВИСИМЫЕ КНОПКИ */}
                   <div className="box-border content-stretch flex flex-row items-start justify-between p-0 relative shrink-0 w-full">
                     <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
                       <ButtonIcon 
                         icon="create-layout"
                         onClick={handleAddLayout}
                         variant="default"
-                        disabled={!canCreateLayout} // Disabled когда создаем или редактируем layout
+                        disabled={!canCreateLayout}
+                        tooltip="Create new layout"
                       />
                       <ButtonIcon 
                         icon="import-layout"
                         onClick={handleImportLayout}
                         variant="default"
-                        disabled={!canImportLayout} // Disabled когда редактируем layout
+                        disabled={!canImportLayout}
+                        tooltip="Import layout"
                       />
                     </div>
                     <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
@@ -642,31 +639,40 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                         icon="edit-layout"
                         onClick={handleListLayout}
                         variant="default"
-                        disabled={!canListLayout} // Disabled если ничего не выбрано
+                        disabled={!canListLayout}
+                        tooltip="Edit setting"
                       />
                       <ButtonIcon 
-                        icon={isLayoutActive ? "deactivate" : "activate"}
+                        icon={isActivateButtonActive ? "deactivate" : "activate"}
                         onClick={handleActivateLayout}
                         variant="default"
-                        disabled={!canActivate} // Disabled если selectedLayout со звездочками
+                        disabled={!canActivate}
+                        active={isActivateButtonActive}
+                        activeColor="#254CA9"
+                        tooltip={isActivateButtonActive ? "Deactivate layout for Sheet1" : "Activate layout for Sheet1"}
                       />
                       <ButtonIcon 
-                        icon="activate-all-sheets"
+                        icon={isActivateAllButtonActive ? "deactivate" : "activate-all-sheets"}
                         onClick={handleActivateAllSheets}
                         variant="default"
-                        disabled={!canActivateAllSheets} // Disabled если selectedLayout со звездочками
+                        disabled={!canActivateAllSheets}
+                        active={isActivateAllButtonActive}
+                        activeColor="#254CA9"
+                        tooltip={isActivateAllButtonActive ? "Deactivate layout for all sheets" : "Activate layout for all sheets"}
                       />
                       <ButtonIcon 
                         icon="edit"
                         onClick={handleEditLayout}
                         variant="default"
-                        disabled={!canEditLayout} // Disabled если selectedLayout со звездочками
+                        disabled={!canEditLayout}
+                        tooltip="Edit layout"
                       />
                       <ButtonIcon 
                         icon="delete-layout"
                         onClick={handleDeleteLayout}
                         variant="default"
-                        disabled={!canDeleteLayout} // Disabled если selectedLayout со звездочками
+                        disabled={!canDeleteLayout}
+                        tooltip="Delete layout"
                       />
                     </div>
                   </div>
@@ -755,7 +761,10 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                 </div>
 
                 {/* Close Button */}
-                <ButtonSecondary onClick={onClose}>
+                <ButtonSecondary 
+                  onClick={onClose}
+                  tooltip="Close layout manager"
+                >
                   Close
                 </ButtonSecondary>
               </div>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { CollapsibleSection } from './collapsible-section';
-import { TextInput } from './text-input';
+import { Input } from './input';
 import { Select } from './select';
 import { Checkbox } from './checkbox';
+import { RadioButton } from './radio-button';
 // Image removed to clean up component
 
 export type OrientationType = 'portrait' | 'landscape' | 'inverse';
@@ -53,6 +54,7 @@ export function PaperAndScaleSection({
   const [internalScaleType, setInternalScaleType] = useState(scaleType);
   const [internalScaleValue, setInternalScaleValue] = useState(scaleValue);
   const [internalUnitsValue, setInternalUnitsValue] = useState(unitsValue);
+  const [internalUnitsType, setInternalUnitsType] = useState('item1'); // Default to Millimeters
   const [internalScaleLineWeights, setInternalScaleLineWeights] = useState(scaleLineWeights);
   const [internalFitToPaperSize, setInternalFitToPaperSize] = useState(fitToPaperSize);
 
@@ -62,8 +64,25 @@ export function PaperAndScaleSection({
   };
 
   const handlePaperSizeChange = (value: string) => {
-    setInternalPaperSize(value);
-    onPaperSizeChange?.(value);
+    // Map item values to actual paper size identifiers  
+    const paperSizeMap = {
+      'item1': 'iso-a3',
+      'item2': 'iso-a4', 
+      'item3': 'us-letter'
+    };
+    const paperSize = paperSizeMap[value as keyof typeof paperSizeMap] || value;
+    setInternalPaperSize(paperSize);
+    onPaperSizeChange?.(paperSize);
+  };
+
+  // Map paper size back to item value for Select
+  const getPaperSizeValue = () => {
+    const paperSizeMap = {
+      'iso-a3': 'item1',
+      'iso-a4': 'item2', 
+      'us-letter': 'item3'
+    };
+    return paperSizeMap[internalPaperSize as keyof typeof paperSizeMap] || 'item1';
   };
 
   const handleScaleTypeChange = (value: string) => {
@@ -81,6 +100,18 @@ export function PaperAndScaleSection({
     onUnitsValueChange?.(value);
   };
 
+  const handleUnitsTypeChange = (value: string) => {
+    setInternalUnitsType(value);
+    // Map item values to actual unit types if needed
+    const unitTypeMap = {
+      'item1': 'millimeters',
+      'item2': 'inches',
+      'item3': 'centimeters'
+    };
+    const unitType = unitTypeMap[value as keyof typeof unitTypeMap] || value;
+    console.log('Units type changed to:', unitType);
+  };
+
   const handleScaleLineWeightsChange = (checked: boolean) => {
     setInternalScaleLineWeights(checked);
     onScaleLineWeightsChange?.(checked);
@@ -91,45 +122,11 @@ export function PaperAndScaleSection({
     onFitToPaperSizeChange?.(checked);
   };
 
-  // Orientation Button Component
-  function OrientationButton({ 
-    label, 
-    isSelected, 
-    onClick, 
-    shape = 'circle' 
-  }: { 
-    label: string; 
-    isSelected: boolean; 
-    onClick: () => void; 
-    shape?: 'circle' | 'square';
-  }) {
-    return (
-      <div 
-        className="flex items-center gap-2 cursor-pointer"
-        onClick={onClick}
-      >
-        <div 
-          className={`w-4 h-4 border-2 flex items-center justify-center ${
-            shape === 'circle' ? 'rounded-full' : 'rounded-sm'
-          }`}
-          style={{ 
-            borderColor: '#d5d7e1',
-            backgroundColor: isSelected ? '#4A90E2' : 'transparent'
-          }}
-        >
-          {isSelected && (
-            <div 
-              className={`w-2 h-2 ${shape === 'circle' ? 'rounded-full' : 'rounded-sm'}`}
-              style={{ backgroundColor: '#ffffff' }}
-            />
-          )}
-        </div>
-        <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[12px] text-left">
-          {label}
-        </div>
-      </div>
-    );
-  }
+  // Helper function to handle orientation change
+  const handleOrientationRadioChange = (value: string) => {
+    const orientationValue = value as OrientationType;
+    handleOrientationChange(orientationValue);
+  };
 
   return (
     <CollapsibleSection 
@@ -141,23 +138,29 @@ export function PaperAndScaleSection({
         
         {/* Orientation Section */}
         <div className="flex flex-row gap-4 items-center">
-          <OrientationButton 
-            label="Portrait" 
-            isSelected={internalOrientation === 'portrait'}
-            onClick={() => handleOrientationChange('portrait')}
+          <RadioButton 
+            value="portrait"
+            checked={internalOrientation === 'portrait'}
+            onChange={handleOrientationRadioChange}
+            label="Portrait"
+            name="orientation"
             shape="circle"
           />
-          <OrientationButton 
-            label="Landscape" 
-            isSelected={internalOrientation === 'landscape'}
-            onClick={() => handleOrientationChange('landscape')}
+          <RadioButton 
+            value="landscape"
+            checked={internalOrientation === 'landscape'}
+            onChange={handleOrientationRadioChange}
+            label="Landscape"
+            name="orientation"
             shape="circle"
           />
-          <OrientationButton 
-            label="Inverse" 
-            isSelected={internalOrientation === 'inverse'}
-            onClick={() => handleOrientationChange('inverse')}
-            shape="square"
+          <RadioButton 
+            value="inverse"
+            checked={internalOrientation === 'inverse'}
+            onChange={handleOrientationRadioChange}
+            label="Inverse"
+            name="orientation"
+            shape="circle"
           />
         </div>
 
@@ -172,7 +175,7 @@ export function PaperAndScaleSection({
             itemName2="ISO A4 (210.00 x 297.00 MM)"
             itemName3="US Letter (8.5 x 11 IN)"
             headerText="Paper Size"
-            value="item1"
+            value={getPaperSizeValue()}
             onChange={handlePaperSizeChange}
             className="w-full"
           />
@@ -186,7 +189,7 @@ export function PaperAndScaleSection({
           
           <div className="flex flex-row gap-4 items-start mb-4">
             <div className="basis-0 grow">
-              <TextInput
+              <Input
                 value={internalScaleType}
                 onChange={handleScaleTypeChange}
                 placeholder="User-defined"
@@ -209,7 +212,7 @@ export function PaperAndScaleSection({
             </div>
             <div className="flex flex-row gap-2 items-center">
               <div className="w-16">
-                <TextInput
+                <Input
                   value={internalScaleValue}
                   onChange={handleScaleValueChange}
                   placeholder="1"
@@ -223,8 +226,8 @@ export function PaperAndScaleSection({
                   itemName2="Inches"
                   itemName3="Centimeters"
                   headerText="Units"
-                  value="item1"
-                  onChange={(value) => console.log('Units changed:', value)}
+                  value={internalUnitsType}
+                  onChange={handleUnitsTypeChange}
                   className="w-full"
                 />
               </div>
@@ -232,7 +235,7 @@ export function PaperAndScaleSection({
                 =
               </div>
               <div className="w-20">
-                <TextInput
+                <Input
                   value={internalUnitsValue}
                   onChange={handleUnitsValueChange}
                   placeholder="3.027"

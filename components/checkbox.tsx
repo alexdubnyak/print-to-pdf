@@ -17,8 +17,9 @@ export function Checkbox({ checked, onChange, disabled = false, className = '', 
 
   return (
     <div 
-      className={`flex items-center gap-2.5 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${className}`}
+      className={`flex items-center gap-2.5 h-7 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${className}`}
       onClick={handleClick}
+      style={{ height: '28px', minHeight: '28px' }}
     >
       <div className="relative shrink-0 size-4">
         <svg
