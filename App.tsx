@@ -17,20 +17,48 @@ import { PageLayoutManager } from "./components/page-layout-manager";
 // IMAGE ASSETS - Technical Drawing References
 // ============================================
 
-// Technical Drawing Images
+// Technical Drawing Images - Direct URLs to real technical drawings
 const TECHNICAL_DRAWING_SHEET_1 =
-  "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png"; // 707x500mm Horizontal
+  "https://dwgmodels.com/uploads/posts/2023-12/reception-desks-for-hotels_m.jpg"; // 707x500mm Horizontal Technical Drawing
 const TECHNICAL_DRAWING_SHEET_2 =
-  "figma:asset/0cc96cd8916e1803db15b3d52193be720f65c57c.png"; // 841x594mm A1 Vertical
+  "https://dwgmodels.com/uploads/posts/2018-08/1534800474_facades-of-the-old-power-station_m.jpg"; // 841x594mm A1 Vertical Technical Drawing
 
-// Background Images
+// Background Images - Direct URLs
 const BACKGROUND_IMAGE_MAIN =
-  "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png"; // Main dialog background
+  "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1496&h=813&q=80"; // Main dialog background
 
-// Import the actual assets using the constants
-import imgSheet1Drawing from "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png";
-import imgSheet2Drawing from "figma:asset/0cc96cd8916e1803db15b3d52193be720f65c57c.png";
-import imgMainBackground from "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png";
+// Direct image URLs replacing Figma assets
+const imgSheet1Drawing = TECHNICAL_DRAWING_SHEET_1;
+const imgSheet2Drawing = TECHNICAL_DRAWING_SHEET_2;
+const imgMainBackground = BACKGROUND_IMAGE_MAIN;
+
+// 🔍 ОТЛАДКА ИМПОРТОВ: Добавляем отладочную информацию
+console.log('🖼️ ==============================================');
+console.log('🖼️ НОВЫЕ ИЗОБРАЖЕНИЯ ЧЕРТЕЖЕЙ - ОТЛАДКА');
+console.log('🖼️ ==============================================');
+console.log('Sheet 1 Drawing (Reception Desks):', imgSheet1Drawing);
+console.log('Sheet 2 Drawing (Power Station):', imgSheet2Drawing);
+console.log('Main Background:', imgMainBackground);
+
+// Проверяем типы
+console.log('🔍 ТИПЫ:');
+console.log('Sheet 1 type:', typeof imgSheet1Drawing);
+console.log('Sheet 2 type:', typeof imgSheet2Drawing);
+
+// Проверяем являются ли они HTTP URL
+console.log('🔍 HTTP URL CHECK:');
+console.log('Sheet 1 is HTTP?', imgSheet1Drawing.startsWith('http'));
+console.log('Sheet 2 is HTTP?', imgSheet2Drawing.startsWith('http'));
+
+// Проверяем длину строк
+console.log('🔍 ДЛИНА:');
+console.log('Sheet 1 length:', imgSheet1Drawing.length);
+console.log('Sheet 2 length:', imgSheet2Drawing.length);
+
+// Проверяем содержимое первых 50 символов
+console.log('🔍 ПЕРВЫЕ 50 СИМВОЛОВ:');
+console.log('Sheet 1 start:', imgSheet1Drawing.substring(0, 50));
+console.log('Sheet 2 start:', imgSheet2Drawing.substring(0, 50));
 
 // ============================================
 // SHEET CONFIGURATION
@@ -45,25 +73,37 @@ const layoutOptions: SelectOption[] = [
   },
 ];
 
-// Sheet data configuration with fixed asset references
+// Sheet data configuration with direct URLs
 const sheets = [
   {
     id: 1,
     name: "Sheet 1",
-    image: imgSheet1Drawing, // 707x500mm Horizontal Technical Drawing
+    image: imgSheet1Drawing, // 707x500mm Reception Desks Technical Drawing
     widthMm: "707",
     heightMm: "500",
-    description: "Horizontal Technical Drawing",
+    description: "Reception Desks Technical Drawing",
   },
   {
     id: 2,
     name: "Sheet 2",
-    image: imgSheet2Drawing, // 841x594mm A1 Vertical Technical Drawing
+    image: imgSheet2Drawing, // 841x594mm Power Station Technical Drawing
     widthMm: "841",
     heightMm: "594",
-    description: "A1 Vertical Technical Drawing",
+    description: "Power Station Technical Drawing",
   },
 ];
+
+// 🔍 ОТЛАДКА МАССИВА SHEETS
+console.log('📋 ==============================================');
+console.log('📋 SHEETS ARRAY - НОВЫЕ ЧЕРТЕЖИ');
+console.log('📋 ==============================================');
+console.log('Full sheets array:', sheets);
+console.log('Sheet 1 image URL (Reception Desks):', sheets[0].image);
+console.log('Sheet 2 image URL (Power Station):', sheets[1].image);
+console.log('✅ ОБНОВЛЕНИЕ: Теперь используются реальные технические чертежи');
+console.log('Sheet 1 dimensions:', `${sheets[0].widthMm}x${sheets[0].heightMm}`, sheets[0].description);
+console.log('Sheet 2 dimensions:', `${sheets[1].widthMm}x${sheets[1].heightMm}`, sheets[1].description);
+console.log('📋 ==============================================');
 
 // ============================================
 // LAYOUT MAPPING CONFIGURATION
@@ -354,6 +394,15 @@ function PreviewArea({
   );
   const currentIndex = selectedSheets.indexOf(currentSheet);
 
+  // 🔍 ОТЛАДКА PREVIEW AREA
+  console.log('🎭 PREVIEW AREA DEBUG:', {
+    selectedCount,
+    currentSheet,
+    selectedSheets,
+    currentSheetData,
+    currentIndex
+  });
+
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow h-full items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0">
       {currentSheetData && (
@@ -419,7 +468,7 @@ function SheetsHeader() {
         style={{ color: "var(--color-text-light)" }}
       >
         <p className="block leading-[normal] whitespace-pre">
-          Search sheets
+          SearchSheets
         </p>
       </div>
     </div>
@@ -473,7 +522,7 @@ function SelectAllCheckbox({
   onSelectAllClick,
 }: {
   selectAllChecked: boolean;
-  onSelectAllClick: () => void;
+  onSelectAllClick: (checked: boolean) => void;
 }) {
   return (
     <div className="checkbox-row order-3">
@@ -491,7 +540,7 @@ function Sheet1Checkbox({
   onSheet1Click,
 }: {
   sheet1Checked: boolean;
-  onSheet1Click: () => void;
+  onSheet1Click: (checked: boolean) => void;
 }) {
   return (
     <div className="checkbox-row">
@@ -509,7 +558,7 @@ function Sheet1CheckboxWrapper({
   onSheet1Click,
 }: {
   sheet1Checked: boolean;
-  onSheet1Click: () => void;
+  onSheet1Click: (checked: boolean) => void;
 }) {
   return (
     <div className="basis-grow-container">
@@ -534,7 +583,7 @@ function Sheet1LayoutRow({
   appliedLayoutName,
 }: {
   sheet1Checked: boolean;
-  onSheet1Click: () => void;
+  onSheet1Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   onLayoutEdit: () => void;
@@ -581,7 +630,6 @@ function Sheet1LayoutRow({
         icon="edit-layout"
         onClick={onLayoutEdit}
         disabled={!sheet1Checked}
-        tooltip="Edit layout"
       />
     </div>
   );
@@ -592,7 +640,7 @@ function Sheet2Checkbox({
   onSheet2Click,
 }: {
   sheet2Checked: boolean;
-  onSheet2Click: () => void;
+  onSheet2Click: (checked: boolean) => void;
 }) {
   return (
     <div className="checkbox-row">
@@ -610,7 +658,7 @@ function Sheet2CheckboxWrapper({
   onSheet2Click,
 }: {
   sheet2Checked: boolean;
-  onSheet2Click: () => void;
+  onSheet2Click: (checked: boolean) => void;
 }) {
   return (
     <div className="basis-grow-container">
@@ -635,7 +683,7 @@ function Sheet2LayoutRow({
   appliedLayoutName,
 }: {
   sheet2Checked: boolean;
-  onSheet2Click: () => void;
+  onSheet2Click: (checked: boolean) => void;
   layout2Value: string;
   onLayout2Change: (value: string) => void;
   onLayout2Edit: () => void;
@@ -682,7 +730,6 @@ function Sheet2LayoutRow({
         icon="edit-layout"
         onClick={onLayout2Edit}
         disabled={!sheet2Checked}
-        tooltip="Edit layout"
       />
     </div>
   );
@@ -706,9 +753,9 @@ function SheetsConfigGroup({
   selectAllChecked: boolean;
   sheet1Checked: boolean;
   sheet2Checked: boolean;
-  onSelectAllClick: () => void;
-  onSheet1Click: () => void;
-  onSheet2Click: () => void;
+  onSelectAllClick: (checked: boolean) => void;
+  onSheet1Click: (checked: boolean) => void;
+  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -769,9 +816,9 @@ function MainConfigArea({
   selectAllChecked: boolean;
   sheet1Checked: boolean;
   sheet2Checked: boolean;
-  onSelectAllClick: () => void;
-  onSheet1Click: () => void;
-  onSheet2Click: () => void;
+  onSelectAllClick: (checked: boolean) => void;
+  onSheet1Click: (checked: boolean) => void;
+  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -865,9 +912,9 @@ function RightConfigPanel({
   selectAllChecked: boolean;
   sheet1Checked: boolean;
   sheet2Checked: boolean;
-  onSelectAllClick: () => void;
-  onSheet1Click: () => void;
-  onSheet2Click: () => void;
+  onSelectAllClick: (checked: boolean) => void;
+  onSheet1Click: (checked: boolean) => void;
+  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -940,9 +987,9 @@ function DialogMainContent({
   selectAllChecked: boolean;
   sheet1Checked: boolean;
   sheet2Checked: boolean;
-  onSelectAllClick: () => void;
-  onSheet1Click: () => void;
-  onSheet2Click: () => void;
+  onSelectAllClick: (checked: boolean) => void;
+  onSheet1Click: (checked: boolean) => void;
+  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -1037,9 +1084,9 @@ function DialogContainer({
   selectAllChecked: boolean;
   sheet1Checked: boolean;
   sheet2Checked: boolean;
-  onSelectAllClick: () => void;
-  onSheet1Click: () => void;
-  onSheet2Click: () => void;
+  onSelectAllClick: (checked: boolean) => void;
+  onSheet1Click: (checked: boolean) => void;
+  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -1129,9 +1176,9 @@ function PrintToPdf({
   selectAllChecked: boolean;
   sheet1Checked: boolean;
   sheet2Checked: boolean;
-  onSelectAllClick: () => void;
-  onSheet1Click: () => void;
-  onSheet2Click: () => void;
+  onSelectAllClick: (checked: boolean) => void;
+  onSheet1Click: (checked: boolean) => void;
+  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -1448,6 +1495,14 @@ export default function App() {
         setOriginalLayoutValues(null);
       }
     }
+
+    // 🔍 ОТЛАДКА: Логируем когда выбирается Sheet 2
+    console.log('🎯 SHEET 2 SELECTED! Current state:', {
+      checked,
+      currentSheet,
+      selectedSheets,
+      sheet2Data: sheets.find(s => s.id === 2)
+    });
   };
 
   const handleLayoutChange = (value: string) => {
@@ -1490,7 +1545,12 @@ export default function App() {
 
   const handleSheetChange = (sheet: number) => {
     setCurrentSheet(sheet);
-    console.log(`Switched to sheet ${sheet}`);
+    console.log(`🔄 ПЕРЕКЛЮЧЕНИЕ НА SHEET ${sheet}`);
+    
+    // 🔍 ОТЛАДКА: Подробная информация при переключении
+    const sheetData = sheets.find(s => s.id === sheet);
+    console.log('📊 Sheet data:', sheetData);
+    console.log('🖼️ Image URL for this sheet:', sheetData?.image);
   };
 
   // Layout editor handlers
