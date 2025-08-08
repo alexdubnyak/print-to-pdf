@@ -311,11 +311,22 @@ html {
   /* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ КНОПОК С ИКОНКАМИ */
   /* ============================================= */
 
-  /* Button Icon Default - базовые стили */
+  /* Button Icon Default - базовые стили (small - 28x28px) */
   .button-icon-default {
     background-color: #141518;
     border-width: 0px;
     cursor: pointer;
+  }
+
+  /* Button Icon Secondary - базовые стили (small - 28x28px) */
+  .button-icon-secondary {
+    background-color: #2c2e31;
+    cursor: pointer;
+  }
+
+  /* Small размер для кнопок (28x28px) - по умолчанию */
+  .w-7.h-7.button-icon-default,
+  .w-7.h-7.button-icon-secondary {
     width: 28px !important;
     height: 28px !important;
     min-width: 28px !important;
@@ -324,16 +335,15 @@ html {
     max-height: 28px !important;
   }
 
-  /* Button Icon Secondary - базовые стили */
-  .button-icon-secondary {
-    background-color: #2c2e31;
-    cursor: pointer;
-    width: 28px !important;
-    height: 28px !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
-    max-width: 28px !important;
-    max-height: 28px !important;
+  /* Medium размер для кнопок (36x36px) */
+  .w-9.h-9.button-icon-default,
+  .w-9.h-9.button-icon-secondary {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
   }
 
   /* ============================================= */
@@ -644,16 +654,16 @@ html {
     box-sizing: border-box !important;
   }
 
-  /* Button icons should be exactly 28x28 */
-  .button-icon-default,
-  .button-icon-secondary {
-    width: 28px !important;
-    height: 28px !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
-    max-width: 28px !important;
-    max-height: 28px !important;
+  /* Button icons small size (28x28) */
+  .w-7.h-7.button-icon-default,
+  .w-7.h-7.button-icon-secondary {
     padding: 6px !important;
+  }
+
+  /* Button icons medium size (36x36) */
+  .w-9.h-9.button-icon-default,
+  .w-9.h-9.button-icon-secondary {
+    padding: 8px !important;
   }
 
   /* Navigation buttons should be exactly 28x28 */
@@ -1206,11 +1216,28 @@ html {
         90deg,
         rgba(0, 0, 0, 0.8) 0%,
         rgba(0, 0, 0, 0.8) 100%
-      ),
-      var(--bg-image);
+      );
   }
 
   .bg-dynamic-image {
     background-image: var(--bg-image);
+  }
+
+  /* Responsive background utilities */
+  .responsive-bg-right {
+    right: 0;
+    transform: translateX(0);
+  }
+
+  .responsive-bg-expand {
+    width: auto;
+    min-width: 300px;
+  }
+
+  /* Adaptive positioning for right-side elements */
+  .adaptive-right-positioning {
+    position: absolute;
+    right: 0;
+    transform-origin: right center;
   }
 }
