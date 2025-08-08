@@ -16,58 +16,19 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
     heightMm
   });
 
-  // Determine background settings based on sheet name/dimensions
-  const getBackgroundSettings = () => {
-    // Sheet 1: 707x500mm (horizontal layout)
-    if (widthMm === '707' && heightMm === '500') {
-      console.log('📐 Определены настройки для Sheet 1 (707x500)');
-      return {
-        backgroundSize: '167.12% 118.26%',
-        backgroundPosition: '52.7% 33.61%'
-      };
-    }
-    // Sheet 2: 841x594mm (A1 format - vertical layout)
-    if (widthMm === '841' && heightMm === '594') {
-      console.log('📐 Определены настройки для Sheet 2 (841x594)');
-      return {
-        backgroundSize: '140% 95%',
-        backgroundPosition: '50% 45%'
-      };
-    }
-    // Default fallback
-    console.log('⚠️ Использованы настройки по умолчанию для размеров:', widthMm, 'x', heightMm);
-    return {
-      backgroundSize: 'contain',
-      backgroundPosition: 'center'
-    };
-  };
-
-  const backgroundSettings = getBackgroundSettings();
-  
-  // 🔍 ОТЛАДКА: Логируем финальные настройки фона
-  console.log('🎨 Background settings:', backgroundSettings);
-
   // 🔍 ОТЛАДКА: Проверяем URL изображения
-  const imageUrl = `url('${image}')`;
-  console.log('🖼️ Image URL:', imageUrl);
   console.log('🖼️ Raw image prop:', image);
-
-  // 🔍 ОТЛАДКА: Логируем итоговые стили для изображения
-  const imageStyles = {
-    '--bg-image': imageUrl,
-    backgroundImage: imageUrl, // Добавляем fallback
-    backgroundSize: backgroundSettings.backgroundSize,
-    backgroundPosition: backgroundSettings.backgroundPosition
-  };
-  console.log('🎨 Final image styles:', imageStyles);
 
   return (
     <div className="h-[251.296px] relative shrink-0 w-[323.5px]">
+      {/* Базовый лист (фон) */}
       <div className="absolute flex h-[251.281px] items-center justify-center left-[-0.45px] top-[0.434px] w-[324.391px]">
         <div className="flex-none rotate-[270deg]">
           <div className="h-[324.401px] w-[251.296px]" style={{ backgroundColor: 'var(--color-white)' }} />
         </div>
       </div>
+      
+      {/* Первый внутренний лист с пунктирной рамкой */}
       <div className="absolute flex h-[239.406px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[310.703px] sheet-preview-center-1">
         <div className="flex-none rotate-[270deg]">
           <div className="h-[310.707px] relative w-[239.417px]" style={{ backgroundColor: 'var(--color-white)' }}>
@@ -75,13 +36,51 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
           </div>
         </div>
       </div>
+      
+      {/* Второй внутренний лист с сплошной рамкой - здесь будет изображение */}
       <div className="absolute flex h-[214.734px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[286.938px] sheet-preview-center-2">
         <div className="flex-none rotate-[270deg]">
-          <div className="h-[286.948px] relative w-[214.744px]" style={{ backgroundColor: 'var(--color-white)' }}>
-            <div className="absolute border-[0.456903px] border-solid inset-0 pointer-events-none" style={{ borderColor: 'var(--color-black)' }} />
+          <div className="h-[286.948px] relative w-[214.744px] overflow-hidden" style={{ backgroundColor: 'var(--color-white)' }}>
+            {/* Рамка листа */}
+            <div className="absolute border-[0.456903px] border-solid inset-0 pointer-events-none z-10" style={{ borderColor: 'var(--color-black)' }} />
+            
+            {/* 🖼️ ИЗОБРАЖЕНИЕ ЧЕРТЕЖА - встроенное на лист с сохранением пропорций + поворот на 90° */}
+            <div className="absolute inset-[2px] flex items-center justify-center">
+              <img
+                src={image}
+                alt={`Technical drawing for ${sheetName}`}
+                className="max-w-full max-h-full object-contain"
+                style={{
+                  filter: 'brightness(0.95) contrast(1.1)', // Слегка затемняем для лучшей видимости на белом фоне
+                  transform: 'rotate(90deg)', // 🔄 Поворот на 90 градусов по часовой стрелке
+                  transformOrigin: 'center center', // Центр вращения
+                }}
+                onLoad={() => console.log('✅ Изображение загружено и повернуто на 90°:', image)}
+                onError={(e) => {
+                  console.error('❌ Ошибка загрузки изображения:', image, e);
+                  // Fallback - показываем placeholder
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+              
+              {/* Fallback placeholder на случай ошибки загрузки */}
+              <div 
+                className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs pointer-events-none"
+                style={{ display: 'none' }}
+                id={`fallback-${sheetName}`}
+              >
+                <div className="text-center">
+                  <div className="mb-1">📋</div>
+                  <div>Technical Drawing</div>
+                  <div className="text-[8px] mt-1">{widthMm}×{heightMm}mm</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Размерные линии и метки - сохраняем как есть */}
       <div className="absolute flex h-[15.531px] items-center justify-center left-[0.463px] top-[-16.015px] w-[0px]">
         <div className="flex-none rotate-[270deg]">
           <div className="h-0 relative w-[15.535px]">
@@ -248,16 +247,6 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
           </div>
         </div>
       </div>
-      
-      {/* 🔍 ОТЛАДКА: Добавлен отладочный див для изображения */}
-      <div
-        className="absolute bg-no-repeat h-[152.605px] translate-x-[-50%] translate-y-[-50%] w-[88.182px] sheet-preview-image bg-dynamic-image"
-        data-name="sheet-image"
-        data-debug-image={image} // Добавляем data-атрибут для отладки
-        style={imageStyles as React.CSSProperties}
-        onLoad={() => console.log('✅ Изображение загружено')}
-        onError={(e) => console.error('❌ Ошибка загрузки изображения:', e)}
-      />
       
       <div className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] left-[144.388px] not-italic text-[10.9657px] text-left text-nowrap top-[-37.923px]" style={{ color: 'var(--color-text-light)' }}>
         <p className="block leading-[normal] whitespace-pre">{sheetName}</p>

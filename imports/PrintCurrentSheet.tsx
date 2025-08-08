@@ -1,8 +1,6 @@
 import svgPaths from "./svg-fozgx6zh3z";
-
-// Direct image URLs replacing Figma assets
-const imgImage9 = "https://dwgmodels.com/uploads/posts/2023-12/reception-desks-for-hotels_m.jpg";
-const imgImage = "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1496&h=813&q=80";
+import imgImage9 from "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png";
+import imgImage from "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png";
 
 function Frame206() {
   return (
@@ -1117,9 +1115,17 @@ function Frame232() {
 function PrintToPdf() {
   return (
     <div
-      className="absolute bg-[#333538] box-border content-stretch flex flex-col h-[591px] items-start justify-between p-0 shadow-[0px_4px_64px_0px_rgba(0,0,0,0.25)] top-[147.5px] translate-x-[-50%] w-[971px]"
+      className="absolute bg-[#333538] box-border content-stretch flex flex-col h-[591px] items-start justify-between p-0 rounded-lg border border-[#4a4a4a] top-[147.5px] translate-x-[-50%] w-[971px]"
       data-name="Print to PDF"
-      style={{ left: "calc(50% - 7.25px)" }}
+      style={{ 
+        left: "calc(50% - 7.25px)",
+        boxShadow: `
+          0px 8px 32px rgba(0, 0, 0, 0.6),
+          0px 4px 16px rgba(0, 0, 0, 0.4),
+          0px 2px 8px rgba(0, 0, 0, 0.3),
+          inset 0px 1px 0px rgba(255, 255, 255, 0.1)
+        `,
+      }}
     >
       <Frame232 />
     </div>
@@ -1129,15 +1135,43 @@ function PrintToPdf() {
 export default function PrintCurrentSheet() {
   return (
     <div className="relative size-full" data-name="Print current sheet">
+      {/* CAD Background from screenshot */}
       <div
-        className="[background-size:auto,_cover] absolute bg-[position:0%_0%,_50%_50%] h-[813px] left-0 top-0 w-[1496px]"
-        data-name="image"
+        className="[background-size:cover] absolute bg-center h-[813px] left-0 top-0 w-[1496px]"
+        data-name="cad-background"
         style={{
-          backgroundImage: `linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.8) 100%), url('${imgImage}')`,
+          backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1496 813"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23404040" stroke-width="0.5"/></pattern></defs><rect width="1496" height="813" fill="%23353535"/><rect width="1496" height="813" fill="url(%23grid)"/><rect x="0" y="0" width="1496" height="65" fill="%232a2a2a"/><rect x="0" y="0" width="300" height="813" fill="%232f2f2f"/><rect x="1200" y="0" width="296" height="813" fill="%232f2f2f"/><text x="150" y="35" text-anchor="middle" font-family="Arial" font-size="14" fill="%23d5d7e1">ARES Kudo - New.dwg</text><rect x="500" y="300" width="200" height="150" fill="none" stroke="%23ffffff" stroke-width="2"/><rect x="300" y="500" width="300" height="200" fill="none" stroke="%234285f4" stroke-width="2"/><polygon points="800,400 750,500 850,500" fill="none" stroke="%234285f4" stroke-width="2"/><circle cx="900" cy="300" r="50" fill="none" stroke="%23ffffff" stroke-width="2"/><text x="1400" y="100" font-family="Arial" font-size="12" fill="%23cfcfcf">PROPERTIES</text><text x="1400" y="130" font-family="Arial" font-size="10" fill="%23888">NO ENTITIES SELECTED</text><text x="1400" y="600" font-family="Arial" font-size="12" fill="%23cfcfcf">LAYERS</text><rect x="1380" y="620" width="16" height="16" fill="%23ffffff"/><text x="1405" y="632" font-family="Arial" font-size="10" fill="%23cfcfcf">ByLayer</text><rect x="0" y="750" width="1496" height="63" fill="%232a2a2a"/><text x="50" y="785" font-family="Arial" font-size="12" fill="%23cfcfcf">Model | Sheet1 | Sheet2</text></svg>')`,
         }}
       />
-      <div className="absolute bg-[#333538] h-[145.5px] left-[499px] top-[368.5px] w-[486.5px]" />
+      
+      {/* Enhanced overlay with better darkening */}
+      <div
+        className="absolute inset-0"
+        data-name="overlay"
+        style={{
+          background: `
+            radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 70%),
+            linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%)
+          `,
+          backdropFilter: 'blur(1px)',
+        }}
+      />
+      
+      {/* Additional shadow area behind popup */}
+      <div 
+        className="absolute bg-black/40 rounded-xl blur-xl"
+        style={{
+          left: 'calc(50% - 500px)',
+          top: '130px',
+          width: '1000px',
+          height: '620px',
+        }}
+      />
+      
+      {/* Bottom controls bar */}
       <Frame209 />
+      
+      {/* Main popup with enhanced styling */}
       <PrintToPdf />
     </div>
   );

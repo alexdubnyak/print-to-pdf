@@ -1,4 +1,5 @@
 import svgPaths from "../imports/svg-wmfynqmf6c";
+import helpSvgPaths from "../imports/svg-snkfn2a75m";
 
 export type IconType = 
   | 'edit-layout'
@@ -12,16 +13,18 @@ export type IconType =
   | 'activate-all-sheets'
   | 'import-layout'
   | 'search'
-  | 'deactivate';
+  | 'deactivate'
+  | 'help';
 
 interface IconProps {
   type: IconType;
   disabled?: boolean;
   className?: string;
-  active?: boolean;        // ← НОВОЕ: для поддержки активного состояния
+  active?: boolean;
+  size?: 'small' | 'medium'; // Добавлен prop size
 }
 
-export function Icon({ type, disabled = false, className = "", active = false }: IconProps) {
+export function Icon({ type, disabled = false, className = "", active = false, size = 'small' }: IconProps) {
   const getIconColor = (baseColor: string) => {
     if (active) {
       return '#ffffff'; // Белый цвет для активного состояния
@@ -29,11 +32,14 @@ export function Icon({ type, disabled = false, className = "", active = false }:
     return disabled ? 'var(--color-text-secondary, #8E8F90)' : baseColor;
   };
 
+  // Все иконки одинакового размера 16px независимо от размера кнопки
+  const iconSizeClass = 'size-4';
+
   const renderIcon = () => {
     switch (type) {
       case 'edit-layout':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="edit layout">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="edit layout">
             <svg
               className="block size-full"
               fill="none"
@@ -53,7 +59,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'delete-layout':
         return (
-          <div className={`overflow-clip relative shrink-0 size-4 ${className}`} data-name="delete layout">
+          <div className={`overflow-clip relative shrink-0 ${iconSizeClass} ${className}`} data-name="delete layout">
             <div className="absolute h-[12.6px] left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] w-[14.4px]">
               <svg
                 className="block size-full"
@@ -85,7 +91,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'create-layout':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="create layout">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="create layout">
             <svg
               className="block size-full"
               fill="none"
@@ -105,7 +111,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'approve':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="approve">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="approve">
             <svg
               className="block size-full"
               fill="none"
@@ -125,7 +131,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'cancel-creation':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="cancel creation">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="cancel creation">
             <svg
               className="block size-full"
               fill="none"
@@ -145,7 +151,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'edit':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="edit">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="edit">
             <svg
               className="block size-full"
               fill="none"
@@ -165,7 +171,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'delete-layout-red':
         return (
-          <div className={`overflow-clip relative shrink-0 size-4 ${className}`} data-name="delete layout">
+          <div className={`overflow-clip relative shrink-0 ${iconSizeClass} ${className}`} data-name="delete layout">
             <div className="absolute h-[12.6px] left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] w-[14.4px]">
               <svg
                 className="block size-full"
@@ -197,7 +203,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'activate':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="activate">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="activate">
             <svg
               className="block size-full"
               fill="none"
@@ -217,7 +223,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'activate-all-sheets':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="activate all sheets">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="activate all sheets">
             <svg
               className="block size-full"
               fill="none"
@@ -242,7 +248,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'import-layout':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="import layout">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="import layout">
             <svg
               className="block size-full"
               fill="none"
@@ -277,7 +283,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'search':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="search">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="search">
             <svg
               className="block size-full"
               fill="none"
@@ -299,7 +305,7 @@ export function Icon({ type, disabled = false, className = "", active = false }:
 
       case 'deactivate':
         return (
-          <div className={`relative shrink-0 size-4 ${className}`} data-name="deactivate">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="deactivate">
             <svg
               className="block size-full"
               fill="none"
@@ -311,6 +317,26 @@ export function Icon({ type, disabled = false, className = "", active = false }:
                   d="M14 8.5H2V7.5H14V8.5Z"
                   fill={getIconColor('#D5D7E1')}
                   id="deactivate-line"
+                />
+              </g>
+            </svg>
+          </div>
+        );
+
+      case 'help':
+        return (
+          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="help">
+            <svg
+              className="block size-full"
+              fill="none"
+              preserveAspectRatio="xMidYMid meet" // Изменено для правильного соотношения сторон
+              viewBox="0 0 6 11"
+            >
+              <g id="help">
+                <path
+                  d={helpSvgPaths.p204a2f00}
+                  fill={getIconColor('var(--color-icon-fill, #CFCFCF)')}
+                  id="Vector"
                 />
               </g>
             </svg>
