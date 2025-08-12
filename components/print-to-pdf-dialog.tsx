@@ -11,6 +11,8 @@ import { SheetNavigationRight } from "./sheet-navigation-right";
 import { SheetPreview } from "./sheet-preview";
 import { NoPreview } from "./no-preview";
 import { LayoutEditor } from "./layout-editor";
+import { TabsContainer } from "./tabs-container";
+import { LayoutSettingsPanelExact } from "./layout-settings-panel-exact";
 
 // ============================================
 // IMAGE ASSETS - Technical Drawing References
@@ -306,11 +308,13 @@ function PreviewArea({
   currentSheet,
   onSheetChange,
   selectedSheets,
+  hideNavigationArrows = false,
 }: {
   selectedCount: number;
   currentSheet: number;
   onSheetChange: (sheet: number) => void;
   selectedSheets: number[];
+  hideNavigationArrows?: boolean;
 }) {
   const handlePrevious = () => {
     const currentIndex = selectedSheets.indexOf(currentSheet);
@@ -326,10 +330,28 @@ function PreviewArea({
     }
   };
 
-  if (selectedCount === 0) {
+  if (selectedCount === 0 && !hideNavigationArrows) {
     return (
       <div className="basis-0 box-border content-stretch flex flex-col grow h-full items-center justify-center min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0">
         <NoPreview />
+      </div>
+    );
+  }
+
+  // In Quick print mode, always show Sheet 1 even if nothing is selected
+  if (hideNavigationArrows && selectedCount === 0) {
+    const sheet1Data = sheets[0]; // Always show first sheet in Quick print
+    return (
+      <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow h-full items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0">
+        <SheetPreview
+          image={sheet1Data.image}
+          sheetName={sheet1Data.name}
+          widthMm={sheet1Data.widthMm}
+          heightMm={sheet1Data.heightMm}
+        />
+        <div className="flex flex-col gap-2 items-start">
+          <SettingsSection />
+        </div>
       </div>
     );
   }
@@ -350,19 +372,22 @@ function PreviewArea({
         />
       )}
       <div className="flex flex-col gap-2 items-start">
-        <div className="flex gap-2 items-center justify-center w-full">
-          <SheetNavigationLeft
-            disabled={selectedCount === 1 || currentIndex === 0}
-            onClick={handlePrevious}
-          />
-          <SheetNavigationRight
-            disabled={
-              selectedCount === 1 ||
-              currentIndex === selectedSheets.length - 1
-            }
-            onClick={handleNext}
-          />
-        </div>
+        {/* Navigation arrows - conditionally hidden in Quick print mode */}
+        {!hideNavigationArrows && (
+          <div className="flex gap-2 items-center justify-center w-full">
+            <SheetNavigationLeft
+              disabled={selectedCount === 1 || currentIndex === 0}
+              onClick={handlePrevious}
+            />
+            <SheetNavigationRight
+              disabled={
+                selectedCount === 1 ||
+                currentIndex === selectedSheets.length - 1
+              }
+              onClick={handleNext}
+            />
+          </div>
+        )}
         <SettingsSection />
       </div>
     </div>
@@ -374,11 +399,13 @@ function LeftPreviewPanel({
   currentSheet,
   onSheetChange,
   selectedSheets,
+  hideNavigationArrows = false,
 }: {
   selectedCount: number;
   currentSheet: number;
   onSheetChange: (sheet: number) => void;
   selectedSheets: number[];
+  hideNavigationArrows?: boolean;
 }) {
   return (
     <div
@@ -390,6 +417,7 @@ function LeftPreviewPanel({
         currentSheet={currentSheet}
         onSheetChange={onSheetChange}
         selectedSheets={selectedSheets}
+        hideNavigationArrows={hideNavigationArrows}
       />
     </div>
   );
@@ -590,6 +618,8 @@ function SheetsConfigGroup({
   onLayoutEdit,
   onLayout2Edit,
   appliedLayoutName,
+  activeTab,
+  onTabChange,
 }: {
   selectAllChecked: boolean;
   sheet1Checked: boolean;
@@ -604,6 +634,8 @@ function SheetsConfigGroup({
   onLayoutEdit: () => void;
   onLayout2Edit: () => void;
   appliedLayoutName?: string;
+  activeTab: "quick" | "advanced";
+  onTabChange: (tab: "quick" | "advanced") => void;
 }) {
   return (
     <div className="relative shrink-0 w-full">
@@ -719,6 +751,34 @@ function SheetsConfigGroup({
   );
 }
 
+// Quick Print Settings Component - настройки для текущего листа в Quick режиме
+function QuickPrintSettings() {
+  return (
+    <div className="relative w-full h-full min-h-0 quick-print-settings-full-width">
+      <div className="relative size-full flex flex-col h-full min-h-0">
+        {/* Header (фиксированный) */}
+        <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0 px-5">
+          <div
+            className="font-['Open_Sans:SemiBold',_sans-serif] not-italic text-[12px] text-left text-nowrap"
+            style={{ color: "var(--color-text-light)" }}
+          >
+            <p className="leading-[normal] whitespace-pre">Sheet 1 Layout</p>
+          </div>
+        </div>
+
+        {/* Прокручиваемая область */}
+        <div
+          className="grow min-h-0 overflow-y-auto overflow-x-hidden px-5 pb-4 pr-6 tab-content-full-width"
+          role="region"
+          aria-label="Quick print layout settings"
+        >
+          <LayoutSettingsPanelExact />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MainConfigArea({
   searchValue,
   onSearchChange,
@@ -735,6 +795,8 @@ function MainConfigArea({
   onLayoutEdit,
   onLayout2Edit,
   appliedLayoutName,
+  activeTab,
+  onTabChange,
 }: {
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -751,28 +813,50 @@ function MainConfigArea({
   onLayoutEdit: () => void;
   onLayout2Edit: () => void;
   appliedLayoutName?: string;
+  activeTab: "quick" | "advanced";
+  onTabChange: (tab: "quick" | "advanced") => void;
 }) {
   return (
-    <div className="box-border content-stretch flex flex-col gap-5 items-start justify-start order-2 p-0 relative shrink-0 w-full">
-      <SearchSectionWrapper
-        searchValue={searchValue}
-        onSearchChange={onSearchChange}
-      />
-      <SheetsConfigGroup
-        selectAllChecked={selectAllChecked}
-        sheet1Checked={sheet1Checked}
-        sheet2Checked={sheet2Checked}
-        onSelectAllClick={onSelectAllClick}
-        onSheet1Click={onSheet1Click}
-        onSheet2Click={onSheet2Click}
-        layoutValue={layoutValue}
-        onLayoutChange={onLayoutChange}
-        layout2Value={layout2Value}
-        onLayout2Change={onLayout2Change}
-        onLayoutEdit={onLayoutEdit}
-        onLayout2Edit={onLayout2Edit}
-        appliedLayoutName={appliedLayoutName}
-      />
+    <div className="box-border content-stretch flex flex-col gap-5 items-start justify-start order-2 p-0 relative w-full h-full min-h-0 main-config-area-full-width">
+      {/* Tabs Container above everything */}
+      <div className="relative shrink-0 w-full">
+        <div className="relative size-full">
+          <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-5 py-0 relative w-full">
+            <TabsContainer activeTab={activeTab} onTabChange={onTabChange} />
+          </div>
+        </div>
+      </div>
+      
+      {/* Content based on active tab */}
+      {activeTab === "quick" ? (
+        // Quick print: Show layout settings for current sheet
+        <QuickPrintSettings />
+      ) : (
+        // Advanced print: Show all controls
+        <div className="advanced-settings-full-width w-full flex flex-col gap-5">
+          <SearchSectionWrapper
+            searchValue={searchValue}
+            onSearchChange={onSearchChange}
+          />
+          <SheetsConfigGroup
+            selectAllChecked={selectAllChecked}
+            sheet1Checked={sheet1Checked}
+            sheet2Checked={sheet2Checked}
+            onSelectAllClick={onSelectAllClick}
+            onSheet1Click={onSheet1Click}
+            onSheet2Click={onSheet2Click}
+            layoutValue={layoutValue}
+            onLayoutChange={onLayoutChange}
+            layout2Value={layout2Value}
+            onLayout2Change={onLayout2Change}
+            onLayoutEdit={onLayoutEdit}
+            onLayout2Edit={onLayout2Edit}
+            appliedLayoutName={appliedLayoutName}
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -850,6 +934,8 @@ function RightConfigPanel({
   onLayoutEdit,
   onLayout2Edit,
   appliedLayoutName,
+  activeTab,
+  onTabChange,
 }: {
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -869,9 +955,11 @@ function RightConfigPanel({
   onLayoutEdit: () => void;
   onLayout2Edit: () => void;
   appliedLayoutName?: string;
+  activeTab: "quick" | "advanced";
+  onTabChange: (tab: "quick" | "advanced") => void;
 }) {
   return (
-    <div className="box-border content-stretch flex flex-col-reverse gap-5 h-full items-start justify-start pb-0 pt-5 px-0 relative shrink-0 w-[571px]">
+    <div className="box-border content-stretch flex flex-col-reverse gap-5 h-full min-h-0">
       <MainConfigArea
         searchValue={searchValue}
         onSearchChange={onSearchChange}
@@ -888,6 +976,8 @@ function RightConfigPanel({
         onLayoutEdit={onLayoutEdit}
         onLayout2Edit={onLayout2Edit}
         appliedLayoutName={appliedLayoutName}
+        activeTab={activeTab}
+        onTabChange={onTabChange}
       />
       <ButtonToolbarBottom
         onPageLayoutClick={onPageLayoutClick}
@@ -925,6 +1015,8 @@ function DialogMainContent({
   onLayoutEditorClose,
   onLayoutEditorSave,
   appliedLayoutName,
+  activeTab,
+  onTabChange,
 }: {
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -960,6 +1052,7 @@ function DialogMainContent({
         currentSheet={currentSheet}
         onSheetChange={onSheetChange}
         selectedSheets={selectedSheets}
+        hideNavigationArrows={activeTab === "quick"}
       />
       {isLayoutEditorOpen ? (
         <LayoutEditor
@@ -987,6 +1080,8 @@ function DialogMainContent({
           onLayoutEdit={onLayoutEdit}
           onLayout2Edit={onLayout2Edit}
           appliedLayoutName={appliedLayoutName}
+          activeTab={activeTab}
+          onTabChange={onTabChange}
         />
       )}
     </div>
@@ -1021,6 +1116,8 @@ function DialogContainer({
   onLayoutEditorClose,
   onLayoutEditorSave,
   appliedLayoutName,
+  activeTab,
+  onTabChange,
 }: {
   onClose: () => void;
   searchValue: string;
@@ -1049,6 +1146,8 @@ function DialogContainer({
   onLayoutEditorClose: () => void;
   onLayoutEditorSave: () => void;
   appliedLayoutName?: string;
+  activeTab: "quick" | "advanced";
+  onTabChange: (tab: "quick" | "advanced") => void;
 }) {
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-px grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0 w-full">
@@ -1080,6 +1179,8 @@ function DialogContainer({
         onLayoutEditorClose={onLayoutEditorClose}
         onLayoutEditorSave={onLayoutEditorSave}
         appliedLayoutName={appliedLayoutName}
+        activeTab={activeTab}
+        onTabChange={onTabChange}
       />
     </div>
   );
@@ -1095,6 +1196,9 @@ interface PrintToPdfDialogProps {
 }
 
 export function PrintToPdfDialog({ onClose, onPageLayoutManagerOpen }: PrintToPdfDialogProps) {
+  // Tabs state - Quick print by default
+  const [activeTab, setActiveTab] = useState<"quick" | "advanced">("quick");
+  
   const [searchValue, setSearchValue] = useState("");
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [sheet1Checked, setSheet1Checked] = useState(false);
@@ -1402,6 +1506,8 @@ export function PrintToPdfDialog({ onClose, onPageLayoutManagerOpen }: PrintToPd
           onLayoutEditorClose={handleLayoutEditorClose}
           onLayoutEditorSave={handleLayoutEditorSave}
           appliedLayoutName={appliedLayoutName}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
       </div>
     </>

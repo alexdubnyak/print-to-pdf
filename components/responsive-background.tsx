@@ -1,91 +1,106 @@
-import imgImage20 from "figma:asset/0fc685cd8f14f838f09ada3b1204362f5d241faf.png";
-import imgImage21 from "figma:asset/fc1aa20fa288627bfb8f77e052e2670c57b8a968.png";
+import React, { ReactNode } from "react";
+import imgImage3 from "figma:asset/4f0bad069f1a79526d8fca7a1265e757a1048cd4.png";
+import imgImage22 from "figma:asset/0fc685cd8f14f838f09ada3b1204362f5d241faf.png";
+import ScrollableRibbon from "./ScrollableRibbon";
 
 interface ResponsiveBackgroundProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
+  className?: string;
   overlay?: boolean;
 }
 
-function BackgroundLayer() {
+/* ===== Decorative pieces (все немые) ===== */
+function TabBar() {
   return (
-    <div className="absolute h-[92px] left-0 top-20 w-full">
+    <div className="absolute bg-[#1e2023] h-[28px] left-0 top-[47px] w-full pointer-events-none">
       <div
-        className="absolute bg-[0%_11.27%] bg-no-repeat bg-size-[100%_873.12%] h-[93px] left-0 top-px w-full"
-        data-name="image 20"
-        style={{ backgroundImage: `url('${imgImage20}')` }}
+        className="absolute bg-no-repeat bg-size-[337.28%_100%] bg-top-left h-[28px] left-0 top-0 w-[558px]"
+        style={{ backgroundImage: `url('${imgImage3}')` }}
       />
       <div
-        className="absolute bg-[100%_79.25%] bg-no-repeat bg-size-[271.51%_157.61%] h-[92px] right-0 top-0 w-[551px]"
-        data-name="image 21"
-        style={{ backgroundImage: `url('${imgImage21}')` }}
+        className="absolute bg-no-repeat bg-size-[4705%_100%] bg-top-right h-[28px] right-0 top-0 w-10"
+        style={{ backgroundImage: `url('${imgImage3}')` }}
       />
     </div>
   );
 }
 
-export function ResponsiveBackground({ children, overlay = false }: ResponsiveBackgroundProps) {
+function Frame294() {
+  return <div className="absolute h-[37px] left-[619px] top-[872px] w-[1487px] pointer-events-none" />;
+}
+
+function Header() {
   return (
-    <div className="relative size-full">
-      {/* Main background layer */}
+    <div className="absolute bg-[#1e2023] h-[47px] left-0 top-0 w-full pointer-events-none">
       <div
-        className="absolute bg-center bg-cover bg-no-repeat h-[812px] left-0 top-0 w-full"
-        data-name="main background"
-        style={{ backgroundImage: `url('${imgImage20}')` }}
+        className="absolute bg-no-repeat bg-size-[476.43%_1727.66%] bg-top-right h-[47px] right-0 top-0 w-[314px]"
+        style={{ backgroundImage: `url('${imgImage22}')` }}
       />
-      
-      {/* Right side panel background - adapts to screen width */}
-      <div className="absolute bg-[#333538] h-[37px] right-0 top-[774px] w-[133px]" />
-      
-      {/* Right corner element */}
-      <div
-        className="absolute bg-bottom-right bg-no-repeat bg-size-[2624.56%_2082.05%] h-[39px] right-0 top-[773px] w-[57px]"
-        data-name="right corner"
-        style={{ backgroundImage: `url('${imgImage20}')` }}
-      />
-      
-      {/* Right side content area - expands with screen width */}
-      <div className="absolute bg-[#dcdcdc] h-[591px] right-0 top-[182px] w-[379px]" />
-      
-      {/* Top header area - expands to right */}
-      <div className="absolute bg-[#1e2023] h-20 right-0 top-0 w-[639px]" />
-      
-      {/* Top separator line */}
-      <div className="absolute bg-[#1e2023] h-2.5 right-0 top-[172px] w-[639px]" />
-      
-      {/* Top toolbar area */}
-      <div className="absolute bg-[#333538] h-[92px] right-0 top-20 w-[639px]" />
-      
-      {/* Top right corner header */}
-      <div
-        className="absolute bg-no-repeat bg-size-[476.43%_1015%] bg-top-right h-20 right-0 top-0 w-[314px]"
-        data-name="top right header"
-        style={{ backgroundImage: `url('${imgImage20}')` }}
-      />
-      
-      {/* Left side header */}
       <div
         className="absolute bg-no-repeat bg-size-[171.36%_1727.66%] bg-top-left h-[47px] left-0 top-0 w-[873px]"
-        data-name="left header"
-        style={{ backgroundImage: `url('${imgImage20}')` }}
+        style={{ backgroundImage: `url('${imgImage22}')` }}
       />
-      
-      {/* Right side panel */}
-      <div
-        className="absolute bg-[100%_82.96%] bg-no-repeat bg-size-[476.43%_137.86%] h-[589px] right-0 top-[185px] w-[314px]"
-        data-name="right panel"
-        style={{ backgroundImage: `url('${imgImage20}')` }}
-      />
-      
-      {/* Additional background layer */}
-      <BackgroundLayer />
-      
-      {/* Overlay for dialogs */}
-      {overlay && (
-        <div className="absolute inset-0 bg-gradient-overlay" />
-      )}
-      
-      {/* Content children */}
-      {children}
     </div>
   );
 }
+
+function Frame298() {
+  return (
+    <div
+      className="absolute bg-[#333538] bottom-0 h-[37px] translate-x-[-50%] w-[1487px] pointer-events-none"
+      style={{ left: "calc(50% + 0.5px)" }}
+    >
+      <div
+        className="absolute bg-bottom-left bg-no-repeat bg-size-[104.18%_2194.59%] h-[37px] left-0 top-0 w-[1436px]"
+        style={{ backgroundImage: `url('${imgImage22}')` }}
+      />
+      <div
+        className="absolute bg-bottom-right bg-no-repeat bg-size-[2933.33%_2194.59%] h-[37px] right-0 top-0 w-[51px]"
+        style={{ backgroundImage: `url('${imgImage22}')` }}
+      />
+    </div>
+  );
+}
+
+/* ===== Main wrapper ===== */
+const ResponsiveBackground: React.FC<ResponsiveBackgroundProps> = ({
+  children,
+  className = "",
+  overlay = false,
+}) => {
+  return (
+    <div className={`fixed inset-0 bg-[#dcdcdc] ${className}`} data-name="responsive background">
+      {/* фон/декор */}
+      <div className="relative z-0 w-full h-full">
+        <TabBar />
+        <Frame294 />
+        <div
+          className="absolute bg-[99.17%_83.11%] bg-no-repeat bg-size-[519.44%_138.33%] h-[587px] right-[19px] top-56 w-72 pointer-events-none"
+          style={{ backgroundImage: `url('${imgImage22}')` }}
+        />
+        <div
+          className="absolute bg-[50%_91.21%] bg-no-repeat bg-size-[356.19%_2136.84%] bottom-[74px] h-[38px] left-1/2 translate-x-[-50%] w-[420px] pointer-events-none"
+          style={{ backgroundImage: `url('${imgImage22}')` }}
+        />
+        <div
+          className="absolute bg-[44.64%_61.84%] bg-no-repeat bg-size-[631.22%_443.72%] h-[183px] top-1/2 translate-x-[-50%] translate-y-[-50%] w-[237px] pointer-events-none"
+          style={{ left: "calc(50% + 0.5px)", backgroundImage: `url('${imgImage22}')` }}
+        />
+        <Header />
+        <Frame298 />
+      </div>
+
+      {/* лента */}
+      <ScrollableRibbon className="absolute left-0 top-[75px] w-full z-20 pointer-events-auto" />
+
+      {/* оверлей */}
+      {overlay && <div className="fixed inset-0 bg-black/60 bg-opacity-50 z-30" />}
+
+      {/* контент */}
+      <div className="relative z-40 w-full h-full">{children}</div>
+    </div>
+  );
+};
+
+export { ResponsiveBackground };
+export default ResponsiveBackground;

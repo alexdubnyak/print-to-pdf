@@ -141,6 +141,27 @@
 }
 
 @layer base {
+  html,
+  body {
+    height: 100%;
+    width: 100%;
+    font-size: 14px;
+    background-color: #dcdcdc;
+    overflow: hidden !important; /* Глобальная блокировка скролла */
+  }
+
+  #root {
+    height: 100vh;
+    width: 100vw;
+    background-color: #dcdcdc;
+    overflow: hidden !important; /* Блокировка скролла для root */
+  }
+
+  /* Локальная блокировка скролла только для контейнеров диалогов */
+  .dialog-overlay-container {
+    overflow: hidden !important;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -296,16 +317,12 @@ html {
     background-color: #141518;
     height: 36px !important;
     width: auto !important;
-   
-    
     color: var(--color-white);
   }
 
   .button-secondary:hover {
     background-color: #2a2c2f;
   }
-
- 
 
   /* ============================================= */
   /* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ КНОПОК С ИКОНКАМИ */
@@ -360,7 +377,7 @@ html {
     background-color: var(--color-activate-all-hover, #1a4fb8) !important;
   }
 
-  /* Убираем стан����артные hover эффекты для активной кнопки */
+  /* Убираем стандартные hover эффекты для активной кнопки */
   .activate-all-active.button-icon-secondary:hover {
     background-color: var(--color-activate-all-active, #2160D3) !important;
   }
@@ -1207,10 +1224,108 @@ html {
   .settings-content select:focus {
     box-shadow: 0 0 0 2px rgba(33, 96, 211, 0.3);
   }
+
+  /* ============================================= */
+  /* 🎀 RIBBON HORIZONTAL SCROLL - ПРОСТОЙ СТИЛЬ  */
+  /* ============================================= */
+  .ribbon-scroll {
+    overflow-x: scroll !important;
+    overflow-y: hidden !important;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #333538;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* WebKit скроллбар для ribbon */
+  .ribbon-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .ribbon-scroll::-webkit-scrollbar-track {
+    background: rgba(51, 53, 56, 0.3);
+    border-radius: 3px;
+  }
+  
+  .ribbon-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+  
+  .ribbon-scroll::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+  
+  /* ============================================= */
 }
 
 /* Dynamic background image classes that accept CSS variables */
 @layer utilities {
+  /* Scrollbar utilities */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;  /* Firefox */
+    box-sizing: content-box; /* Убеждаемся, что скроллбар не влияет на размеры */
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;  /* Chrome, Safari and Opera */
+    width: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+    margin: 0; /* Убираем отступы */
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Специальный класс для риббона - скроллбар внизу */
+  .scrollbar-bottom {
+    scrollbar-width: thin;
+    box-sizing: border-box;
+    padding-bottom: 4px; /* Место для скроллбара */
+  }
+  
+  .scrollbar-bottom::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  
+  .scrollbar-bottom::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+    margin: 0;
+  }
+  
+  .scrollbar-bottom::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+  
+  .scrollbar-bottom::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
   .bg-gradient-overlay {
     background-image: linear-gradient(
         90deg,
@@ -1240,4 +1355,36 @@ html {
     right: 0;
     transform-origin: right center;
   }
+
+  /* ============================================= */
+  /* 🎀 RIBBON HORIZONTAL SCROLL - ПРОСТОЙ СТИЛЬ  */
+  /* ============================================= */
+  .ribbon-scroll {
+    overflow-x: scroll !important;
+    overflow-y: hidden !important;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #333538;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* WebKit скроллбар для ribbon */
+  .ribbon-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .ribbon-scroll::-webkit-scrollbar-track {
+    background: rgba(51, 53, 56, 0.3);
+    border-radius: 3px;
+  }
+  
+  .ribbon-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+  
+  .ribbon-scroll::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+  
+  /* ============================================= */
 }

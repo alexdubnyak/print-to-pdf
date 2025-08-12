@@ -2,65 +2,64 @@ import { useState } from "react";
 import { PageLayoutManager } from "./components/page-layout-manager";
 import { PDFButtonOverlay } from "./components/pdf-button-overlay";
 import { PrintToPdfDialog } from "./components/print-to-pdf-dialog";
-import { ResponsiveBackground } from "./components/responsive-background";
-
-// ============================================
-// MAIN APPLICATION COMPONENT
-// ============================================
+import ResponsiveBackground from "./components/responsive-background";
 
 export default function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPageLayoutManagerOpen, setIsPageLayoutManagerOpen] = useState(false);
 
-  const handleClose = () => {
+  const overlayActive = isDialogOpen || isPageLayoutManagerOpen;
+
+  const openDialog = () => {
+    console.log("Opening PrintToPdfDialog");
+    setIsDialogOpen(true);
+    setIsPageLayoutManagerOpen(false);
+  };
+
+  const closeDialog = () => {
+    console.log("Closing PrintToPdfDialog");
     setIsDialogOpen(false);
   };
 
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true);
-    console.log("PDF Overlay clicked! Dialog opening...");
-  };
-
-  const handlePageLayoutManagerOpen = () => {
+  const openPageLayoutManager = () => {
+    console.log("Opening PageLayoutManager");
+    setIsDialogOpen(false);
     setIsPageLayoutManagerOpen(true);
-    console.log("Opening Page Layout Manager");
   };
 
-  const handlePageLayoutManagerClose = () => {
+  const closePageLayoutManager = () => {
+    console.log("Closing PageLayoutManager and reopening PrintToPdfDialog");
     setIsPageLayoutManagerOpen(false);
-    console.log("Page Layout Manager closed");
+    setIsDialogOpen(true);
   };
 
-  // Show Page Layout Manager when opened
-  if (isPageLayoutManagerOpen) {
-    return (
-      <ResponsiveBackground overlay={true}>
-        <div className="absolute top-[226px] translate-x-[-50%] print-dialog-position h-[362px] w-[770px]">
-          <PageLayoutManager
-            onClose={handlePageLayoutManagerClose}
-          />
-        </div>
-      </ResponsiveBackground>
-    );
-  }
-
-  // Show print dialog when opened
-  if (isDialogOpen) {
-    return (
-      <ResponsiveBackground overlay={true}>
-        <PrintToPdfDialog 
-          onClose={handleClose}
-          onPageLayoutManagerOpen={handlePageLayoutManagerOpen}
-        />
-      </ResponsiveBackground>
-    );
-  }
-
-  // Main interface when dialog is closed - clean ARES background with PDF overlay
   return (
-    <ResponsiveBackground overlay={false}>
-      {/* PDF button overlay from separate component */}
-      <PDFButtonOverlay onClick={handleOpenDialog} />
-    </ResponsiveBackground>
+    <div className="h-screen w-screen">
+      <ResponsiveBackground overlay={overlayActive}>
+        {/* Прозрачная кнопка запуска диалога */}
+        {!overlayActive && <PDFButtonOverlay onClick={openDialog} />}
+
+        {/* Оверлейная обёртка для модалок с полупрозрачным фоном */}
+        {(isDialogOpen || isPageLayoutManagerOpen) && (
+          <div 
+            className="fixed inset-0 z-[5000] flex items-center justify-center pointer-events-none"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          >
+            <div className="pointer-events-auto">
+              {isDialogOpen && (
+                <PrintToPdfDialog
+                  onClose={closeDialog}
+                  onPageLayoutManagerOpen={openPageLayoutManager}
+                />
+              )}
+
+              {isPageLayoutManagerOpen && (
+                <PageLayoutManager onClose={closePageLayoutManager} />
+              )}
+            </div>
+          </div>
+        )}
+      </ResponsiveBackground>
+    </div>
   );
 }
