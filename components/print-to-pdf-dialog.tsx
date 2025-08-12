@@ -447,7 +447,7 @@ function SearchSection({
   onSearchChange: (value: string) => void;
 }) {
   return (
-    <div className="content-section">
+    <div className="content-section w-full">
       <SearchSheetsHeader />
       <TextInput
         value={searchValue}
@@ -469,7 +469,7 @@ function SearchSectionWrapper({
   return (
     <div className="relative shrink-0 w-full">
       <div className="relative size-full">
-        <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-5 py-0 relative w-full">
+        <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-0 py-0 relative w-full">
           <SearchSection
             searchValue={searchValue}
             onSearchChange={onSearchChange}
@@ -516,7 +516,7 @@ function SelectAllCheckbox({
   onSelectAllClick: (checked: boolean) => void;
 }) {
   return (
-    <div className="checkbox-row order-3">
+    <div className="checkbox-row order-3 w-full">
       <Checkbox
         checked={selectAllChecked}
         onChange={onSelectAllClick}
@@ -534,7 +534,7 @@ function Sheet1Checkbox({
   onSheet1Click: (checked: boolean) => void;
 }) {
   return (
-    <div className="checkbox-row">
+    <div className="checkbox-row w-full">
       <Checkbox
         checked={sheet1Checked}
         onChange={onSheet1Click}
@@ -552,9 +552,9 @@ function Sheet1CheckboxWrapper({
   onSheet1Click: (checked: boolean) => void;
 }) {
   return (
-    <div className="basis-grow-container">
-      <div className="flex-center-container">
-        <div className="padded-content">
+    <div className="basis-grow-container w-full">
+      <div className="flex-center-container w-full">
+        <div className="padded-content w-full">
           <Sheet1Checkbox
             sheet1Checked={sheet1Checked}
             onSheet1Click={onSheet1Click}
@@ -573,7 +573,7 @@ function Sheet2Checkbox({
   onSheet2Click: (checked: boolean) => void;
 }) {
   return (
-    <div className="checkbox-row">
+    <div className="checkbox-row w-full">
       <Checkbox
         checked={sheet2Checked}
         onChange={onSheet2Click}
@@ -591,9 +591,9 @@ function Sheet2CheckboxWrapper({
   onSheet2Click: (checked: boolean) => void;
 }) {
   return (
-    <div className="basis-grow-container">
-      <div className="flex-center-container">
-        <div className="padded-content">
+    <div className="basis-grow-container w-full">
+      <div className="flex-center-container w-full">
+        <div className="padded-content w-full">
           <Sheet2Checkbox
             sheet2Checked={sheet2Checked}
             onSheet2Click={onSheet2Click}
@@ -640,7 +640,7 @@ function SheetsConfigGroup({
   return (
     <div className="relative shrink-0 w-full">
       <div className="relative size-full">
-        <div className="box-border content-stretch flex flex-col-reverse gap-2.5 items-start justify-start px-5 py-0 relative w-full">
+        <div className="box-border content-stretch flex flex-col-reverse gap-2.5 items-start justify-start px-0 py-0 relative w-full">
           <SelectAllCheckbox
             selectAllChecked={selectAllChecked}
             onSelectAllClick={onSelectAllClick}
@@ -649,9 +649,9 @@ function SheetsConfigGroup({
           {/* Main content row with Sheets and Page layouts columns */}
           <div className="flex flex-row gap-1.5 w-full">
             {/* Sheets Column */}
-            <div className="flex flex-col gap-2.5 flex-1">
+            <div className="flex flex-col gap-2.5 flex-1 w-full">
               <SheetsHeader />
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-2.5 w-full">
                 <Sheet1CheckboxWrapper
                   sheet1Checked={sheet1Checked}
                   onSheet1Click={onSheet1Click}
@@ -664,10 +664,10 @@ function SheetsConfigGroup({
             </div>
             
             {/* Page layouts Column */}
-            <div className="flex flex-col gap-2.5 flex-1">
+            <div className="flex flex-col gap-2.5 flex-1 w-full">
               <PageLayoutsHeader />
-              <div className="flex flex-col gap-2.5">
-                <div className="flex flex-row gap-1.5 items-center">
+              <div className="flex flex-col gap-2.5 w-full">
+                <div className="flex flex-row gap-1.5 items-center w-full">
                   <div className="flex-1">
                     <Select
                       itemCount={3}
@@ -705,7 +705,7 @@ function SheetsConfigGroup({
                   />
                 </div>
                 
-                <div className="flex flex-row gap-1.5 items-center">
+                <div className="flex flex-row gap-1.5 items-center w-full">
                   <div className="flex-1">
                     <Select
                       itemCount={3}
@@ -754,10 +754,10 @@ function SheetsConfigGroup({
 // Quick Print Settings Component - настройки для текущего листа в Quick режиме
 function QuickPrintSettings() {
   return (
-    <div className="relative w-full h-full min-h-0 quick-print-settings-full-width">
+    <div className="relative w-full h-full min-h-0">
       <div className="relative size-full flex flex-col h-full min-h-0">
         {/* Header (фиксированный) */}
-        <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0 px-5">
+        <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0 px-0">
           <div
             className="font-['Open_Sans:SemiBold',_sans-serif] not-italic text-[12px] text-left text-nowrap"
             style={{ color: "var(--color-text-light)" }}
@@ -768,7 +768,7 @@ function QuickPrintSettings() {
 
         {/* Прокручиваемая область */}
         <div
-          className="grow min-h-0 overflow-y-auto overflow-x-hidden px-5 pb-4 pr-6 tab-content-full-width"
+          className="grow min-h-0 overflow-y-auto overflow-x-hidden px-0 pb-4 pr-0 w-full"
           role="region"
           aria-label="Quick print layout settings"
         >
@@ -817,11 +817,11 @@ function MainConfigArea({
   onTabChange: (tab: "quick" | "advanced") => void;
 }) {
   return (
-    <div className="box-border content-stretch flex flex-col gap-5 items-start justify-start order-2 p-0 relative w-full h-full min-h-0 main-config-area-full-width">
+    <div className="box-border content-stretch flex flex-col gap-5 items-start justify-start order-2 p-0 relative w-full h-full min-h-0">
       {/* Tabs Container above everything */}
       <div className="relative shrink-0 w-full">
         <div className="relative size-full">
-          <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-5 py-0 relative w-full">
+          <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-0 py-0 relative w-full">
             <TabsContainer activeTab={activeTab} onTabChange={onTabChange} />
           </div>
         </div>
@@ -833,7 +833,7 @@ function MainConfigArea({
         <QuickPrintSettings />
       ) : (
         // Advanced print: Show all controls
-        <div className="advanced-settings-full-width w-full flex flex-col gap-5">
+        <div className="w-full flex flex-col gap-5">
           <SearchSectionWrapper
             searchValue={searchValue}
             onSearchChange={onSearchChange}
@@ -959,7 +959,7 @@ function RightConfigPanel({
   onTabChange: (tab: "quick" | "advanced") => void;
 }) {
   return (
-    <div className="box-border content-stretch flex flex-col-reverse gap-5 h-full min-h-0">
+    <div className="box-border content-stretch flex flex-col-reverse gap-5 h-full min-h-0 w-full flex-1">
       <MainConfigArea
         searchValue={searchValue}
         onSearchChange={onSearchChange}
