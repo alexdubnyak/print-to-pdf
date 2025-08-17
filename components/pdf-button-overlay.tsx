@@ -1,28 +1,21 @@
 interface PDFButtonOverlayProps {
   onClick: () => void;
+  className?: string;
 }
 
-export function PDFButtonOverlay({ onClick }: PDFButtonOverlayProps) {
+export function PDFButtonOverlay({ onClick, className = "" }: PDFButtonOverlayProps) {
   return (
-    <div 
-      className="absolute top-[8px] left-[403px] w-[30px] h-[30px] z-50 cursor-pointer"
-      onClick={onClick}
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      onMouseDown={(e) => e.stopPropagation()}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } }}
+      // FIXED — поверх любых локальных stacking context'ов
+      className={`fixed top-[8px] left-[403px] w-[30px] h-[30px] z-[9999] cursor-pointer pointer-events-auto ${className}`}
+      // временно подсветим рамкой, чтобы точно увидеть область клика
+      style={{ outline: "1px dashed rgba(0,0,0,0.3)" }}
       title="Open PDF Dialog"
-      style={{
-        // Make it visible with red border for positioning
-        backgroundColor: 'rgba(255, 0, 0, 0)',
-        
-        // Add slight visual feedback on hover
-        transition: 'all 0.2s ease'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = 'rgba(33, 96, 211, 0)';
-        e.currentTarget.style.borderColor = 'blue';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = 'rgba(255, 0, 0, 0)';
-        e.currentTarget.style.borderColor = 'red';
-      }}
     />
   );
 }

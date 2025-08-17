@@ -1,9 +1,9 @@
 import imgImage20 from "figma:asset/0fc685cd8f14f838f09ada3b1204362f5d241faf.png";
 import imgImage21 from "figma:asset/fc1aa20fa288627bfb8f77e052e2670c57b8a968.png";
 
-function Frame292() {
+function Frame294() {
   return (
-    <div className="absolute h-[92px] left-0 top-20 w-[1496px]">
+    <div className="absolute h-[94px] left-0 top-0 w-[1845px]">
       <div
         className="absolute bg-[0%_11.27%] bg-no-repeat h-[93px] left-0 top-px w-[1496px]"
         data-name="image 20"
@@ -20,6 +20,17 @@ function Frame292() {
           backgroundSize: '271.51% 157.61%'
         }}
       />
+    </div>
+  );
+}
+
+function Ribbon() {
+  return (
+    <div
+      className="absolute h-[92px] left-0 top-20 w-[1496px]"
+      data-name="ribbon"
+    >
+      <Frame294 />
     </div>
   );
 }
@@ -69,7 +80,7 @@ export default function Frame293() {
           backgroundSize: '476.43% 137.86%'
         }}
       />
-      <Frame292 />
+      <Ribbon />
     </div>
   );
 }
