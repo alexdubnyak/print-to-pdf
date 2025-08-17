@@ -161,6 +161,60 @@
   .dialog-overlay-container {
     overflow: hidden !important;
   }
+  
+  /* ============================================= */
+  /* MODAL CENTERING UTILITIES */
+  /* ============================================= */
+  
+  /* Perfect centering for modals */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  
+  /* Modal container with responsive constraints */
+  .modal-container {
+    position: relative;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+    margin: auto;
+    flex-shrink: 0;
+  }
+  
+  /* Ensure modals don't exceed viewport */
+  .modal-content {
+    position: relative;
+    overflow: visible;
+  }
+  
+  /* For very small screens */
+  @media (max-width: 480px) {
+    .modal-overlay {
+      padding: 8px;
+    }
+    
+    .modal-container {
+      max-width: calc(100vw - 16px);
+      max-height: calc(100vh - 16px);
+    }
+  }
+  
+  /* For large screens - prevent modals from being too far from center */
+  @media (min-width: 1920px) {
+    .modal-container {
+      max-width: min(calc(100vw - 32px), 1200px);
+    }
+  }
 
   * {
     @apply border-border outline-ring/50;

@@ -6,7 +6,8 @@ import ResponsiveBackground from "./components/responsive-background";
 
 export default function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isPageLayoutManagerOpen, setIsPageLayoutManagerOpen] = useState(false);
+  const [isPageLayoutManagerOpen, setIsPageLayoutManagerOpen] =
+    useState(false);
 
   const overlayActive = isDialogOpen || isPageLayoutManagerOpen;
 
@@ -28,7 +29,9 @@ export default function App() {
   };
 
   const closePageLayoutManager = () => {
-    console.log("Closing PageLayoutManager and reopening PrintToPdfDialog");
+    console.log(
+      "Closing PageLayoutManager and reopening PrintToPdfDialog",
+    );
     setIsPageLayoutManagerOpen(false);
     setIsDialogOpen(true);
   };
@@ -37,24 +40,40 @@ export default function App() {
     <div className="h-screen w-screen">
       <ResponsiveBackground overlay={overlayActive}>
         {/* Прозрачная кнопка запуска диалога */}
-        {!overlayActive && <PDFButtonOverlay onClick={openDialog} />}
+        {!overlayActive && (
+          <PDFButtonOverlay onClick={openDialog} />
+        )}
 
         {/* Оверлейная обёртка для модалок с полупрозрачным фоном */}
         {(isDialogOpen || isPageLayoutManagerOpen) && (
-          <div 
-            className="fixed inset-0 z-[5000] flex items-center justify-center pointer-events-none"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          <div
+            className="fixed inset-0 z-[5000] flex items-center justify-center p-4 pointer-events-none overflow-auto"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              minHeight: "100vh",
+              minWidth: "100vw",
+            }}
           >
-            <div className="pointer-events-auto">
+            <div
+              className="pointer-events-auto mx-auto my-auto flex-shrink-0"
+              style={{
+                maxWidth: "calc(100vw - 32px)",
+                maxHeight: "calc(100vh - 32px)",
+              }}
+            >
               {isDialogOpen && (
                 <PrintToPdfDialog
                   onClose={closeDialog}
-                  onPageLayoutManagerOpen={openPageLayoutManager}
+                  onPageLayoutManagerOpen={
+                    openPageLayoutManager
+                  }
                 />
               )}
 
               {isPageLayoutManagerOpen && (
-                <PageLayoutManager onClose={closePageLayoutManager} />
+                <PageLayoutManager
+                  onClose={closePageLayoutManager}
+                />
               )}
             </div>
           </div>

@@ -325,11 +325,12 @@ export function Icon({ type, disabled = false, className = "", active = false, s
 
       case 'help':
         return (
-          <div className={`relative shrink-0 ${iconSizeClass} ${className}`} data-name="help">
+          <div className={`relative shrink-0 ${iconSizeClass} ${className} flex items-center justify-center`} data-name="help">
             <svg
-              className="block size-full"
+              className="block"
               fill="none"
-              preserveAspectRatio="xMidYMid meet" // Изменено для правильного соотношения сторон
+              width="6"
+              height="11"
               viewBox="0 0 6 11"
             >
               <g id="help">

@@ -90,7 +90,7 @@ export function TabsContainer({ activeTab, onTabChange }: TabsContainerProps) {
   return (
     <div className="relative size-full">
       <div className="relative size-full">
-        <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-5 py-0 relative size-full p-[0px]">
+        <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-0 py-0 relative size-full p-[0px]">
           <TabsWrapper activeTab={activeTab} onTabChange={onTabChange} />
         </div>
       </div>
