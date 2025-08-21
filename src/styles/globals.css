@@ -286,6 +286,79 @@ html {
   font-size: var(--font-size);
 }
 
+/* Snap Controls Button Styles */
+.snap-button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 39px;
+  width: 71px;
+  padding: 0;
+  gap: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-content: stretch;
+  user-select: none;
+}
+
+/* Standard state for active buttons */
+.snap-button--active {
+  background-color: #333538;
+}
+
+/* Hover state for active buttons */
+.snap-button--active:hover {
+  background-color: #141518;
+}
+
+/* Active/pressed state for active buttons */
+.snap-button--active:active {
+  background-color: #141518;
+  text-color: #ffffff;
+}
+
+/* Standard state for inactive buttons */
+.snap-button--inactive {
+  background-color: #1e2023;
+  text-color: #CFCFCF;
+}
+
+.snap-button__border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #000000;
+  pointer-events: none;
+}
+
+.snap-button__text {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 0;
+  color: #ffffff;
+  position: relative;
+  flex-shrink: 0;
+  white-space: nowrap;
+  letter-spacing: 0.4px;
+  font-variation-settings: 'CTGR' 0, 'wdth' 100;
+}
+
+/* Text color for active buttons */
+.snap-button--active .snap-button__text {
+  color: #cfcfcf;
+}
+
+.snap-button__text p {
+  display: block;
+  line-height: 16px;
+  white-space: pre;
+}
+
 /* Custom positioning classes for the print dialog components */
 @layer components {
   .arrow-container-position {
