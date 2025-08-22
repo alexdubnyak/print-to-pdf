@@ -162,20 +162,98 @@ export function QuickPrintSettingsNew() {
             data-node-id="894:6264"
           >
             <label className="text-[#d5d7e1] text-xs font-semibold block">Range</label>
-            <RadioGroup
-              options={[
-                { value: 'all-geometry', label: 'All geometry' },
-                { value: 'sheet', label: 'Sheet' },
-                { value: 'current-view', label: 'Current view' },
-                { value: 'specify', label: 'Specify' },
-                { value: 'named-view', label: 'Named view' },
-              ]}
-              value={range}
-              onChange={setRange}
-              name="range"
-              direction="vertical"
-              className="gap-2"
-            />
+            <div className="content-stretch flex flex-col items-start justify-start relative size-full gap-2">
+              {/* All geometry */}
+              <div className="content-stretch flex gap-1.5 h-7 items-center justify-start relative shrink-0">
+                <input
+                  type="radio"
+                  name="range"
+                  value="all-geometry"
+                  checked={range === 'all-geometry'}
+                  onChange={e => setRange(e.target.value)}
+                  className="relative shrink-0 size-4"
+                />
+                <div className="font-['Open_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#d5d7e1] text-[12px] text-nowrap">
+                  <p className="leading-[normal] whitespace-pre">All geometry</p>
+                </div>
+              </div>
+
+              {/* Sheet */}
+              <div className="content-stretch flex gap-1.5 h-7 items-center justify-start relative shrink-0">
+                <input
+                  type="radio"
+                  name="range"
+                  value="sheet"
+                  checked={range === 'sheet'}
+                  onChange={e => setRange(e.target.value)}
+                  className="relative shrink-0 size-4"
+                />
+                <div className="font-['Open_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#d5d7e1] text-[12px] text-nowrap">
+                  <p className="leading-[normal] whitespace-pre">Sheet</p>
+                </div>
+              </div>
+
+              {/* Current view with checkbox */}
+              <div className="content-stretch flex flex-col items-start justify-start relative size-full">
+                <div className="content-stretch flex gap-1.5 h-7 items-center justify-start relative shrink-0">
+                  <input
+                    type="radio"
+                    name="range"
+                    value="current-view"
+                    checked={range === 'current-view'}
+                    onChange={e => setRange(e.target.value)}
+                    className="relative shrink-0 size-4"
+                  />
+                  <div className="font-['Open_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#d5d7e1] text-[12px] text-nowrap">
+                    <p className="leading-[normal] whitespace-pre">Current view</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Specify with button */}
+              <div className="content-stretch flex flex-col items-start justify-start relative size-full">
+                <div className="content-stretch flex gap-1.5 h-7 items-center justify-start relative shrink-0">
+                  <input
+                    type="radio"
+                    name="range"
+                    value="specify"
+                    checked={range === 'specify'}
+                    onChange={e => setRange(e.target.value)}
+                    className="relative shrink-0 size-4"
+                  />
+                  <div className="font-['Open_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#d5d7e1] text-[12px] text-nowrap">
+                    <p className="leading-[normal] whitespace-pre">Specify</p>
+                  </div>
+                </div>
+                {range === 'specify' && (
+                  <div
+                    className="bg-[#141518] content-stretch flex h-7 items-center justify-center relative shrink-0 cursor-pointer hover:bg-[#1a1b1d] transition-colors"
+                    onClick={() => console.log('Specify Window clicked')}
+                  >
+                    <div className="box-border content-stretch flex gap-1.5 h-full items-center justify-center px-3 py-1 relative shrink-0">
+                      <div className="font-['Open_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#ffffff] text-[12px] text-nowrap">
+                        <p className="leading-[normal] whitespace-pre">Specify window</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Named view */}
+              <div className="content-stretch flex gap-1.5 h-7 items-center justify-start relative shrink-0">
+                <input
+                  type="radio"
+                  name="range"
+                  value="named-view"
+                  checked={range === 'named-view'}
+                  onChange={e => setRange(e.target.value)}
+                  className="relative shrink-0 size-4"
+                />
+                <div className="font-['Open_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#d5d7e1] text-[12px] text-nowrap">
+                  <p className="leading-[normal] whitespace-pre">Named view</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div

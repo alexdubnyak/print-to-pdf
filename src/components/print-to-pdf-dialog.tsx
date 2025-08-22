@@ -37,7 +37,7 @@ const imgSheet2Drawing = TECHNICAL_DRAWING_SHEET_2;
 // Sheet data configuration with direct URLs
 const sheets = [
   {
-    id: 1,
+    id: 'sheet1',
     name: 'Sheet 1',
     image: imgSheet1Drawing, // 707x500mm Reception Desks Technical Drawing
     widthMm: '707',
@@ -45,7 +45,7 @@ const sheets = [
     description: 'Reception Desks Technical Drawing',
   },
   {
-    id: 2,
+    id: 'sheet2',
     name: 'Sheet 2',
     image: imgSheet2Drawing, // 841x594mm Power Station Technical Drawing
     widthMm: '841',
@@ -276,12 +276,14 @@ function PreviewArea({
   onSheetChange,
   selectedSheets,
   hideNavigationArrows = false,
+  isModelTabActive = false,
 }: {
   selectedCount: number;
   currentSheet: number;
   onSheetChange: (sheet: number) => void;
   selectedSheets: number[];
   hideNavigationArrows?: boolean;
+  isModelTabActive?: boolean;
 }) {
   const handlePrevious = () => {
     const currentIndex = selectedSheets.indexOf(currentSheet);
@@ -297,7 +299,8 @@ function PreviewArea({
     }
   };
 
-  if (selectedCount === 0 && !hideNavigationArrows) {
+  // Показываем "No preview available" если ничего не выбрано И (не скрыты стрелки ИЛИ активна вкладка Model)
+  if (selectedCount === 0 && (!hideNavigationArrows || isModelTabActive)) {
     return (
       <div className="basis-0 box-border content-stretch flex flex-col grow h-full items-center justify-center min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
         <NoPreview />
@@ -305,8 +308,8 @@ function PreviewArea({
     );
   }
 
-  // In Quick print mode, always show Sheet 1 even if nothing is selected
-  if (hideNavigationArrows && selectedCount === 0) {
+  // In Quick print mode, always show Sheet 1 even if nothing is selected (но только если НЕ активна вкладка Model)
+  if (hideNavigationArrows && selectedCount === 0 && !isModelTabActive) {
     const sheet1Data = sheets[0]; // Always show first sheet in Quick print
     return (
       <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
@@ -323,17 +326,36 @@ function PreviewArea({
     );
   }
 
-  const currentSheetData = sheets.find(sheet => sheet.id === currentSheet);
+  const currentSheetData = sheets.find(
+    sheet => parseInt(sheet.id.replace('sheet', '')) === currentSheet
+  );
   const currentIndex = selectedSheets.indexOf(currentSheet);
+
+  // Логика ротации изображений для бесконечного количества листов
+  const getSheetDataForCurrentSheet = () => {
+    if (currentSheet <= 0) return null;
+
+    // Ротируем между двумя существующими изображениями
+    const sheetIndex = (currentSheet - 1) % 2; // 0 для нечетных, 1 для четных
+    const baseSheet = sheets[sheetIndex];
+
+    return {
+      ...baseSheet,
+      name: `Sheet ${currentSheet}`, // Динамическое имя листа
+      id: `sheet${currentSheet}`, // Динамический ID
+    };
+  };
+
+  const rotatedSheetData = getSheetDataForCurrentSheet();
 
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
-      {currentSheetData && (
+      {rotatedSheetData && (
         <SheetPreview
-          image={currentSheetData.image}
-          sheetName={currentSheetData.name}
-          widthMm={currentSheetData.widthMm}
-          heightMm={currentSheetData.heightMm}
+          image={rotatedSheetData.image}
+          sheetName={rotatedSheetData.name}
+          widthMm={rotatedSheetData.widthMm}
+          heightMm={rotatedSheetData.heightMm}
         />
       )}
       <div className="flex flex-col gap-2 items-start">
@@ -362,12 +384,14 @@ function LeftPreviewPanel({
   onSheetChange,
   selectedSheets,
   hideNavigationArrows = false,
+  isModelTabActive = false,
 }: {
   selectedCount: number;
   currentSheet: number;
   onSheetChange: (sheet: number) => void;
   selectedSheets: number[];
   hideNavigationArrows?: boolean;
+  isModelTabActive?: boolean;
 }) {
   return (
     <div
@@ -380,6 +404,7 @@ function LeftPreviewPanel({
         onSheetChange={onSheetChange}
         selectedSheets={selectedSheets}
         hideNavigationArrows={hideNavigationArrows}
+        isModelTabActive={isModelTabActive}
       />
     </div>
   );
@@ -475,6 +500,28 @@ function SelectAllCheckbox({
   );
 }
 
+function DynamicSheetCheckboxWrapper({
+  sheet,
+  isChecked,
+  onSheetClick,
+}: {
+  sheet: { id: string; name: string; isActive: boolean };
+  isChecked: boolean;
+  onSheetClick: (checked: boolean) => void;
+}) {
+  return (
+    <div className="basis-grow-container w-full">
+      <div className="flex-center-container w-full">
+        <div className="padded-content w-full">
+          <div className="checkbox-row w-full">
+            <Checkbox checked={isChecked} onChange={onSheetClick} label={sheet.name} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Sheet1Checkbox({
   sheet1Checked,
   onSheet1Click,
@@ -541,11 +588,7 @@ function Sheet2CheckboxWrapper({
 
 function SheetsConfigGroup({
   selectAllChecked,
-  sheet1Checked,
-  sheet2Checked,
   onSelectAllClick,
-  onSheet1Click,
-  onSheet2Click,
   layoutValue,
   onLayoutChange,
   layout2Value,
@@ -555,13 +598,13 @@ function SheetsConfigGroup({
   appliedLayoutName,
   activeTab,
   onTabChange,
+  sheets,
+  onSheetsChange,
+  checkedSheets,
+  onSheetClick,
 }: {
   selectAllChecked: boolean;
-  sheet1Checked: boolean;
-  sheet2Checked: boolean;
   onSelectAllClick: (checked: boolean) => void;
-  onSheet1Click: (checked: boolean) => void;
-  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -571,6 +614,10 @@ function SheetsConfigGroup({
   appliedLayoutName?: string;
   activeTab: 'quick' | 'advanced';
   onTabChange: (tab: 'quick' | 'advanced') => void;
+  sheets: Array<{ id: string; name: string; isActive: boolean }>;
+  onSheetsChange: (sheets: Array<{ id: string; name: string; isActive: boolean }>) => void;
+  checkedSheets: Record<string, boolean>;
+  onSheetClick: (sheetId: string, checked: boolean) => void;
 }) {
   return (
     <div className="relative shrink-0 w-full">
@@ -587,14 +634,23 @@ function SheetsConfigGroup({
             <div className="flex flex-col gap-2.5 flex-1 w-full">
               <SheetsHeader />
               <div className="flex flex-col gap-2.5 w-full">
-                <Sheet1CheckboxWrapper
-                  sheet1Checked={sheet1Checked}
-                  onSheet1Click={onSheet1Click}
-                />
-                <Sheet2CheckboxWrapper
-                  sheet2Checked={sheet2Checked}
-                  onSheet2Click={onSheet2Click}
-                />
+                {sheets.map((sheet, index) => {
+                  const isSheetChecked = checkedSheets[sheet.id] || false;
+                  return (
+                    <div key={sheet.id} className="flex flex-row gap-1.5 items-center w-full">
+                      <div
+                        className="flex-1 rounded h-[36px] flex items-center px-2"
+                        style={{ backgroundColor: '#1E2023' }}
+                      >
+                        <Checkbox
+                          checked={isSheetChecked}
+                          onChange={checked => onSheetClick(sheet.id, checked)}
+                          label={sheet.name}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -602,75 +658,47 @@ function SheetsConfigGroup({
             <div className="flex flex-col gap-2.5 flex-1 w-full">
               <PageLayoutsHeader />
               <div className="flex flex-col gap-2.5 w-full">
-                <div className="flex flex-row gap-1.5 items-center w-full">
-                  <div className="flex-1">
-                    <Select
-                      itemCount={3}
-                      itemName1={
-                        appliedLayoutName &&
-                        appliedLayoutName.startsWith('*') &&
-                        appliedLayoutName.endsWith('*')
-                          ? appliedLayoutName
-                          : '*Sheet1*'
-                      }
-                      itemName2={
-                        appliedLayoutName &&
-                        appliedLayoutName.startsWith('*') &&
-                        appliedLayoutName.endsWith('*')
-                          ? appliedLayoutName
-                          : '*Sheet2*'
-                      }
-                      itemName3={
-                        appliedLayoutName && !appliedLayoutName.startsWith('*')
-                          ? appliedLayoutName
-                          : 'Custom Layout'
-                      }
-                      headerText="Sheet 1 Layout"
-                      value={layoutValue}
-                      onChange={onLayoutChange}
-                      className="w-full"
-                      disabled={!sheet1Checked}
-                    />
-                  </div>
-                  <ButtonIcon icon="edit-layout" onClick={onLayoutEdit} disabled={!sheet1Checked} />
-                </div>
-
-                <div className="flex flex-row gap-1.5 items-center w-full">
-                  <div className="flex-1">
-                    <Select
-                      itemCount={3}
-                      itemName1={
-                        appliedLayoutName &&
-                        appliedLayoutName.startsWith('*') &&
-                        appliedLayoutName.endsWith('*')
-                          ? appliedLayoutName
-                          : '*Sheet1*'
-                      }
-                      itemName2={
-                        appliedLayoutName &&
-                        appliedLayoutName.startsWith('*') &&
-                        appliedLayoutName.endsWith('*')
-                          ? appliedLayoutName
-                          : '*Sheet2*'
-                      }
-                      itemName3={
-                        appliedLayoutName && !appliedLayoutName.startsWith('*')
-                          ? appliedLayoutName
-                          : 'Custom Layout'
-                      }
-                      headerText="Sheet 2 Layout"
-                      value={layout2Value}
-                      onChange={onLayout2Change}
-                      className="w-full"
-                      disabled={!sheet2Checked}
-                    />
-                  </div>
-                  <ButtonIcon
-                    icon="edit-layout"
-                    onClick={onLayout2Edit}
-                    disabled={!sheet2Checked}
-                  />
-                </div>
+                {sheets.map((sheet, index) => {
+                  const isSheetChecked = checkedSheets[sheet.id] || false;
+                  return (
+                    <div key={sheet.id} className="flex flex-row gap-1.5 items-center w-full">
+                      <div className="flex-1">
+                        <Select
+                          itemCount={3}
+                          itemName1={
+                            appliedLayoutName &&
+                            appliedLayoutName.startsWith('*') &&
+                            appliedLayoutName.endsWith('*')
+                              ? appliedLayoutName
+                              : `*${sheet.name}*`
+                          }
+                          itemName2={
+                            appliedLayoutName &&
+                            appliedLayoutName.startsWith('*') &&
+                            appliedLayoutName.endsWith('*')
+                              ? appliedLayoutName
+                              : `*${sheet.name}*`
+                          }
+                          itemName3={
+                            appliedLayoutName && !appliedLayoutName.startsWith('*')
+                              ? appliedLayoutName
+                              : 'Custom Layout'
+                          }
+                          headerText={`${sheet.name} Layout`}
+                          value={index === 0 ? layoutValue : layout2Value}
+                          onChange={index === 0 ? onLayoutChange : onLayout2Change}
+                          className="w-full"
+                          disabled={!isSheetChecked}
+                        />
+                      </div>
+                      <ButtonIcon
+                        icon="edit-layout"
+                        onClick={index === 0 ? onLayoutEdit : onLayout2Edit}
+                        disabled={!isSheetChecked}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -809,11 +837,7 @@ function MainConfigArea({
   searchValue,
   onSearchChange,
   selectAllChecked,
-  sheet1Checked,
-  sheet2Checked,
   onSelectAllClick,
-  onSheet1Click,
-  onSheet2Click,
   layoutValue,
   onLayoutChange,
   layout2Value,
@@ -826,15 +850,16 @@ function MainConfigArea({
   onPageLayoutClick,
   onPrintClick,
   isPrintDisabled,
+  hideTabs,
+  sheets,
+  onSheetsChange,
+  checkedSheets,
+  onSheetClick,
 }: {
   searchValue: string;
   onSearchChange: (value: string) => void;
   selectAllChecked: boolean;
-  sheet1Checked: boolean;
-  sheet2Checked: boolean;
   onSelectAllClick: (checked: boolean) => void;
-  onSheet1Click: (checked: boolean) => void;
-  onSheet2Click: (checked: boolean) => void;
   layoutValue: string;
   onLayoutChange: (value: string) => void;
   layout2Value: string;
@@ -847,19 +872,26 @@ function MainConfigArea({
   onPageLayoutClick: () => void;
   onPrintClick: () => void;
   isPrintDisabled: boolean;
+  hideTabs?: boolean;
+  sheets: Array<{ id: string; name: string; isActive: boolean }>;
+  onSheetsChange: (sheets: Array<{ id: string; name: string; isActive: boolean }>) => void;
+  checkedSheets: Record<string, boolean>;
+  onSheetClick: (sheetId: string, checked: boolean) => void;
 }) {
   return (
     <div className="box-border content-stretch flex flex-col justify-between items-start p-0 relative w-full h-full min-h-0">
       {/* Top Content */}
       <div className="box-border content-stretch flex flex-col gap-5 items-start justify-start p-0 relative w-full flex-1 px-[20px] pt-[10px] pb-0">
-        {/* Tabs Container above everything */}
-        <div className="relative shrink-0 w-full">
-          <div className="relative size-full">
-            <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-0 py-0 relative w-full">
-              <TabsContainer activeTab={activeTab} onTabChange={onTabChange} />
+        {/* Tabs Container above everything - скрываем если hideTabs = true */}
+        {!hideTabs && (
+          <div className="relative shrink-0 w-full">
+            <div className="relative size-full">
+              <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start px-0 py-0 relative w-full">
+                <TabsContainer activeTab={activeTab} onTabChange={onTabChange} />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Content based on active tab */}
         {activeTab === 'quick' ? (
@@ -871,11 +903,7 @@ function MainConfigArea({
             <SearchSectionWrapper searchValue={searchValue} onSearchChange={onSearchChange} />
             <SheetsConfigGroup
               selectAllChecked={selectAllChecked}
-              sheet1Checked={sheet1Checked}
-              sheet2Checked={sheet2Checked}
               onSelectAllClick={onSelectAllClick}
-              onSheet1Click={onSheet1Click}
-              onSheet2Click={onSheet2Click}
               layoutValue={layoutValue}
               onLayoutChange={onLayoutChange}
               layout2Value={layout2Value}
@@ -885,6 +913,10 @@ function MainConfigArea({
               appliedLayoutName={appliedLayoutName}
               activeTab={activeTab}
               onTabChange={onTabChange}
+              sheets={sheets}
+              onSheetsChange={onSheetsChange}
+              checkedSheets={checkedSheets}
+              onSheetClick={onSheetClick}
             />
           </div>
         )}
@@ -897,13 +929,19 @@ function ButtonToolbarBottom({
   onPageLayoutClick,
   onPrintClick,
   isPrintDisabled,
+  activeTab = 'quick',
 }: {
   onPageLayoutClick: () => void;
   onPrintClick: () => void;
   isPrintDisabled: boolean;
+  activeTab?: 'quick' | 'advanced';
 }) {
   const handleHelpClick = () => {
     console.log('Help button clicked');
+  };
+
+  const handleSaveLayoutClick = () => {
+    console.log('Save layout button clicked');
   };
 
   return (
@@ -928,11 +966,68 @@ function ButtonToolbarBottom({
           alignItems: 'flex-end',
         }}
       >
+        {activeTab === 'quick' && (
+          <ButtonSecondary onClick={handleSaveLayoutClick}>Save layout</ButtonSecondary>
+        )}
         <ButtonSecondary onClick={onPageLayoutClick}>Page layout manager</ButtonSecondary>
 
         <ButtonPrimary onClick={onPrintClick} disabled={isPrintDisabled}>
           Print
         </ButtonPrimary>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// LAYOUT EDIT DIALOG COMPONENT
+// ============================================
+
+function LayoutEditDialog({ sheetName, onClose }: { sheetName: string; onClose: () => void }) {
+  return (
+    <div
+      className="box-border content-stretch flex flex-col items-start justify-start p-0 shadow-[0px_4px_64px_0px_rgba(0,0,0,0.25)] w-[971px] h-[591px]"
+      style={{
+        backgroundColor: 'var(--color-dialog-bg-darker)',
+      }}
+      data-name="Layout Edit Dialog"
+    >
+      {/* Header */}
+      <DialogHeaderWrapper onClose={onClose} />
+
+      {/* Main Content */}
+      <div className="basis-0 box-border content-stretch flex flex-row grow items-stretch justify-start min-h-0 min-w-px p-0 relative shrink-0 w-full">
+        {/* Left Panel - Quick Print Preview */}
+        <QuickPrintLeftPanel />
+
+        {/* Right Panel - Settings without tabs */}
+        <div className="flex flex-col grow min-h-0 w-full">
+          {/* Custom header where tabs were */}
+          <div className="box-border content-stretch flex flex-row items-center justify-start p-[20px] relative shrink-0 w-full">
+            <div style={{ marginRight: '10px' }}>
+              <SheetNavigationLeft disabled={false} onClick={onClose} />
+            </div>
+            <div
+              className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#d5d7e1] text-[16px] text-left text-nowrap"
+              style={{ marginLeft: '10px' }}
+            >
+              <p className="block leading-[normal] whitespace-pre">{sheetName} layout settings</p>
+            </div>
+          </div>
+
+          {/* Settings content */}
+          <div className="flex flex-col grow min-h-0 w-full px-[20px] pb-[20px]">
+            <QuickPrintSettings />
+          </div>
+          <div className="mt-auto">
+            <ButtonToolbarBottom
+              onPageLayoutClick={() => console.log('Page layout manager from layout edit')}
+              onPrintClick={() => console.log('Print from layout edit')}
+              isPrintDisabled={false}
+              activeTab="quick"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -945,58 +1040,70 @@ function ButtonToolbarBottom({
 export function PrintToPdfDialog({
   onClose,
   onPageLayoutManagerOpen,
+  activeTab,
+  sheets,
+  onSheetsChange,
 }: {
   onClose: () => void;
   onPageLayoutManagerOpen: () => void;
+  activeTab: string;
+  sheets: Array<{ id: string; name: string; isActive: boolean }>;
+  onSheetsChange: (sheets: Array<{ id: string; name: string; isActive: boolean }>) => void;
 }) {
   // State management
   const [searchValue, setSearchValue] = useState('');
   const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [sheet1Checked, setSheet1Checked] = useState(false);
-  const [sheet2Checked, setSheet2Checked] = useState(false);
+  const [checkedSheets, setCheckedSheets] = useState<Record<string, boolean>>({});
   const [layoutValue, setLayoutValue] = useState('item1');
   const [layout2Value, setLayout2Value] = useState('item2');
   const [currentSheet, setCurrentSheet] = useState(1);
   const [appliedLayoutName, setAppliedLayoutName] = useState('');
-  const [activeTab, setActiveTab] = useState<'quick' | 'advanced'>('quick');
+  const [activeTabInternal, setActiveTabInternal] = useState<'quick' | 'advanced'>('quick');
+  const [isLayoutEditOpen, setIsLayoutEditOpen] = useState(false);
+  const [editingSheetName, setEditingSheetName] = useState('');
+
+  // Если активна вкладка Model, принудительно устанавливаем Quick print режим
+  const isModelTabActive = activeTab === 'model';
+  const effectiveActiveTab = isModelTabActive ? 'quick' : activeTabInternal;
 
   // Derived state
-  const selectedSheets = [...(sheet1Checked ? [1] : []), ...(sheet2Checked ? [2] : [])];
+  const selectedSheets = sheets
+    .filter(sheet => checkedSheets[sheet.id])
+    .map(sheet => parseInt(sheet.id.replace('sheet', '')));
   const selectedCount = selectedSheets.length;
-  const isActivateAllActive = selectAllChecked && selectedCount === 2;
-  const isActivateAllDisabled = selectedCount === 2;
+  const isActivateAllActive = selectAllChecked && selectedCount === sheets.length;
+  const isActivateAllDisabled = selectedCount === sheets.length;
   const isPrintDisabled = activeTab === 'advanced' && selectedCount === 0;
 
   // Event handlers
   const handleSelectAllClick = (checked: boolean) => {
     setSelectAllChecked(checked);
-    setSheet1Checked(checked);
-    setSheet2Checked(checked);
+    sheets.forEach(sheet => {
+      setCheckedSheets(prev => ({ ...prev, [sheet.id]: checked }));
+    });
     if (checked && currentSheet === 0) {
       setCurrentSheet(1);
     }
   };
 
-  const handleSheet1Click = (checked: boolean) => {
-    setSheet1Checked(checked);
-    if (checked && currentSheet === 0) {
-      setCurrentSheet(1);
-    }
-    if (!checked && currentSheet === 1) {
-      setCurrentSheet(sheet2Checked ? 2 : 0);
-    }
-    updateSelectAllState(checked, sheet2Checked);
-  };
+  const handleSheetClick = (sheetId: string, checked: boolean) => {
+    setCheckedSheets(prev => ({ ...prev, [sheetId]: checked }));
 
-  const handleSheet2Click = (checked: boolean) => {
-    setSheet2Checked(checked);
     if (checked && currentSheet === 0) {
-      setCurrentSheet(2);
+      setCurrentSheet(parseInt(sheetId.replace('sheet', '')));
     }
-    if (!checked && currentSheet === 2) {
-      setCurrentSheet(sheet1Checked ? 1 : 0);
+    if (!checked && currentSheet === parseInt(sheetId.replace('sheet', ''))) {
+      const nextCheckedSheet = sheets.find(
+        sheet => checkedSheets[sheet.id] && sheet.id !== sheetId
+      );
+      setCurrentSheet(nextCheckedSheet ? parseInt(nextCheckedSheet.id.replace('sheet', '')) : 0);
     }
-    updateSelectAllState(sheet1Checked, checked);
+
+    // Обновляем selectAllChecked на основе состояния всех sheets
+    const allChecked = sheets.every(sheet =>
+      sheetId === sheet.id ? checked : checkedSheets[sheet.id]
+    );
+    setSelectAllChecked(allChecked);
   };
 
   const updateSelectAllState = (sheet1: boolean, sheet2: boolean) => {
@@ -1005,8 +1112,9 @@ export function PrintToPdfDialog({
 
   const handleActivateAll = () => {
     setSelectAllChecked(true);
-    setSheet1Checked(true);
-    setSheet2Checked(true);
+    sheets.forEach(sheet => {
+      setCheckedSheets(prev => ({ ...prev, [sheet.id]: true }));
+    });
     if (currentSheet === 0) {
       setCurrentSheet(1);
     }
@@ -1014,8 +1122,7 @@ export function PrintToPdfDialog({
 
   const handleClearAll = () => {
     setSelectAllChecked(false);
-    setSheet1Checked(false);
-    setSheet2Checked(false);
+    setCheckedSheets({});
     setCurrentSheet(0);
   };
 
@@ -1029,14 +1136,20 @@ export function PrintToPdfDialog({
 
   const handleLayoutEdit = () => {
     console.log('Opening layout editor for sheet 1');
-    setAppliedLayoutName('Custom Layout from Sheet 1');
-    onPageLayoutManagerOpen();
+    setEditingSheetName('Sheet 1');
+    setIsLayoutEditOpen(true);
   };
 
   const handleLayout2Edit = () => {
     console.log('Opening layout editor for sheet 2');
-    setAppliedLayoutName('Custom Layout from Sheet 2');
-    onPageLayoutManagerOpen();
+    setEditingSheetName('Sheet 2');
+    setIsLayoutEditOpen(true);
+  };
+
+  const handleCloseLayoutEdit = () => {
+    console.log('Closing layout editor');
+    setIsLayoutEditOpen(false);
+    setEditingSheetName('');
   };
 
   return (
@@ -1047,57 +1160,67 @@ export function PrintToPdfDialog({
       }}
       data-name="Print to PDF"
     >
-      {/* Header */}
-      <DialogHeaderWrapper onClose={onClose} />
+      {/* Show LayoutEditDialog if editing layout */}
+      {isLayoutEditOpen ? (
+        <LayoutEditDialog sheetName={editingSheetName} onClose={handleCloseLayoutEdit} />
+      ) : (
+        <>
+          {/* Header */}
+          <DialogHeaderWrapper onClose={onClose} />
 
-      {/* Main Content */}
-      <div className="basis-0 box-border content-stretch flex flex-row grow items-stretch justify-start min-h-0 min-w-px p-0 relative shrink-0 w-full">
-        {/* Left Panel - только для Quick print показываем новый дизайн */}
-        {activeTab === 'quick' ? (
-          <QuickPrintLeftPanel />
-        ) : (
-          <LeftPreviewPanel
-            selectedCount={selectedCount}
-            currentSheet={currentSheet}
-            onSheetChange={setCurrentSheet}
-            selectedSheets={selectedSheets}
-            hideNavigationArrows={activeTab === 'quick'}
-          />
-        )}
+          {/* Main Content */}
+          <div className="basis-0 box-border content-stretch flex flex-row grow items-stretch justify-start min-h-0 min-w-px p-0 relative shrink-0 w-full">
+            {/* Left Panel - используем LeftPreviewPanel для Model вкладки, QuickPrintLeftPanel для обычного Quick print */}
+            {effectiveActiveTab === 'quick' && !isModelTabActive ? (
+              <QuickPrintLeftPanel />
+            ) : (
+              <LeftPreviewPanel
+                selectedCount={selectedCount}
+                currentSheet={currentSheet}
+                onSheetChange={setCurrentSheet}
+                selectedSheets={selectedSheets}
+                hideNavigationArrows={effectiveActiveTab === 'quick'}
+                isModelTabActive={isModelTabActive}
+              />
+            )}
 
-        {/* Right Panel */}
-        <div className="flex flex-col grow min-h-0 w-full">
-          <MainConfigArea
-            searchValue={searchValue}
-            onSearchChange={setSearchValue}
-            selectAllChecked={selectAllChecked}
-            sheet1Checked={sheet1Checked}
-            sheet2Checked={sheet2Checked}
-            onSelectAllClick={handleSelectAllClick}
-            onSheet1Click={handleSheet1Click}
-            onSheet2Click={handleSheet2Click}
-            layoutValue={layoutValue}
-            onLayoutChange={setLayoutValue}
-            layout2Value={layout2Value}
-            onLayout2Change={setLayout2Value}
-            onLayoutEdit={handleLayoutEdit}
-            onLayout2Edit={handleLayout2Edit}
-            appliedLayoutName={appliedLayoutName}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            onPageLayoutClick={onPageLayoutManagerOpen}
-            onPrintClick={handlePrint}
-            isPrintDisabled={isPrintDisabled}
-          />
-          <div className="mt-auto">
-            <ButtonToolbarBottom
-              onPageLayoutClick={onPageLayoutManagerOpen}
-              onPrintClick={handlePrint}
-              isPrintDisabled={isPrintDisabled}
-            />
+            {/* Right Panel */}
+            <div className="flex flex-col grow min-h-0 w-full">
+              <MainConfigArea
+                searchValue={searchValue}
+                onSearchChange={setSearchValue}
+                selectAllChecked={selectAllChecked}
+                onSelectAllClick={handleSelectAllClick}
+                layoutValue={layoutValue}
+                onLayoutChange={setLayoutValue}
+                layout2Value={layout2Value}
+                onLayout2Change={setLayout2Value}
+                onLayoutEdit={handleLayoutEdit}
+                onLayout2Edit={handleLayout2Edit}
+                appliedLayoutName={appliedLayoutName}
+                activeTab={effectiveActiveTab}
+                onTabChange={setActiveTabInternal}
+                onPageLayoutClick={onPageLayoutManagerOpen}
+                onPrintClick={handlePrint}
+                isPrintDisabled={isPrintDisabled}
+                hideTabs={isModelTabActive}
+                sheets={sheets}
+                onSheetsChange={onSheetsChange}
+                checkedSheets={checkedSheets}
+                onSheetClick={handleSheetClick}
+              />
+              <div className="mt-auto">
+                <ButtonToolbarBottom
+                  onPageLayoutClick={onPageLayoutManagerOpen}
+                  onPrintClick={handlePrint}
+                  isPrintDisabled={isPrintDisabled}
+                  activeTab={effectiveActiveTab}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }

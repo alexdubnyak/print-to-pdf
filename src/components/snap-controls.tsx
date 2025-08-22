@@ -1,4 +1,4 @@
-import svgPaths from "../imports/svg-oyx9kk31h7";
+import svgPaths from '../imports/svg-oyx9kk31h7';
 
 interface SnapControlsProps {
   onSnapClick?: (snapType: string) => void;
@@ -19,7 +19,10 @@ function CoordinatesDisplay() {
       className="bg-[#1e2023] box-border content-stretch flex gap-2.5 h-[39px] items-center justify-start px-2.5 py-0 relative shrink-0 w-[127px]"
       data-name="Component 79"
     >
-      <div aria-hidden="true" className="absolute border border-[#000000] border-solid inset-0 pointer-events-none" />
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#000000] border-solid inset-0 pointer-events-none"
+      />
       <div
         className="font-['Noto_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#808287] text-[10px] text-nowrap tracking-[0.4px]"
         style={{ fontVariationSettings: "'CTGR' 0, 'wdth' 100" }}
@@ -80,36 +83,38 @@ export default function SnapControls({ onSnapClick, snapStates }: SnapControlsPr
     polar: false,
     esnap: false,
     etrack: false,
-    lweight: false
+    lweight: false,
   };
-  
+
   const currentSnapStates = snapStates || defaultSnapStates;
-  
+
   const snapButtons = [
-    { id: "snap", label: "SNAP", isActive: currentSnapStates.snap },
-    { id: "grid", label: "GRID", isActive: currentSnapStates.grid },
-    { id: "ortho", label: "ORTHO", isActive: currentSnapStates.ortho },
-    { id: "polar", label: "POLAR", isActive: currentSnapStates.polar },
-    { id: "esnap", label: "ESNAP", isActive: currentSnapStates.esnap },
-    { id: "etrack", label: "ETRACK", isActive: currentSnapStates.etrack },
-    { id: "lweight", label: "LWEIGHT", isActive: currentSnapStates.lweight }
+    { id: 'snap', label: 'SNAP', isActive: currentSnapStates.snap },
+    { id: 'grid', label: 'GRID', isActive: currentSnapStates.grid },
+    { id: 'ortho', label: 'ORTHO', isActive: currentSnapStates.ortho },
+    { id: 'polar', label: 'POLAR', isActive: currentSnapStates.polar },
+    { id: 'esnap', label: 'ESNAP', isActive: currentSnapStates.esnap },
+    { id: 'etrack', label: 'ETRACK', isActive: currentSnapStates.etrack },
+    { id: 'lweight', label: 'LWEIGHT', isActive: currentSnapStates.lweight },
   ];
 
   return (
     <div className="box-border content-stretch flex gap-[5px] items-center justify-start px-5 py-0 relative h-[39px] p-[0px]">
-      {/* TEST - Простая кнопка для проверки */}
-      <div className="bg-red-500 text-white px-2 py-1 text-xs">TEST</div>
-      
       {/* Snap buttons group */}
       <div className="box-border content-stretch flex items-center justify-start p-0 relative shrink-0">
-        {snapButtons.map((button) => (
+        {snapButtons.map(button => (
           <div
             key={button.id}
-            className="bg-green-500 text-white px-2 py-1 text-xs mr-1"
+            className={`snap-button ${
+              button.isActive ? 'snap-button--active' : 'snap-button--inactive'
+            }`}
             onClick={() => onSnapClick?.(button.id)}
             data-name={`Component 72 ${button.label}`}
           >
-            {button.label}
+            <div aria-hidden="true" className="snap-button__border" />
+            <div className="snap-button__text">
+              <p>{button.label}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -121,7 +126,7 @@ export default function SnapControls({ onSnapClick, snapStates }: SnapControlsPr
       <VersionDisplay />
 
       {/* A3 Button */}
-      <A3Button onClick={() => onSnapClick?.("a3")} />
+      <A3Button onClick={() => onSnapClick?.('a3')} />
     </div>
   );
 }

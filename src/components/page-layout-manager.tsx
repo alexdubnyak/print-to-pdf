@@ -1,39 +1,41 @@
 const handleLayoutSelect = (layout: string) => {
-    // Блокируем выбор других элементов в режиме удаления
-    if (isDeletingLayout) {
-      console.log('🚫 Выбор заблокирован: идет процесс удаления');
-      return;
-    }
-    
-    setSelectedLayout(layout);
-    
-    // Сбрасываем состояние кнопок при смене layout
-    setActivatedBy('none');
-    
-    console.log(`\n🔄 Выбран layout: "${layout}"`);
-    console.log(`Имеет звездочки: ${isLayoutEnclosedInStars(layout) ? 'ДА ⭐' : 'НЕТ ⚪'}`);
-  };import { useState, useRef, useEffect } from 'react';
-import svgPaths from "../imports/svg-uo6jg4qcws";
-import { ButtonSecondary } from './button-secondary';
+  // Блокируем выбор других элементов в режиме удаления
+  if (isDeletingLayout) {
+    console.log('🚫 Выбор заблокирован: идет процесс удаления');
+    return;
+  }
+
+  setSelectedLayout(layout);
+
+  // Сбрасываем состояние кнопок при смене layout
+  setActivatedBy('none');
+
+  console.log(`\n🔄 Выбран layout: "${layout}"`);
+  console.log(`Имеет звездочки: ${isLayoutEnclosedInStars(layout) ? 'ДА ⭐' : 'НЕТ ⚪'}`);
+};
+import { useEffect, useRef, useState } from 'react';
+import svgPaths from '../imports/svg-uo6jg4qcws';
 import { ButtonIcon } from './button-icon';
+import { ButtonSecondary } from './button-secondary';
 import { Checkbox } from './checkbox';
 import { LayoutCreator } from './layout-creator';
 
 interface PageLayoutManagerProps {
   onClose: () => void;
+  sheets?: Array<{ id: string; name: string; isActive: boolean }>;
 }
 
 // Sheet layout item component
-function SheetLayoutItem({ 
-  name, 
-  isSelected, 
-  onClick, 
-  hasStars, 
+function SheetLayoutItem({
+  name,
+  isSelected,
+  onClick,
+  hasStars,
   isInDeleteMode = false,
-  isDeletingThisItem = false 
-}: { 
-  name: string; 
-  isSelected: boolean; 
+  isDeletingThisItem = false,
+}: {
+  name: string;
+  isSelected: boolean;
   onClick: () => void;
   hasStars?: boolean;
   isInDeleteMode?: boolean;
@@ -42,7 +44,7 @@ function SheetLayoutItem({
   // Определяем цвет фона и текст в зависимости от режима
   let bgColor = 'bg-[#333538] hover:bg-[#2a2c2e]';
   let displayText = name;
-  
+
   if (isDeletingThisItem) {
     bgColor = 'bg-[#d4183d]'; // Красный фон для удаляемого элемента
     displayText = 'Are you sure you want to delete layout?';
@@ -51,7 +53,7 @@ function SheetLayoutItem({
   }
 
   return (
-    <div 
+    <div
       className={`box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-2 relative shrink-0 cursor-pointer transition-colors duration-200 h-8 w-full ${bgColor}`}
       onClick={onClick}
       title={hasStars ? `${name} - со звездочками (кнопки будут disabled)` : name}
@@ -63,7 +65,7 @@ function SheetLayoutItem({
   );
 }
 
-export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
+export function PageLayoutManager({ onClose, sheets = [] }: PageLayoutManagerProps) {
   const [selectedLayout, setSelectedLayout] = useState('*Sheet1*');
   const [showDialogOnCreate, setShowDialogOnCreate] = useState(true);
   const [currentSheetLayout, setCurrentSheetLayout] = useState('<None>');
@@ -72,17 +74,20 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
   const [isDeletingLayout, setIsDeletingLayout] = useState(false);
   const [editingLayoutName, setEditingLayoutName] = useState('');
   const [deletingLayoutName, setDeletingLayoutName] = useState('');
-  
+
   // Ref для контейнера со списком для автопрокрутки
   const listContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Список layouts для тестирования - теперь состояние, чтобы можно было обновлять
-  const [layouts, setLayouts] = useState([
-    '*Sheet1*',           // Лист со звездочками - кнопки disabled
-    '*Sheet2*',           // Лист со звездочками - кнопки disabled  
-    'Custom Layout',      // Обычный layout для активации
-  ]);
-  
+
+  // Список layouts - генерируем динамически на основе переданных листов
+  const generateInitialLayouts = () => {
+    const sheetLayouts = sheets.map(sheet => `*${sheet.name}*`);
+    return sheetLayouts.length > 0
+      ? [...sheetLayouts, 'Custom Layout']
+      : ['*Sheet1*', '*Sheet2*', 'Custom Layout'];
+  };
+
+  const [layouts, setLayouts] = useState(generateInitialLayouts());
+
   // Состояние для LayoutCreator - выбранный "Based on" элемент
   const [layoutCreatorBasedOn, setLayoutCreatorBasedOn] = useState('*Sheet1*');
 
@@ -101,33 +106,45 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
   // Состояние для сохранения "Based on:" значений для каждого layout'а
   const [layoutBasedOnHistory, setLayoutBasedOnHistory] = useState<Record<string, string>>({});
 
+  // Обновляем layouts при изменении sheets
+  useEffect(() => {
+    const newLayouts = generateInitialLayouts();
+    setLayouts(newLayouts);
+
+    // Обновляем selectedLayout если текущий не существует в новом списке
+    if (!newLayouts.includes(selectedLayout)) {
+      setSelectedLayout(newLayouts[0] || '*Sheet1*');
+    }
+  }, [sheets]);
+
   // НЕЗАВИСИМЫЕ состояния кнопок основаны на том, КТО активировал layout:
-  
+
   // 1. Кнопка "Activate" синяя только если ОНА активировала layout
   const isActivateButtonActive = activatedBy === 'activate';
-  
-  // 2. Кнопка "Activate all sheets" синяя только если ОНА активировала layout  
+
+  // 2. Кнопка "Activate all sheets" синяя только если ОНА активировала layout
   const isActivateAllButtonActive = activatedBy === 'activate-all';
-  
+
   // Кнопки create и import - create disabled когда создаем, редактируем или удаляем layout
   const canCreateLayout = !isCreatingLayout && !isEditingLayout && !isDeletingLayout;
   const canImportLayout = !isEditingLayout && !isDeletingLayout;
-  
+
   // Кнопка edit-layout - ВСЕГДА активна (если что-то выбрано)
   const canListLayout = !!selectedLayout;
-  
+
   // ЭТИ 4 КНОПКИ disabled ТОЛЬКО если selectedLayout со звездочками или идет операция
-  const canActivate = !selectedLayoutHasStars && !isDeletingLayout;              // activate
-  const canActivateAllSheets = !selectedLayoutHasStars && !isDeletingLayout;     // activate-all-sheets  
-  const canEditLayout = !selectedLayoutHasStars && !isCreatingLayout && !isDeletingLayout;            // edit
-  const canDeleteLayout = !selectedLayoutHasStars && layouts.length > 1 && !isCreatingLayout && !isEditingLayout; // delete-layout
+  const canActivate = !selectedLayoutHasStars && !isDeletingLayout; // activate
+  const canActivateAllSheets = !selectedLayoutHasStars && !isDeletingLayout; // activate-all-sheets
+  const canEditLayout = !selectedLayoutHasStars && !isCreatingLayout && !isDeletingLayout; // edit
+  const canDeleteLayout =
+    !selectedLayoutHasStars && layouts.length > 1 && !isCreatingLayout && !isEditingLayout; // delete-layout
 
   // Автопрокрутка к inline элементам при их появлении
   useEffect(() => {
     if (listContainerRef.current) {
       let targetIndex = -1;
       let actionType = '';
-      
+
       if (isDeletingLayout && deletingLayoutName) {
         targetIndex = layouts.findIndex(layout => layout === deletingLayoutName);
         actionType = 'удаления';
@@ -139,7 +156,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
         targetIndex = layouts.length;
         actionType = 'создания';
       }
-      
+
       if (targetIndex !== -1) {
         // Небольшая задержка, чтобы элемент успел отрендериться
         setTimeout(() => {
@@ -148,24 +165,24 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
             const itemHeight = 32;
             const inlineElementHeight = 58;
             const totalHeight = itemHeight + inlineElementHeight;
-            
+
             // Позиция, где должен начинаться элемент + inline компонент
             const targetScrollTop = targetIndex * itemHeight;
-            
+
             // Проверяем, нужна ли прокрутка
             const containerHeight = listContainerRef.current.clientHeight;
             const scrollTop = listContainerRef.current.scrollTop;
             const elementBottom = targetScrollTop + inlineElementHeight; // Для inline элемента
-            
+
             // Если элемент не полностью виден, прокручиваем
             if (elementBottom > scrollTop + containerHeight || targetScrollTop < scrollTop) {
               const scrollPosition = Math.max(0, elementBottom - containerHeight + 10); // +10px для отступа
-              
+
               listContainerRef.current.scrollTo({
                 top: scrollPosition,
-                behavior: 'smooth'
+                behavior: 'smooth',
               });
-              
+
               console.log(`📜 Автопрокрутка к элементу ${actionType}: позиция ${targetIndex}`);
               console.log(`🎯 Позиция прокрутки: ${scrollPosition}px`);
             } else {
@@ -175,7 +192,14 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
         }, 100); // 100ms задержка для рендеринга
       }
     }
-  }, [isDeletingLayout, deletingLayoutName, isEditingLayout, editingLayoutName, isCreatingLayout, layouts]);
+  }, [
+    isDeletingLayout,
+    deletingLayoutName,
+    isEditingLayout,
+    editingLayoutName,
+    isCreatingLayout,
+    layouts,
+  ]);
 
   const handleLayoutSelect = (layout: string) => {
     // Блокируем выбор других элементов в режиме удаления
@@ -183,7 +207,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
       console.log('🚫 Выбор заблокирован: идет процесс удаления');
       return;
     }
-    
+
     setSelectedLayout(layout);
     console.log(`\n🔄 Выбран layout: "${layout}"`);
     console.log(`Имеет звездочки: ${isLayoutEnclosedInStars(layout) ? 'ДА ⭐' : 'НЕТ ⚪'}`);
@@ -191,13 +215,14 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
 
   // Переключение режима создания layout (инлайн)
   const handleAddLayout = () => {
-    if (!isEditingLayout && !isDeletingLayout) { // Можно создавать только если не редактируем и не удаляем
+    if (!isEditingLayout && !isDeletingLayout) {
+      // Можно создавать только если не редактируем и не удаляем
       // Закрываем все другие режимы (на всякий случай)
       setIsEditingLayout(false);
       setIsDeletingLayout(false);
       setEditingLayoutName('');
       setDeletingLayoutName('');
-      
+
       setIsCreatingLayout(true);
       // Сбрасываем "Based on" к первому доступному layout при открытии
       setLayoutCreatorBasedOn(layouts.length > 0 ? layouts[0] : '*Sheet1*');
@@ -205,7 +230,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
       console.log(`🎬 Подготовка к автопрокрутке для видимости inline элемента создания`);
     }
   };
-  
+
   // Подтверждение создания layout (из инлайн компонента)
   const handleApproveLayout = (name: string, basedOn: string) => {
     // Проверяем, что имя не пустое и не состоит только из пробелов
@@ -214,35 +239,35 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
       console.warn('❌ Нельзя создать layout с пустым именем');
       return;
     }
-    
+
     // Проверяем, существует ли уже layout с таким именем, и генерируем уникальное
     let uniqueName = trimmedName;
     let counter = 1;
-    
+
     while (layouts.includes(uniqueName)) {
       uniqueName = `${trimmedName} ${counter}`;
       counter++;
     }
-    
+
     // Добавляем новый layout в список
     setLayouts(prevLayouts => [...prevLayouts, uniqueName]);
-    
+
     // Сохраняем выбранное "Based on:" значение для этого layout'а
     setLayoutBasedOnHistory(prev => ({
       ...prev,
-      [uniqueName]: basedOn
+      [uniqueName]: basedOn,
     }));
-    
+
     // Автоматически выбираем созданный layout
     setSelectedLayout(uniqueName);
-    
+
     // Закрываем режим создания
     setIsCreatingLayout(false);
-    
+
     console.log(`✅ Создан новый layout: "${uniqueName}" на основе "${basedOn}"`);
     console.log(`💾 Сохранено "Based on:" значение для "${uniqueName}": "${basedOn}"`);
   };
-  
+
   // Обработчик изменения "Based on" в LayoutCreator
   const handleLayoutCreatorBasedOnChange = (basedOn: string) => {
     setLayoutCreatorBasedOn(basedOn);
@@ -251,18 +276,19 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
 
   // Обработчик редактирования layout
   const handleEditLayout = () => {
-    if (selectedLayout && !selectedLayoutHasStars && !isCreatingLayout && !isDeletingLayout) { // Можно редактировать только если не создаем и не удаляем
+    if (selectedLayout && !selectedLayoutHasStars && !isCreatingLayout && !isDeletingLayout) {
+      // Можно редактировать только если не создаем и не удаляем
       // Закрываем все другие режимы (на всякий случай)
       setIsCreatingLayout(false);
       setIsDeletingLayout(false);
       setDeletingLayoutName('');
-      
+
       setEditingLayoutName(selectedLayout);
-      
+
       // Используем сохраненное ранее "Based on:" значение, или дефолтное если не найдено
       const savedBasedOn = layoutBasedOnHistory[selectedLayout] || selectedLayout;
       setLayoutCreatorBasedOn(savedBasedOn);
-      
+
       setIsEditingLayout(true);
       console.log(`🔄 Открыт инлайн редактор для layout: "${selectedLayout}"`);
       console.log(`📖 Загружено сохраненное "Based on:" значение: "${savedBasedOn}"`);
@@ -279,25 +305,23 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
         console.warn('❌ Нельзя сохранить layout с пустым именем');
         return;
       }
-      
+
       // Проверяем уникальность нового имени (но только если имя изменилось)
       let uniqueName = trimmedName;
       if (editingLayoutName !== trimmedName) {
         let counter = 1;
-        
+
         while (layouts.includes(uniqueName) && uniqueName !== editingLayoutName) {
           uniqueName = `${trimmedName} ${counter}`;
           counter++;
         }
       }
-      
+
       // Обновляем название layout в списке
-      setLayouts(prevLayouts => 
-        prevLayouts.map(layout => 
-          layout === editingLayoutName ? uniqueName : layout
-        )
+      setLayouts(prevLayouts =>
+        prevLayouts.map(layout => (layout === editingLayoutName ? uniqueName : layout))
       );
-      
+
       // Обновляем историю "Based on:" значений
       setLayoutBasedOnHistory(prev => {
         const updated = { ...prev };
@@ -308,15 +332,17 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
         updated[uniqueName] = basedOn;
         return updated;
       });
-      
+
       // Обновляем выбранный layout на новое имя
       setSelectedLayout(uniqueName);
-      
+
       // Закрываем режим редактирования
       setIsEditingLayout(false);
       setEditingLayoutName('');
-      
-      console.log(`✅ Отредактирован layout: "${editingLayoutName}" → "${uniqueName}" на основе "${basedOn}"`);
+
+      console.log(
+        `✅ Отредактирован layout: "${editingLayoutName}" → "${uniqueName}" на основе "${basedOn}"`
+      );
       console.log(`💾 Обновлено "Based on:" значение для "${uniqueName}": "${basedOn}"`);
     }
   };
@@ -329,7 +355,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
     setLayoutCreatorBasedOn('*Sheet1*');
     console.log('❌ Отменено редактирование layout');
   };
-  
+
   // Отмена создания layout (из инлайн компонента)
   const handleCancelLayout = () => {
     setIsCreatingLayout(false);
@@ -337,7 +363,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
     setLayoutCreatorBasedOn('*Sheet1*');
     console.log('❌ Отменено создание layout');
   };
-  
+
   const handleImportLayout = () => console.log('Import layout');
   const handleListLayout = () => console.log('List layouts');
 
@@ -346,7 +372,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
     if (selectedLayout && !selectedLayoutHasStars) {
       if (isActivateButtonActive) {
         // ДЕАКТИВАЦИЯ Sheet1 - возвращаем Sheet1 в исходное состояние
-        setLayouts(prevLayouts => 
+        setLayouts(prevLayouts =>
           prevLayouts.map(layout => {
             if (layout.includes('*Sheet1 (') && layout.includes(')*')) {
               return '*Sheet1*';
@@ -354,17 +380,17 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
             return layout;
           })
         );
-        
+
         // Сбрасываем текущий layout в правой панели
         setCurrentSheetLayout('<None>');
-        
+
         // Сбрасываем состояние кнопки
         setActivatedBy('none');
-        
+
         console.log(`❌ Деактивирован layout для Sheet1`);
       } else {
         // АКТИВАЦИЯ Sheet1 - добавляем название layout'а к Sheet1
-        setLayouts(prevLayouts => 
+        setLayouts(prevLayouts =>
           prevLayouts.map(layout => {
             if (layout === '*Sheet1*') {
               return `*Sheet1 (${selectedLayout})*`;
@@ -372,25 +398,25 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
             return layout;
           })
         );
-        
+
         // Формируем название для отображения в правой панели
         const newLayoutName = `Sheet1 (${selectedLayout})`;
         setCurrentSheetLayout(newLayoutName);
-        
+
         // Устанавливаем, что кнопка "Activate" ответственна за активацию
         setActivatedBy('activate');
-        
+
         console.log(`✅ Активирован layout "${selectedLayout}" для Sheet1`);
       }
     }
   };
-  
+
   // Функция для активации/деактивации layout'а для ВСЕХ листов
   const handleActivateAllSheets = () => {
     if (selectedLayout && !selectedLayoutHasStars) {
       if (isActivateAllButtonActive) {
         // ДЕАКТИВАЦИЯ - возвращаем ВСЕ листы к исходному состоянию
-        setLayouts(prevLayouts => 
+        setLayouts(prevLayouts =>
           prevLayouts.map(layout => {
             if (isLayoutEnclosedInStars(layout) && layout.includes(`(${selectedLayout})`)) {
               // Извлекаем исходное название листа (до первой скобки)
@@ -400,17 +426,17 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
             return layout;
           })
         );
-        
+
         // Сбрасываем текущий layout в правой панели
         setCurrentSheetLayout('<None>');
-        
+
         // Сбрасываем состояние кнопки
         setActivatedBy('none');
-        
+
         console.log(`❌ Деактивирован layout "${selectedLayout}" для ВСЕХ листов`);
       } else {
         // АКТИВАЦИЯ - добавляем название layout'а ко ВСЕМ листам со звездочками
-        setLayouts(prevLayouts => 
+        setLayouts(prevLayouts =>
           prevLayouts.map(layout => {
             if (isLayoutEnclosedInStars(layout) && !layout.includes(`(${selectedLayout})`)) {
               // Убираем последнюю звездочку, добавляем layout, возвращаем звездочку
@@ -420,69 +446,77 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
             return layout;
           })
         );
-        
+
         // Обновляем текущий layout для Sheet1 в правой панели
         const newLayoutName = `Sheet1 (${selectedLayout})`;
         setCurrentSheetLayout(newLayoutName);
-        
+
         // Устанавливаем, что кнопка "Activate all sheets" ответственна за активацию
         setActivatedBy('activate-all');
-        
+
         console.log(`✅ Активирован layout "${selectedLayout}" для ВСЕХ листов (Sheet1 + Sheet2)`);
       }
     }
   };
-  
+
   // Обработчик начала удаления layout (открытие inline компонента)
   const handleDeleteLayout = () => {
-    if (selectedLayout && !selectedLayoutHasStars && layouts.length > 1 && !isCreatingLayout && !isEditingLayout) {
+    if (
+      selectedLayout &&
+      !selectedLayoutHasStars &&
+      layouts.length > 1 &&
+      !isCreatingLayout &&
+      !isEditingLayout
+    ) {
       // Закрываем все другие режимы (на всякий случай)
       setIsCreatingLayout(false);
       setIsEditingLayout(false);
       setEditingLayoutName('');
-      
+
       setDeletingLayoutName(selectedLayout);
-      
+
       // Используем сохраненное ранее "Based on:" значение для отображения
       const savedBasedOn = layoutBasedOnHistory[selectedLayout] || selectedLayout;
       setLayoutCreatorBasedOn(savedBasedOn);
-      
+
       setIsDeletingLayout(true);
       console.log(`🔄 Открыт инлайн удалятель для layout: "${selectedLayout}"`);
-      console.log(`📖 Загружено сохраненное "Based on:" значение для отображения: "${savedBasedOn}"`);      
+      console.log(
+        `📖 Загружено сохраненное "Based on:" значение для отображения: "${savedBasedOn}"`
+      );
       console.log(`🔴 Элемент "${selectedLayout}" подсвечен красным цветом`);
       console.log(`💬 Текст изменен на: "Are you sure you want to delete layout?"`);
       console.log(`🎬 Подготовка к автопрокрутке для видимости inline элемента`);
     }
   };
-  
+
   // Подтверждение удаления layout (из инлайн компонента)
   const handleConfirmDeleteLayout = (layoutName: string) => {
     // Удаляем layout из списка
     setLayouts(prevLayouts => prevLayouts.filter(layout => layout !== layoutName));
-    
+
     // Удаляем сохраненное "Based on:" значение для этого layout'а
     setLayoutBasedOnHistory(prev => {
       const updated = { ...prev };
       delete updated[layoutName];
       return updated;
     });
-    
+
     // Выбираем первый доступный layout
     const remainingLayouts = layouts.filter(layout => layout !== layoutName);
     if (remainingLayouts.length > 0) {
       setSelectedLayout(remainingLayouts[0]);
     }
-    
+
     // Закрываем режим удаления
     setIsDeletingLayout(false);
     setDeletingLayoutName('');
-    
+
     console.log(`🗑️ Удален layout: "${layoutName}"`);
     console.log(`🧹 Очищено "Based on:" значение для "${layoutName}"`);
     console.log('✅ Режим удаления завершен');
   };
-  
+
   // Отмена удаления layout (из инлайн компонента)
   const handleCancelDeleteLayout = () => {
     setIsDeletingLayout(false);
@@ -499,17 +533,21 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
       data-name="page layout manager"
     >
       {/* Header */}
-      <div className="relative shrink-0 w-full" style={{ backgroundColor: 'var(--color-dialog-bg-dark)' }}>
+      <div
+        className="relative shrink-0 w-full"
+        style={{ backgroundColor: 'var(--color-dialog-bg-dark)' }}
+      >
         <div className="flex flex-row items-center relative size-full">
           <div className="box-border content-stretch flex flex-row items-center justify-between px-2.5 py-0 relative w-full">
-            <div className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[11px] text-left text-nowrap uppercase" style={{ color: 'var(--color-text-light)' }}>
-              <p className="block leading-[normal] whitespace-pre">
-                Page layout manager
-              </p>
+            <div
+              className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[11px] text-left text-nowrap uppercase"
+              style={{ color: 'var(--color-text-light)' }}
+            >
+              <p className="block leading-[normal] whitespace-pre">Page layout manager</p>
             </div>
-            <div 
-              className="relative shrink-0 size-[37px] cursor-pointer hover:opacity-80 transition-opacity" 
-              data-name="actions" 
+            <div
+              className="relative shrink-0 size-[37px] cursor-pointer hover:opacity-80 transition-opacity"
+              data-name="actions"
               onClick={onClose}
               title="Закрыть"
             >
@@ -520,11 +558,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                 viewBox="0 0 37 37"
               >
                 <g id="actions">
-                  <path
-                    d={svgPaths.p4aac200}
-                    fill="var(--color-icon-fill, #DFDFDF)"
-                    id="Union"
-                  />
+                  <path d={svgPaths.p4aac200} fill="var(--color-icon-fill, #DFDFDF)" id="Union" />
                 </g>
               </svg>
             </div>
@@ -535,21 +569,19 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
       {/* Main Content */}
       <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative shrink-0 w-full flex-1">
         <div className="basis-0 box-border content-stretch flex flex-col-reverse gap-4 grow items-start justify-start min-h-px min-w-px pb-0 pt-4 px-0 relative self-stretch shrink-0">
-          
           {/* Content Area */}
           <div className="order-2 relative shrink-0 w-full flex-1">
             <div className="relative size-full">
               <div className="box-border content-stretch flex flex-row gap-4 items-start justify-start pl-0 pr-4 py-0 relative w-full h-full">
-                
                 {/* Page Layouts Section */}
                 <div className="box-border content-stretch flex flex-col gap-3 items-start justify-start pl-4 pr-0 py-0 relative shrink-0 w-[290px]">
                   <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#cfcfcf] text-[12px] text-left text-nowrap">
                     <p className="block leading-[normal] whitespace-pre">Page Layouts</p>
                   </div>
-                  
+
                   {/* Layouts List с прокруткой */}
                   <div className="relative shrink-0 w-full h-[160px]">
-                    <div 
+                    <div
                       ref={listContainerRef}
                       className="box-border content-stretch flex flex-col items-start justify-start overflow-y-auto overflow-x-hidden p-0 relative h-full border border-[#141518]"
                     >
@@ -564,10 +596,13 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                             isInDeleteMode={isDeletingLayout}
                             isDeletingThisItem={isDeletingLayout && deletingLayoutName === layout}
                           />
-                          
+
                           {/* Layout Deleter - появляется строго под удаляемым элементом */}
                           {isDeletingLayout && deletingLayoutName === layout && (
-                            <div key={`layout-deleter-${layout}`} className="relative shrink-0 w-full h-[58px]">
+                            <div
+                              key={`layout-deleter-${layout}`}
+                              className="relative shrink-0 w-full h-[58px]"
+                            >
                               <LayoutCreator
                                 onDelete={handleConfirmDeleteLayout}
                                 onCancel={handleCancelDeleteLayout}
@@ -580,10 +615,13 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                               />
                             </div>
                           )}
-                          
+
                           {/* Layout Editor - появляется строго под редактируемым элементом */}
                           {isEditingLayout && editingLayoutName === layout && (
-                            <div key={`layout-editor-${layout}`} className="relative shrink-0 w-full h-[58px]">
+                            <div
+                              key={`layout-editor-${layout}`}
+                              className="relative shrink-0 w-full h-[58px]"
+                            >
                               <LayoutCreator
                                 onApprove={handleApproveEditLayout}
                                 onCancel={handleCancelEditLayout}
@@ -598,10 +636,13 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                           )}
                         </div>
                       ))}
-                      
+
                       {/* Layout Creator - появляется внизу списка как инлайн элемент для создания */}
                       {isCreatingLayout && (
-                        <div key="layout-creator-inline" className="relative shrink-0 w-full h-[58px]">
+                        <div
+                          key="layout-creator-inline"
+                          className="relative shrink-0 w-full h-[58px]"
+                        >
                           <LayoutCreator
                             onApprove={handleApproveLayout}
                             onCancel={handleCancelLayout}
@@ -615,18 +656,18 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                       )}
                     </div>
                   </div>
-                  
+
                   {/* Action Buttons - НЕЗАВИСИМЫЕ КНОПКИ */}
                   <div className="box-border content-stretch flex flex-row items-start justify-between p-0 relative shrink-0 w-full">
                     <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
-                      <ButtonIcon 
+                      <ButtonIcon
                         icon="create-layout"
                         onClick={handleAddLayout}
                         variant="default"
                         disabled={!canCreateLayout}
                         tooltip="Create new layout"
                       />
-                      <ButtonIcon 
+                      <ButtonIcon
                         icon="import-layout"
                         onClick={handleImportLayout}
                         variant="default"
@@ -635,39 +676,47 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                       />
                     </div>
                     <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
-                      <ButtonIcon 
+                      <ButtonIcon
                         icon="edit-layout"
                         onClick={handleListLayout}
                         variant="default"
                         disabled={!canListLayout}
                         tooltip="Edit setting"
                       />
-                      <ButtonIcon 
-                        icon={isActivateButtonActive ? "deactivate" : "activate"}
+                      <ButtonIcon
+                        icon={isActivateButtonActive ? 'deactivate' : 'activate'}
                         onClick={handleActivateLayout}
                         variant="default"
                         disabled={!canActivate}
                         active={isActivateButtonActive}
                         activeColor="#254CA9"
-                        tooltip={isActivateButtonActive ? "Deactivate layout for Sheet1" : "Activate layout for Sheet1"}
+                        tooltip={
+                          isActivateButtonActive
+                            ? 'Deactivate layout for Sheet1'
+                            : 'Activate layout for Sheet1'
+                        }
                       />
-                      <ButtonIcon 
-                        icon={isActivateAllButtonActive ? "deactivate" : "activate-all-sheets"}
+                      <ButtonIcon
+                        icon={isActivateAllButtonActive ? 'deactivate' : 'activate-all-sheets'}
                         onClick={handleActivateAllSheets}
                         variant="default"
                         disabled={!canActivateAllSheets}
                         active={isActivateAllButtonActive}
                         activeColor="#254CA9"
-                        tooltip={isActivateAllButtonActive ? "Deactivate layout for all sheets" : "Activate layout for all sheets"}
+                        tooltip={
+                          isActivateAllButtonActive
+                            ? 'Deactivate layout for all sheets'
+                            : 'Activate layout for all sheets'
+                        }
                       />
-                      <ButtonIcon 
+                      <ButtonIcon
                         icon="edit"
                         onClick={handleEditLayout}
                         variant="default"
                         disabled={!canEditLayout}
                         tooltip="Edit layout"
                       />
-                      <ButtonIcon 
+                      <ButtonIcon
                         icon="delete-layout"
                         onClick={handleDeleteLayout}
                         variant="default"
@@ -676,12 +725,10 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                       />
                     </div>
                   </div>
-
                 </div>
 
                 {/* Right Side Panels */}
                 <div className="basis-0 box-border content-stretch flex flex-col gap-4 grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
-                  
                   {/* General Section */}
                   <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
                     <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#cfcfcf] text-[12px] text-left text-nowrap">
@@ -750,7 +797,6 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
           <div className="order-1 relative shrink-0 w-full">
             <div className="flex flex-row items-center relative size-full">
               <div className="box-border content-stretch flex flex-row items-center justify-between px-4 py-2 relative w-full">
-                
                 {/* Checkbox */}
                 <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0">
                   <Checkbox
@@ -761,10 +807,7 @@ export function PageLayoutManager({ onClose }: PageLayoutManagerProps) {
                 </div>
 
                 {/* Close Button */}
-                <ButtonSecondary 
-                  onClick={onClose}
-                  tooltip="Close layout manager"
-                >
+                <ButtonSecondary onClick={onClose} tooltip="Close layout manager">
                   Close
                 </ButtonSecondary>
               </div>

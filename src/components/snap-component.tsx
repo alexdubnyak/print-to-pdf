@@ -3,16 +3,16 @@ interface SnapComponentProps {
   className?: string;
 }
 
-export default function SnapComponent({ onClick, className = "" }: SnapComponentProps) {
+export default function SnapComponent({ onClick, className = '' }: SnapComponentProps) {
   return (
     <div
       className={`bg-[#333538] box-border content-stretch flex gap-2.5 items-center justify-center p-0 relative size-full cursor-pointer hover:bg-[#404248] transition-colors ${className}`}
       data-name="Component 72"
       onClick={onClick}
     >
-      <div 
-        aria-hidden="true" 
-        className="absolute border border-[#000000] border-solid inset-0 pointer-events-none" 
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#000000] border-solid inset-0 pointer-events-none"
       />
       <div
         className="font-['Noto_Sans:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#cfcfcf] text-[10px] text-nowrap tracking-[0.4px]"
