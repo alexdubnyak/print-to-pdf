@@ -1,5 +1,5 @@
 import imgImage9 from 'figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import svgPathsQuick from '../imports/svg-4xdfr98ovj';
 import svgPaths from '../imports/svg-uo6jg4qcws';
 import { ButtonIcon } from './button-icon';
@@ -277,6 +277,9 @@ function PreviewArea({
   selectedSheets,
   hideNavigationArrows = false,
   isModelTabActive = false,
+  inverse = false,
+  xOffset = '1',
+  yOffset = '1',
 }: {
   selectedCount: number;
   currentSheet: number;
@@ -284,6 +287,9 @@ function PreviewArea({
   selectedSheets: number[];
   hideNavigationArrows?: boolean;
   isModelTabActive?: boolean;
+  inverse?: boolean;
+  xOffset?: string;
+  yOffset?: string;
 }) {
   const handlePrevious = () => {
     const currentIndex = selectedSheets.indexOf(currentSheet);
@@ -318,6 +324,9 @@ function PreviewArea({
           sheetName={sheet1Data.name}
           widthMm={sheet1Data.widthMm}
           heightMm={sheet1Data.heightMm}
+          inverse={inverse}
+          xOffset={xOffset}
+          yOffset={yOffset}
         />
         <div className="flex flex-col gap-2 items-start">
           <SettingsSection />
@@ -356,6 +365,9 @@ function PreviewArea({
           sheetName={rotatedSheetData.name}
           widthMm={rotatedSheetData.widthMm}
           heightMm={rotatedSheetData.heightMm}
+          inverse={inverse}
+          xOffset={xOffset}
+          yOffset={yOffset}
         />
       )}
       <div className="flex flex-col gap-2 items-start">
@@ -385,6 +397,9 @@ function LeftPreviewPanel({
   selectedSheets,
   hideNavigationArrows = false,
   isModelTabActive = false,
+  inverse = false,
+  xOffset = '1',
+  yOffset = '1',
 }: {
   selectedCount: number;
   currentSheet: number;
@@ -392,6 +407,9 @@ function LeftPreviewPanel({
   selectedSheets: number[];
   hideNavigationArrows?: boolean;
   isModelTabActive?: boolean;
+  inverse?: boolean;
+  xOffset?: string;
+  yOffset?: string;
 }) {
   return (
     <div
@@ -405,6 +423,9 @@ function LeftPreviewPanel({
         selectedSheets={selectedSheets}
         hideNavigationArrows={hideNavigationArrows}
         isModelTabActive={isModelTabActive}
+        inverse={inverse}
+        xOffset={xOffset}
+        yOffset={yOffset}
       />
     </div>
   );
@@ -712,7 +733,15 @@ function SheetsConfigGroup({
 // QUICK PRINT COMPONENTS FROM FIGMA IMPORT
 // ============================================
 
-function QuickPrintSheetPreview() {
+function QuickPrintSheetPreview({
+  inverse = false,
+  xOffset = '1',
+  yOffset = '1',
+}: {
+  inverse?: boolean;
+  xOffset?: string;
+  yOffset?: string;
+}) {
   return (
     <div className="h-[251.296px] relative shrink-0 w-[323.5px]">
       <div className="absolute flex h-[251.281px] items-center justify-center left-[-0.45px] top-[0.43px] w-[324.391px]">
@@ -769,6 +798,10 @@ function QuickPrintSheetPreview() {
           top: 'calc(50% - 0.105px)',
           left: 'calc(50% + 0.256px)',
           backgroundImage: `url('${imgImage9}')`,
+          transform: `${inverse ? 'scaleX(-1) scaleY(-1)' : ''} translateX(${
+            parseFloat(xOffset) * 2
+          }px) translateY(${parseFloat(yOffset) * 2}px)`.trim(),
+          transformOrigin: 'center center',
         }}
       />
       <div className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] left-[144.39px] not-italic text-[#d5d7e1] text-[10.966px] text-left text-nowrap top-[-37.92px]">
@@ -778,11 +811,19 @@ function QuickPrintSheetPreview() {
   );
 }
 
-function QuickPrintLeftPanel() {
+function QuickPrintLeftPanel({
+  inverse = false,
+  xOffset = '1',
+  yOffset = '1',
+}: {
+  inverse?: boolean;
+  xOffset?: string;
+  yOffset?: string;
+}) {
   return (
     <div className="bg-[#1e2023] box-border content-stretch flex flex-row gap-2.5 items-stretch justify-start p-[20px] relative shrink-0 w-[400px] self-stretch min-h-0">
       <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
-        <QuickPrintSheetPreview />
+        <QuickPrintSheetPreview inverse={inverse} xOffset={xOffset} yOffset={yOffset} />
         <SettingsSection />
       </div>
     </div>
@@ -829,8 +870,25 @@ function QuickDropdown({
 // Deprecated QuickCheckbox replaced by reusable Checkbox component
 
 // Quick Print Settings Component - обновленный согласно дизайну из Figma
-function QuickPrintSettings() {
-  return <QuickPrintSettingsNew />;
+function QuickPrintSettings({
+  inverse = false,
+  onInverseChange,
+  isModelTab = false,
+  onOffsetChange,
+}: {
+  inverse?: boolean;
+  onInverseChange?: (value: boolean) => void;
+  isModelTab?: boolean;
+  onOffsetChange?: (xOffset: string, yOffset: string) => void;
+}) {
+  return (
+    <QuickPrintSettingsNew
+      inverse={inverse}
+      onInverseChange={onInverseChange}
+      isModelTab={isModelTab}
+      onOffsetChange={onOffsetChange}
+    />
+  );
 }
 
 function MainConfigArea({
@@ -855,6 +913,10 @@ function MainConfigArea({
   onSheetsChange,
   checkedSheets,
   onSheetClick,
+  inverse = false,
+  onInverseChange,
+  isModelTab = false,
+  onOffsetChange,
 }: {
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -877,6 +939,10 @@ function MainConfigArea({
   onSheetsChange: (sheets: Array<{ id: string; name: string; isActive: boolean }>) => void;
   checkedSheets: Record<string, boolean>;
   onSheetClick: (sheetId: string, checked: boolean) => void;
+  inverse?: boolean;
+  onInverseChange?: (value: boolean) => void;
+  isModelTab?: boolean;
+  onOffsetChange?: (xOffset: string, yOffset: string) => void;
 }) {
   return (
     <div className="box-border content-stretch flex flex-col justify-between items-start p-0 relative w-full h-full min-h-0">
@@ -896,7 +962,12 @@ function MainConfigArea({
         {/* Content based on active tab */}
         {activeTab === 'quick' ? (
           // Quick print: Show layout settings for current sheet
-          <QuickPrintSettings />
+          <QuickPrintSettings
+            inverse={inverse}
+            onInverseChange={onInverseChange}
+            isModelTab={isModelTab}
+            onOffsetChange={onOffsetChange}
+          />
         ) : (
           // Advanced print: Show all controls
           <div className="w-full flex flex-col gap-5">
@@ -984,6 +1055,15 @@ function ButtonToolbarBottom({
 // ============================================
 
 function LayoutEditDialog({ sheetName, onClose }: { sheetName: string; onClose: () => void }) {
+  const [inverse, setInverse] = useState(false);
+  const [xOffset, setXOffset] = useState('1');
+  const [yOffset, setYOffset] = useState('1');
+
+  const handleOffsetChange = (newXOffset: string, newYOffset: string) => {
+    setXOffset(newXOffset);
+    setYOffset(newYOffset);
+  };
+
   return (
     <div
       className="box-border content-stretch flex flex-col items-start justify-start p-0 shadow-[0px_4px_64px_0px_rgba(0,0,0,0.25)] w-[971px] h-[591px]"
@@ -998,7 +1078,7 @@ function LayoutEditDialog({ sheetName, onClose }: { sheetName: string; onClose: 
       {/* Main Content */}
       <div className="basis-0 box-border content-stretch flex flex-row grow items-stretch justify-start min-h-0 min-w-px p-0 relative shrink-0 w-full">
         {/* Left Panel - Quick Print Preview */}
-        <QuickPrintLeftPanel />
+        <QuickPrintLeftPanel inverse={inverse} xOffset={xOffset} yOffset={yOffset} />
 
         {/* Right Panel - Settings without tabs */}
         <div className="flex flex-col grow min-h-0 w-full">
@@ -1017,7 +1097,12 @@ function LayoutEditDialog({ sheetName, onClose }: { sheetName: string; onClose: 
 
           {/* Settings content */}
           <div className="flex flex-col grow min-h-0 w-full px-[20px] pb-[20px]">
-            <QuickPrintSettings />
+            <QuickPrintSettings
+              inverse={inverse}
+              onInverseChange={setInverse}
+              isModelTab={false}
+              onOffsetChange={handleOffsetChange}
+            />
           </div>
           <div className="mt-auto">
             <ButtonToolbarBottom
@@ -1061,6 +1146,14 @@ export function PrintToPdfDialog({
   const [activeTabInternal, setActiveTabInternal] = useState<'quick' | 'advanced'>('quick');
   const [isLayoutEditOpen, setIsLayoutEditOpen] = useState(false);
   const [editingSheetName, setEditingSheetName] = useState('');
+  const [inverse, setInverse] = useState(false);
+  const [xOffset, setXOffset] = useState('1');
+  const [yOffset, setYOffset] = useState('1');
+
+  const handleOffsetChange = (newXOffset: string, newYOffset: string) => {
+    setXOffset(newXOffset);
+    setYOffset(newYOffset);
+  };
 
   // Если активна вкладка Model, принудительно устанавливаем Quick print режим
   const isModelTabActive = activeTab === 'model';
@@ -1172,7 +1265,7 @@ export function PrintToPdfDialog({
           <div className="basis-0 box-border content-stretch flex flex-row grow items-stretch justify-start min-h-0 min-w-px p-0 relative shrink-0 w-full">
             {/* Left Panel - используем LeftPreviewPanel для Model вкладки, QuickPrintLeftPanel для обычного Quick print */}
             {effectiveActiveTab === 'quick' && !isModelTabActive ? (
-              <QuickPrintLeftPanel />
+              <QuickPrintLeftPanel inverse={inverse} xOffset={xOffset} yOffset={yOffset} />
             ) : (
               <LeftPreviewPanel
                 selectedCount={selectedCount}
@@ -1181,6 +1274,9 @@ export function PrintToPdfDialog({
                 selectedSheets={selectedSheets}
                 hideNavigationArrows={effectiveActiveTab === 'quick'}
                 isModelTabActive={isModelTabActive}
+                inverse={inverse}
+                xOffset={xOffset}
+                yOffset={yOffset}
               />
             )}
 
@@ -1208,6 +1304,10 @@ export function PrintToPdfDialog({
                 onSheetsChange={onSheetsChange}
                 checkedSheets={checkedSheets}
                 onSheetClick={handleSheetClick}
+                inverse={inverse}
+                onInverseChange={setInverse}
+                isModelTab={isModelTabActive}
+                onOffsetChange={handleOffsetChange}
               />
               <div className="mt-auto">
                 <ButtonToolbarBottom

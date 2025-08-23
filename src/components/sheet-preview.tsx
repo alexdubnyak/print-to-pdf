@@ -1,19 +1,30 @@
-import svgPaths from "../imports/svg-uo6jg4qcws";
+import svgPaths from '../imports/svg-uo6jg4qcws';
 
 interface SheetPreviewProps {
   image: string;
   sheetName: string;
   widthMm: string;
   heightMm: string;
+  inverse?: boolean;
+  xOffset?: string;
+  yOffset?: string;
 }
 
-export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPreviewProps) {
+export function SheetPreview({
+  image,
+  sheetName,
+  widthMm,
+  heightMm,
+  inverse = false,
+  xOffset = '1',
+  yOffset = '1',
+}: SheetPreviewProps) {
   // 🔍 ОТЛАДКА: Логируем все входящие пропсы
   console.log('🔍 SheetPreview props:', {
     image,
     sheetName,
     widthMm,
-    heightMm
+    heightMm,
   });
 
   // 🔍 ОТЛАДКА: Проверяем URL изображения
@@ -24,26 +35,41 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
       {/* Базовый лист (фон) */}
       <div className="absolute flex h-[251.281px] items-center justify-center left-[-0.45px] top-[0.434px] w-[324.391px]">
         <div className="flex-none rotate-[270deg]">
-          <div className="h-[324.401px] w-[251.296px]" style={{ backgroundColor: 'var(--color-white)' }} />
+          <div
+            className="h-[324.401px] w-[251.296px]"
+            style={{ backgroundColor: 'var(--color-white)' }}
+          />
         </div>
       </div>
-      
+
       {/* Первый внутренний лист с пунктирной рамкой */}
       <div className="absolute flex h-[239.406px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[310.703px] sheet-preview-center-1">
         <div className="flex-none rotate-[270deg]">
-          <div className="h-[310.707px] relative w-[239.417px]" style={{ backgroundColor: 'var(--color-white)' }}>
-            <div className="absolute border-[0.456903px] border-dashed inset-0 pointer-events-none" style={{ borderColor: 'var(--color-border-muted)' }} />
+          <div
+            className="h-[310.707px] relative w-[239.417px]"
+            style={{ backgroundColor: 'var(--color-white)' }}
+          >
+            <div
+              className="absolute border-[0.456903px] border-dashed inset-0 pointer-events-none"
+              style={{ borderColor: 'var(--color-border-muted)' }}
+            />
           </div>
         </div>
       </div>
-      
+
       {/* Второй внутренний лист с сплошной рамкой - здесь будет изображение */}
       <div className="absolute flex h-[214.734px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[286.938px] sheet-preview-center-2">
         <div className="flex-none rotate-[270deg]">
-          <div className="h-[286.948px] relative w-[214.744px] overflow-hidden" style={{ backgroundColor: 'var(--color-white)' }}>
+          <div
+            className="h-[286.948px] relative w-[214.744px] overflow-hidden"
+            style={{ backgroundColor: 'var(--color-white)' }}
+          >
             {/* Рамка листа */}
-            <div className="absolute border-[0.456903px] border-solid inset-0 pointer-events-none z-10" style={{ borderColor: 'var(--color-black)' }} />
-            
+            <div
+              className="absolute border-[0.456903px] border-solid inset-0 pointer-events-none z-10"
+              style={{ borderColor: 'var(--color-black)' }}
+            />
+
             {/* 🖼️ ИЗОБРАЖЕНИЕ ЧЕРТЕЖА - встроенное на лист с сохранением пропорций + поворот на 90° */}
             <div className="absolute inset-[2px] flex items-center justify-center">
               <img
@@ -51,20 +77,22 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
                 alt={`Technical drawing for ${sheetName}`}
                 className="max-w-full max-h-full object-contain"
                 style={{
-                  filter: 'brightness(0.95) contrast(1.1)', // Слегка затемняем для лучшей видимости на белом фоне
-                  transform: 'rotate(90deg)', // 🔄 Поворот на 90 градусов по часовой стрелке
+                  filter: 'brightness(0.95) contrast(1.1)',
+                  transform: `rotate(90deg) ${inverse ? 'scaleX(-1) scaleY(-1)' : ''} translateX(${
+                    parseFloat(xOffset) * 2
+                  }px) translateY(${parseFloat(yOffset) * 2}px)`.trim(),
                   transformOrigin: 'center center', // Центр вращения
                 }}
                 onLoad={() => console.log('✅ Изображение загружено и повернуто на 90°:', image)}
-                onError={(e) => {
+                onError={e => {
                   console.error('❌ Ошибка загрузки изображения:', image, e);
                   // Fallback - показываем placeholder
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
-              
+
               {/* Fallback placeholder на случай ошибки загрузки */}
-              <div 
+              <div
                 className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs pointer-events-none"
                 style={{ display: 'none' }}
                 id={`fallback-${sheetName}`}
@@ -72,7 +100,9 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
                 <div className="text-center">
                   <div className="mb-1">📋</div>
                   <div>Technical Drawing</div>
-                  <div className="text-[8px] mt-1">{widthMm}×{heightMm}mm</div>
+                  <div className="text-[8px] mt-1">
+                    {widthMm}×{heightMm}mm
+                  </div>
                 </div>
               </div>
             </div>
@@ -127,12 +157,18 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
           </div>
         </div>
       </div>
-      <div className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic text-[9.13805px] text-left text-nowrap top-[-15.535px] sheet-label-position" style={{ color: 'var(--color-text-light)' }}>
+      <div
+        className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic text-[9.13805px] text-left text-nowrap top-[-15.535px] sheet-label-position"
+        style={{ color: 'var(--color-text-light)' }}
+      >
         <p className="block leading-[normal] whitespace-pre">{widthMm} mm</p>
       </div>
       <div className="absolute flex h-[33px] items-center justify-center top-[106.435px] w-[10.5px] sheet-dimension-position">
         <div className="flex-none rotate-[90deg]">
-          <div className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative text-[9.13805px] text-left text-nowrap" style={{ color: 'var(--color-text-light)' }}>
+          <div
+            className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative text-[9.13805px] text-left text-nowrap"
+            style={{ color: 'var(--color-text-light)' }}
+          >
             <p className="block leading-[normal] whitespace-pre">{heightMm} mm</p>
           </div>
         </div>
@@ -145,11 +181,7 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
             preserveAspectRatio="none"
             viewBox="0 0 136 8"
           >
-            <path
-              d={svgPaths.p38025800}
-              fill="var(--color-text-light, #D5D7E1)"
-              id="Line 14"
-            />
+            <path d={svgPaths.p38025800} fill="var(--color-text-light, #D5D7E1)" id="Line 14" />
           </svg>
         </div>
       </div>
@@ -161,11 +193,7 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
             preserveAspectRatio="none"
             viewBox="0 0 136 8"
           >
-            <path
-              d={svgPaths.p3fa11600}
-              fill="var(--color-text-light, #D5D7E1)"
-              id="Line 15"
-            />
+            <path d={svgPaths.p3fa11600} fill="var(--color-text-light, #D5D7E1)" id="Line 15" />
           </svg>
         </div>
       </div>
@@ -217,11 +245,7 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
                 preserveAspectRatio="none"
                 viewBox="0 0 97 8"
               >
-                <path
-                  d={svgPaths.pd5ba200}
-                  fill="var(--color-text-light, #D5D7E1)"
-                  id="Line 18"
-                />
+                <path d={svgPaths.pd5ba200} fill="var(--color-text-light, #D5D7E1)" id="Line 18" />
               </svg>
             </div>
           </div>
@@ -237,18 +261,17 @@ export function SheetPreview({ image, sheetName, widthMm, heightMm }: SheetPrevi
                 preserveAspectRatio="none"
                 viewBox="0 0 97 8"
               >
-                <path
-                  d={svgPaths.pf09200}
-                  fill="var(--stroke-0, white)"
-                  id="Line 19"
-                />
+                <path d={svgPaths.pf09200} fill="var(--stroke-0, white)" id="Line 19" />
               </svg>
             </div>
           </div>
         </div>
       </div>
-      
-      <div className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] left-[144.388px] not-italic text-[10.9657px] text-left text-nowrap top-[-37.923px]" style={{ color: 'var(--color-text-light)' }}>
+
+      <div
+        className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] left-[144.388px] not-italic text-[10.9657px] text-left text-nowrap top-[-37.923px]"
+        style={{ color: 'var(--color-text-light)' }}
+      >
         <p className="block leading-[normal] whitespace-pre">{sheetName}</p>
       </div>
     </div>
