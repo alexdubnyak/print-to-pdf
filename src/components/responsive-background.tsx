@@ -208,10 +208,6 @@ function BottomToolbarWrapper({
     }
   };
 
-  const handleNewLayout = () => {
-    console.log('New layout clicked');
-  };
-
   const handleSheetMoveUp = () => {
     const activeSheetIndex = sheets.findIndex(sheet => sheet.isActive);
 
@@ -288,7 +284,6 @@ function BottomToolbarWrapper({
             onEditLayout={handleEditLayout}
             onNewSheet={handleNewSheet}
             onDeleteSheet={handleDeleteSheet}
-            onNewLayout={handleNewLayout}
             onSheetMoveUp={handleSheetMoveUp}
             onSheetMoveDown={handleSheetMoveDown}
           />

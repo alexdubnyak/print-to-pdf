@@ -6649,8 +6649,9 @@
 
   .scrollbar-bottom {
     scrollbar-width: thin;
+    scrollbar-color: #525559 #333538;
     box-sizing: border-box;
-    padding-bottom: 4px;
+    padding-bottom: 7px; /* Увеличиваем до 7px (4px + 3px) */
   }
 
   .scrollbar-bottom::-webkit-scrollbar {
@@ -6659,18 +6660,19 @@
   }
 
   .scrollbar-bottom::-webkit-scrollbar-track {
-    background: #0000000d;
+    background: #3335384d;
     border-radius: 2px;
     margin: 0;
+    margin-bottom: 3px; /* Отступ вниз на 3px */
   }
 
   .scrollbar-bottom::-webkit-scrollbar-thumb {
-    background: #0003;
+    background: #525559;
     border-radius: 2px;
   }
 
   .scrollbar-bottom::-webkit-scrollbar-thumb:hover {
-    background: #0000004d;
+    background: #6a6d71;
   }
 
   .bg-gradient-overlay {
@@ -6699,7 +6701,7 @@
 
   .ribbon-scroll {
     scrollbar-width: thin;
-    scrollbar-color: #888 #333538;
+    scrollbar-color: #525559 #333538;
     -webkit-overflow-scrolling: touch;
     overflow: scroll hidden !important;
   }
@@ -6711,15 +6713,16 @@
   .ribbon-scroll::-webkit-scrollbar-track {
     background: #3335384d;
     border-radius: 3px;
+    margin-top: 3px;
   }
 
   .ribbon-scroll::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #525559;
     border-radius: 3px;
   }
 
   .ribbon-scroll::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
+    background: #6a6d71;
   }
 }
 
@@ -7743,7 +7746,7 @@ html {
 
   .ribbon-scroll {
     scrollbar-width: thin;
-    scrollbar-color: #888 #333538;
+    scrollbar-color: #525559 #333538;
     -webkit-overflow-scrolling: touch;
     overflow: scroll hidden !important;
   }
@@ -7755,15 +7758,16 @@ html {
   .ribbon-scroll::-webkit-scrollbar-track {
     background: #3335384d;
     border-radius: 3px;
+    margin-top: 3px;
   }
 
   .ribbon-scroll::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #525559;
     border-radius: 3px;
   }
 
   .ribbon-scroll::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
+    background: #6a6d71;
   }
 }
 

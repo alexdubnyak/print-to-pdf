@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import NavigationButtons from "./navigation-buttons";
-import SnapControls from "./snap-controls";
+import { useEffect, useMemo, useState } from 'react';
+import NavigationButtons from './navigation-buttons';
+import SnapControls from './snap-controls';
 
 interface Tab {
   id: string;
@@ -30,7 +30,7 @@ interface BottomToolbarProps {
 
 function Frame300({ onClick }: { onClick?: () => void }) {
   return (
-    <div 
+    <div
       className="h-[39px] relative shrink-0 w-[43.5px] cursor-pointer hover:bg-[#1e2023] transition-colors"
       onClick={onClick}
     >
@@ -39,13 +39,13 @@ function Frame300({ onClick }: { onClick?: () => void }) {
           <rect fill="#141518" height="39" width="43.5" />
           <g transform="translate(14, 14)">
             <svg width="16" height="11" viewBox="0 0 16 11" fill="none">
-              <path d="M16 11H0V0H16V11ZM1 10H10V5H15V1H1V10Z" fill="white"/>
+              <path d="M16 11H0V0H16V11ZM1 10H10V5H15V1H1V10Z" fill="white" />
             </svg>
           </g>
           {/* Треугольник в правом нижнем углу с отступом 4px */}
           <g transform="translate(33.5, 29)">
             <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
-              <path d="M6 6H0L6 0V6Z" fill="white"/>
+              <path d="M6 6H0L6 0V6Z" fill="white" />
             </svg>
           </g>
         </g>
@@ -56,8 +56,8 @@ function Frame300({ onClick }: { onClick?: () => void }) {
 
 function CloseIcon({ onClick }: { onClick?: (e?: React.MouseEvent) => void }) {
   return (
-    <div 
-      className="absolute bottom-1 right-1 size-1.5 cursor-pointer" 
+    <div
+      className="absolute bottom-1 right-1 size-1.5 cursor-pointer"
       onClick={onClick}
       data-name="Component 69"
     >
@@ -68,50 +68,48 @@ function CloseIcon({ onClick }: { onClick?: (e?: React.MouseEvent) => void }) {
   );
 }
 
-function TabComponent({ 
-  tab, 
-  onClick, 
-  onClose 
-}: { 
-  tab: Tab; 
-  onClick?: () => void; 
-  onClose?: () => void; 
+function TabComponent({
+  tab,
+  onClick,
+  onClose,
+}: {
+  tab: Tab;
+  onClick?: () => void;
+  onClose?: () => void;
 }) {
   const isActive = tab.isActive;
-  
+
   return (
     <div
-      className={`box-border content-stretch flex gap-2.5 h-[39px] items-center justify-center p-[10px] relative shrink-0 w-[98px] cursor-pointer ${
-        isActive ? "bg-[#1e2023]" : "bg-[#141518]"
-      }`}
+      className={`tab-button ${isActive ? 'tab-button--active' : 'tab-button--inactive'}`}
       data-name="tab"
       onClick={onClick}
     >
-      {isActive && (
-        <div
-          aria-hidden="true"
-          className="absolute border-[#2c4a93] border-[0px_0px_4px] border-solid inset-0 pointer-events-none"
-        />
-      )}
-      <div
-        className={`font-['Noto_Sans:Display_SemiBold',_sans-serif] font-semibold leading-[0] relative shrink-0 text-[12px] text-nowrap tracking-[0.48px] ${
-          isActive ? "text-[#ffffff]" : "text-[#cfcfcf]"
-        }`}
-        style={{ fontVariationSettings: "'CTGR' 100, 'wdth' 100" }}
-      >
+      {isActive && <div aria-hidden="true" className="tab-button__active-border" />}
+      <div className="tab-button__text">
         <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">{tab.label}</p>
       </div>
+      {/* Треугольник для кнопки Model */}
+      {tab.id === 'model' && (
+        <div className="tab-button__triangle">
+          <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
+            <path d="M6 6H0L6 0V6Z" fill="white" />
+          </svg>
+        </div>
+      )}
       {tab.hasCloseButton && (
-        <CloseIcon onClick={(e) => {
-          e?.stopPropagation();
-          onClose?.();
-        }} />
+        <CloseIcon
+          onClick={e => {
+            e?.stopPropagation();
+            onClose?.();
+          }}
+        />
       )}
     </div>
   );
 }
 
-export default function BottomToolbar({ 
+export default function BottomToolbar({
   tabs = [],
   onTabClick,
   onTabClose,
@@ -119,19 +117,19 @@ export default function BottomToolbar({
   onPanelManage,
   onSnapOptions,
   onSnapClick,
-  snapStates
+  snapStates,
 }: BottomToolbarProps) {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  
+
   // Разделяем табы на статичные (Model) и динамические (Sheets) с помощью useMemo
   const staticTabs = useMemo(() => tabs.filter(tab => tab.id === 'model'), [tabs]);
   const sheetTabs = useMemo(() => tabs.filter(tab => tab.id !== 'model'), [tabs]);
-  
+
   // Определяем количество видимых sheet-табов динамически:
   // - Если sheet-табов <= 3: показываем максимум 2
   // - Если sheet-табов > 3: показываем 3 (режим скролла)
-  const maxVisibleSheetTabs = useMemo(() => 
-    sheetTabs.length > 3 ? 3 : Math.min(sheetTabs.length, 2), 
+  const maxVisibleSheetTabs = useMemo(
+    () => (sheetTabs.length > 3 ? 3 : Math.min(sheetTabs.length, 2)),
     [sheetTabs.length]
   );
 
@@ -150,19 +148,19 @@ export default function BottomToolbar({
   }, [sheetTabs, maxVisibleSheetTabs]);
 
   // Получаем видимые sheet-табы с помощью useMemo
-  const visibleSheetTabs = useMemo(() => 
-    sheetTabs.slice(currentSlideIndex, currentSlideIndex + maxVisibleSheetTabs),
+  const visibleSheetTabs = useMemo(
+    () => sheetTabs.slice(currentSlideIndex, currentSlideIndex + maxVisibleSheetTabs),
     [sheetTabs, currentSlideIndex, maxVisibleSheetTabs]
   );
-  
+
   // Проверяем, можем ли мы листать sheet-табы с помощью useMemo
   const canGoPrevious = useMemo(() => currentSlideIndex > 0, [currentSlideIndex]);
-  const canGoNext = useMemo(() => 
-    currentSlideIndex + maxVisibleSheetTabs < sheetTabs.length,
+  const canGoNext = useMemo(
+    () => currentSlideIndex + maxVisibleSheetTabs < sheetTabs.length,
     [currentSlideIndex, maxVisibleSheetTabs, sheetTabs.length]
   );
-  const shouldShowNavigation = useMemo(() => 
-    sheetTabs.length > maxVisibleSheetTabs,
+  const shouldShowNavigation = useMemo(
+    () => sheetTabs.length > maxVisibleSheetTabs,
     [sheetTabs.length, maxVisibleSheetTabs]
   );
 
@@ -186,7 +184,7 @@ export default function BottomToolbar({
 
   const handleTabClose = (tabId: string) => {
     onTabClose?.(tabId);
-    
+
     // Корректируем индекс слайдера после закрытия sheet-таба
     const newSheetTabsLength = sheetTabs.length - 1;
     if (newSheetTabsLength <= maxVisibleSheetTabs) {
@@ -209,7 +207,7 @@ export default function BottomToolbar({
           data-name="Component 70"
         >
           {/* Всегда показываем статичные табы (Model) */}
-          {staticTabs.map((tab) => (
+          {staticTabs.map(tab => (
             <TabComponent
               key={tab.id}
               tab={tab}
@@ -217,9 +215,9 @@ export default function BottomToolbar({
               onClose={() => handleTabClose(tab.id)}
             />
           ))}
-          
+
           {/* Показываем видимые sheet-табы через слайдер */}
-          {visibleSheetTabs.map((tab) => (
+          {visibleSheetTabs.map(tab => (
             <TabComponent
               key={tab.id}
               tab={tab}
@@ -228,7 +226,7 @@ export default function BottomToolbar({
             />
           ))}
         </div>
-        
+
         {/* Navigation buttons - прилеплены к блоку табов */}
         <NavigationButtons
           onPrevious={shouldShowNavigation ? handlePrevious : undefined}

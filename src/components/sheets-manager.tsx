@@ -1,6 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import svgPaths from "../imports/svg-e1fm0ahvew";
-import OptionsMenu from "./options-menu";
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import svgPaths from '../imports/svg-e1fm0ahvew';
+import OptionsMenu from './options-menu';
+import { PageLayoutManager } from './page-layout-manager';
+import { LayoutEditDialog } from './print-to-pdf-dialog';
 
 interface Sheet {
   id: string;
@@ -15,7 +18,6 @@ interface SheetsManagerProps {
   onEditLayout?: (sheetId: string) => void;
   onNewSheet?: () => void;
   onDeleteSheet?: () => void;
-  onNewLayout?: () => void;
   onSheetMoveUp?: () => void;
   onSheetMoveDown?: () => void;
 }
@@ -133,37 +135,57 @@ function Component68({ onClick }: { onClick?: () => void }) {
   );
 }
 
-
-
-function Frame283({ onNewSheet, onDeleteSheet, onNewLayout }: { onNewSheet?: () => void; onDeleteSheet?: () => void; onNewLayout?: () => void }) {
+function Frame283({
+  onNewSheet,
+  onDeleteSheet,
+  onPageLayoutManager,
+}: {
+  onNewSheet?: () => void;
+  onDeleteSheet?: () => void;
+  onPageLayoutManager?: () => void;
+}) {
   return (
     <div className="box-border content-stretch flex gap-[7px] isolate items-center justify-start p-0 relative shrink-0 w-full z-[1]">
       <Component66 onClick={onNewSheet} />
       <Component67 onClick={onDeleteSheet} />
-      <Component68 onClick={onNewLayout} />
+      <Component68 onClick={onPageLayoutManager} />
     </div>
   );
 }
 
-function Frame284({ onNewSheet, onDeleteSheet, onNewLayout }: { onNewSheet?: () => void; onDeleteSheet?: () => void; onNewLayout?: () => void }) {
+function Frame284({
+  onNewSheet,
+  onDeleteSheet,
+  onPageLayoutManager,
+}: {
+  onNewSheet?: () => void;
+  onDeleteSheet?: () => void;
+  onPageLayoutManager?: () => void;
+}) {
   return (
     <div className="bg-[#141518] relative shrink-0 w-full z-[2]">
       <div className="relative size-full">
         <div className="box-border content-stretch flex flex-col gap-2.5 isolate items-start justify-start p-[10px] relative w-full">
           <div className="font-['Open_Sans:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[12px] text-nowrap tracking-[0.36px] z-[2]">
-            <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">SHEETS MANAGER</p>
+            <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">
+              SHEETS MANAGER
+            </p>
           </div>
-          <Frame283 onNewSheet={onNewSheet} onDeleteSheet={onDeleteSheet} onNewLayout={onNewLayout} />
+          <Frame283
+            onNewSheet={onNewSheet}
+            onDeleteSheet={onDeleteSheet}
+            onPageLayoutManager={onPageLayoutManager}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-function SheetItem({ 
-  sheet, 
-  onSelect, 
-  onOptions, 
+function SheetItem({
+  sheet,
+  onSelect,
+  onOptions,
   onEditLayout,
   showOptionsMenu,
   onOptionsMenuClose,
@@ -171,11 +193,11 @@ function SheetItem({
   onSheetDuplicate,
   onSheetDelete,
   onSheetMoveUp,
-  onSheetMoveDown
-}: { 
-  sheet: Sheet; 
-  onSelect?: () => void; 
-  onOptions?: (sheetId: string, buttonElement: HTMLDivElement) => void; 
+  onSheetMoveDown,
+}: {
+  sheet: Sheet;
+  onSelect?: () => void;
+  onOptions?: (sheetId: string, buttonElement: HTMLDivElement) => void;
   onEditLayout?: () => void;
   showOptionsMenu?: boolean;
   onOptionsMenuClose?: () => void;
@@ -186,13 +208,13 @@ function SheetItem({
   onSheetMoveDown?: (sheetId: string) => void;
 }) {
   const isActive = sheet.isActive;
-  
+
   return (
-    <div className={`h-9 relative shrink-0 w-full ${isActive ? "bg-[#306ed1]" : "bg-[#1e2023]"}`}>
+    <div className={`h-9 relative shrink-0 w-full ${isActive ? 'bg-[#306ed1]' : 'bg-[#1e2023]'}`}>
       <div className="flex flex-row items-center relative size-full">
         <div className="box-border content-stretch flex h-9 items-center justify-between px-[10px] py-1.5 relative w-full">
           <div className="basis-0 box-border content-stretch flex gap-0.5 grow items-center justify-start min-h-px min-w-px p-0 relative shrink-0">
-            <div 
+            <div
               className="basis-0 box-border content-stretch flex flex-col grow items-start justify-center min-h-px min-w-px p-0 relative shrink-0 cursor-pointer"
               onClick={onSelect}
             >
@@ -200,50 +222,70 @@ function SheetItem({
                 className={`[text-shadow:#295aa8_0px_-0.8px_0.3px] font-['Noto_Sans:Display_SemiBold',_sans-serif] font-semibold leading-[0] relative shrink-0 text-[#ffffff] text-[11px] text-nowrap tracking-[0.44px]`}
                 style={{ fontVariationSettings: "'CTGR' 100, 'wdth' 100" }}
               >
-                <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">{sheet.name}</p>
+                <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">
+                  {sheet.name}
+                </p>
               </div>
             </div>
-            <div className={`box-border content-stretch flex gap-1 items-start justify-start p-0 relative shrink-0 ${!isActive ? "opacity-0" : ""}`}>
-              <div 
+            <div
+              className={`box-border content-stretch flex gap-1 items-start justify-start p-0 relative shrink-0 ${
+                !isActive ? 'opacity-0' : ''
+              }`}
+            >
+              <div
                 className={`box-border content-stretch flex gap-2.5 items-center justify-center px-1.5 py-1 relative shrink-0 cursor-pointer ${
-                  isActive ? "bg-[#306ed1]" : "bg-[#1e2023]"
+                  isActive ? 'bg-[#306ed1]' : 'bg-[#1e2023]'
                 }`}
-                onClick={(e) => onOptions?.(sheet.id, e.currentTarget)}
+                onClick={e => onOptions?.(sheet.id, e.currentTarget)}
               >
-                <div aria-hidden="true" className={`absolute border ${isActive ? "border-[#ffffff]" : "border-[#000000]"} border-solid inset-0 pointer-events-none`} />
-                <div className={`font-['Open_Sans:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[9px] text-nowrap tracking-[0.27px] ${
-                  isActive ? "text-[#ffffff]" : "text-[#808287]"
-                }`}>
+                <div
+                  aria-hidden="true"
+                  className={`absolute border ${
+                    isActive ? 'border-[#ffffff]' : 'border-[#000000]'
+                  } border-solid inset-0 pointer-events-none`}
+                />
+                <div
+                  className={`font-['Open_Sans:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[9px] text-nowrap tracking-[0.27px] ${
+                    isActive ? 'text-[#ffffff]' : 'text-[#808287]'
+                  }`}
+                >
                   <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">OPTIONS</p>
                 </div>
               </div>
-              <div 
+              <div
                 className={`box-border content-stretch flex gap-2.5 items-center justify-center px-1.5 py-1 relative shrink-0 cursor-pointer ${
-                  isActive ? "bg-[#306ed1]" : "bg-[#1e2023]"
+                  isActive ? 'bg-[#306ed1]' : 'bg-[#1e2023]'
                 }`}
                 onClick={onEditLayout}
               >
-                <div aria-hidden="true" className={`absolute border ${isActive ? "border-[#ffffff]" : "border-[#000000]"} border-solid inset-0 pointer-events-none`} />
-                <div className={`font-['Open_Sans:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[9px] text-nowrap tracking-[0.27px] uppercase ${
-                  isActive ? "text-[#ffffff]" : "text-[#808287]"
-                }`}>
-                  <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">Edit layout</p>
+                <div
+                  aria-hidden="true"
+                  className={`absolute border ${
+                    isActive ? 'border-[#ffffff]' : 'border-[#000000]'
+                  } border-solid inset-0 pointer-events-none`}
+                />
+                <div
+                  className={`font-['Open_Sans:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[9px] text-nowrap tracking-[0.27px] uppercase ${
+                    isActive ? 'text-[#ffffff]' : 'text-[#808287]'
+                  }`}
+                >
+                  <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">
+                    Edit layout
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-
     </div>
   );
 }
 
-function Component65({ 
-  sheets, 
-  onSheetSelect, 
-  onSheetOptions, 
+function Component65({
+  sheets,
+  onSheetSelect,
+  onSheetOptions,
   onEditLayout,
   activeOptionsSheetId,
   onOptionsMenuClose,
@@ -251,11 +293,11 @@ function Component65({
   onSheetDuplicate,
   onSheetDelete,
   onSheetMoveUp,
-  onSheetMoveDown
-}: { 
-  sheets: Sheet[]; 
-  onSheetSelect?: (sheetId: string) => void; 
-  onSheetOptions?: (sheetId: string, buttonElement: HTMLDivElement) => void; 
+  onSheetMoveDown,
+}: {
+  sheets: Sheet[];
+  onSheetSelect?: (sheetId: string) => void;
+  onSheetOptions?: (sheetId: string, buttonElement: HTMLDivElement) => void;
   onEditLayout?: (sheetId: string) => void;
   activeOptionsSheetId?: string | null;
   onOptionsMenuClose?: () => void;
@@ -268,7 +310,7 @@ function Component65({
   const needsScroll = sheets.length > 8;
   const maxHeight = needsScroll ? '288px' : 'auto'; // 8 листов × 36px = 288px
   const overflowClass = needsScroll ? 'overflow-y-auto' : 'overflow-y-visible';
-  
+
   // Touch and pointer event handlers for better tablet/stylus support
   const handleTouchStart = (e: React.TouchEvent) => {
     if (needsScroll) {
@@ -283,7 +325,7 @@ function Component65({
       const touch = e.touches[0];
       const target = e.currentTarget as HTMLElement;
       const rect = target.getBoundingClientRect();
-      
+
       // If touch is within the scrollable area, allow scrolling
       if (touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
         e.stopPropagation();
@@ -305,15 +347,15 @@ function Component65({
       e.stopPropagation();
     }
   };
-  
+
   return (
     <div
       className={`box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full z-[1] ${overflowClass}`}
-      style={{ 
+      style={{
         maxHeight,
         touchAction: needsScroll ? 'pan-y' : 'auto',
         WebkitOverflowScrolling: needsScroll ? 'touch' : 'auto',
-        overscrollBehavior: needsScroll ? 'contain' : 'auto'
+        overscrollBehavior: needsScroll ? 'contain' : 'auto',
       }}
       data-name="Component 65"
       onTouchStart={handleTouchStart}
@@ -321,7 +363,7 @@ function Component65({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
     >
-      {sheets.map((sheet) => (
+      {sheets.map(sheet => (
         <SheetItem
           key={sheet.id}
           sheet={sheet}
@@ -348,12 +390,14 @@ export default function SheetsManager({
   onEditLayout,
   onNewSheet,
   onDeleteSheet,
-  onNewLayout,
   onSheetMoveUp,
-  onSheetMoveDown
+  onSheetMoveDown,
 }: SheetsManagerProps) {
   const [activeOptionsSheetId, setActiveOptionsSheetId] = useState<string | null>(null);
   const [optionsMenuPosition, setOptionsMenuPosition] = useState({ x: 0, y: 0 });
+  const [isPageLayoutManagerOpen, setIsPageLayoutManagerOpen] = useState(false);
+  const [isLayoutEditOpen, setIsLayoutEditOpen] = useState(false);
+  const [editingSheetName, setEditingSheetName] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const optionsButtonRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -363,15 +407,15 @@ export default function SheetsManager({
     } else {
       const buttonRect = buttonElement.getBoundingClientRect();
       const containerRect = containerRef.current?.getBoundingClientRect();
-      
+
       if (containerRect) {
         // Вычисляем позицию относительно контейнера SheetsManager
         const relativeX = buttonRect.left - containerRect.left;
         const relativeY = buttonRect.top - containerRect.top;
-        
+
         const menuHeight = 160;
         const menuY = relativeY - menuHeight - 5; // Всегда показывать сверху с отступом 5px
-        
+
         setOptionsMenuPosition({
           x: relativeX,
           y: menuY,
@@ -387,32 +431,53 @@ export default function SheetsManager({
   };
 
   const handleSheetRename = (sheetId: string) => {
-    console.log("Rename sheet:", sheetId);
+    console.log('Rename sheet:', sheetId);
     // Здесь будет логика переименования листа
   };
 
   const handleSheetDuplicate = (sheetId: string) => {
-    console.log("Duplicate sheet:", sheetId);
+    console.log('Duplicate sheet:', sheetId);
     // Здесь будет логика дублирования листа
   };
 
   const handleSheetDelete = (sheetId: string) => {
-    console.log("Delete sheet:", sheetId);
+    console.log('Delete sheet:', sheetId);
     // Здесь будет логика удаления листа
   };
 
   const handleSheetMoveUp = (sheetId: string) => {
-    console.log("SheetsManager handleSheetMoveUp called for:", sheetId);
+    console.log('SheetsManager handleSheetMoveUp called for:', sheetId);
     onSheetMoveUp?.();
     // Закрываем меню при перемещении, так как позиция кнопки изменится
     setActiveOptionsSheetId(null);
   };
 
   const handleSheetMoveDown = (sheetId: string) => {
-    console.log("SheetsManager handleSheetMoveDown called for:", sheetId);
+    console.log('SheetsManager handleSheetMoveDown called for:', sheetId);
     onSheetMoveDown?.();
     // Закрываем меню при перемещении, так как позиция кнопки изменится
     setActiveOptionsSheetId(null);
+  };
+
+  const handlePageLayoutManagerOpen = () => {
+    setIsPageLayoutManagerOpen(true);
+  };
+
+  const handlePageLayoutManagerClose = () => {
+    setIsPageLayoutManagerOpen(false);
+  };
+
+  const handleEditLayoutOpen = (sheetId: string) => {
+    const sheet = sheets.find(s => s.id === sheetId);
+    if (sheet) {
+      setEditingSheetName(sheet.name);
+      setIsLayoutEditOpen(true);
+    }
+  };
+
+  const handleEditLayoutClose = () => {
+    setIsLayoutEditOpen(false);
+    setEditingSheetName('');
   };
 
   // Закрывать меню при клике вне SheetsManager
@@ -424,11 +489,11 @@ export default function SheetsManager({
     };
 
     if (activeOptionsSheetId) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [activeOptionsSheetId]);
 
@@ -440,16 +505,20 @@ export default function SheetsManager({
   }, [sheets.map(sheet => sheet.id).join(',')]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="box-border content-stretch flex flex-col isolate items-center justify-start p-0 relative w-[250px] overflow-visible"
     >
-      <Frame284 onNewSheet={onNewSheet} onDeleteSheet={onDeleteSheet} onNewLayout={onNewLayout} />
-      <Component65 
+      <Frame284
+        onNewSheet={onNewSheet}
+        onDeleteSheet={onDeleteSheet}
+        onPageLayoutManager={handlePageLayoutManagerOpen}
+      />
+      <Component65
         sheets={sheets}
         onSheetSelect={onSheetSelect}
         onSheetOptions={handleSheetOptions}
-        onEditLayout={onEditLayout}
+        onEditLayout={handleEditLayoutOpen}
         activeOptionsSheetId={activeOptionsSheetId}
         onOptionsMenuClose={handleOptionsMenuClose}
         onSheetRename={handleSheetRename}
@@ -478,6 +547,35 @@ export default function SheetsManager({
           />
         </div>
       )}
+
+      {/* Page Layout Manager Dialog - using portal to render at body level */}
+      {isPageLayoutManagerOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 pointer-events-none overflow-auto dialog-container"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          >
+            <div className="pointer-events-auto">
+              <PageLayoutManager onClose={handlePageLayoutManagerClose} sheets={sheets} />
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {/* Layout Edit Dialog - using portal to render at body level */}
+      {isLayoutEditOpen &&
+        editingSheetName &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 pointer-events-none overflow-auto dialog-container"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          >
+            <div className="pointer-events-auto">
+              <LayoutEditDialog sheetName={editingSheetName} onClose={handleEditLayoutClose} />
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

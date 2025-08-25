@@ -194,7 +194,7 @@ html {
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  
+
   /* Firefox scrollbar styles */
   scrollbar-width: thin;
   scrollbar-color: #525559 #1e2023;
@@ -225,7 +225,7 @@ html {
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  
+
   /* Firefox scrollbar styles */
   scrollbar-width: thin;
   scrollbar-color: #525559 #1e2023;
@@ -253,28 +253,143 @@ html {
 [data-name="Component 65"].overflow-y-auto {
   /* Ensure pointer events work correctly */
   pointer-events: auto;
-  
+
   /* Enable momentum scrolling on iOS */
   -webkit-overflow-scrolling: touch;
-  
+
   /* Prevent bouncing at scroll boundaries */
   overscroll-behavior-y: contain;
-  
+
   /* Allow only vertical panning for touch devices */
   touch-action: pan-y;
-  
+
   /* Support for stylus and pen input devices */
   -ms-touch-action: pan-y;
-  
+
   /* Ensure scrolling works with pointer events (Wacom, Surface Pen, etc.) */
   -ms-scroll-chaining: none;
   -ms-scroll-rails: vertical;
-  
+
   /* Webkit specific optimizations for smooth scrolling */
   -webkit-transform: translateZ(0);
-  
+
   /* GPU acceleration for smoother scrolling */
   will-change: scroll-position;
+}
+
+/* CSS Variables for customizable button styles */
+/* ================================================ */
+/* 
+Usage Examples:
+
+1. Change tab button colors:
+:root {
+  --tab-bg-active: #ff0000;
+  --tab-text-active: #ffffff;
+}
+
+2. Change snap button sizes:
+:root {
+  --snap-width: 80px;
+  --snap-font-size: 11px;
+}
+
+3. Override for specific themes:
+.dark-theme {
+  --tab-bg-active: #000000;
+  --snap-bg-active: #444444;
+}
+*/
+:root {
+  /* Tab Buttons (Model/Sheets) Variables */
+  --tab-bg-active: #1e2023; /* Background color for active tabs */
+  --tab-bg-inactive: #141518; /* Background color for inactive tabs */
+  --tab-bg-hover: #2a2d31; /* Background color on hover */
+  --tab-text-active: #ffffff; /* Text color for active tabs */
+  --tab-text-inactive: #cfcfcf; /* Text color for inactive tabs */
+  --tab-border-active: #2c4a93; /* Border color for active tab indicator */
+  --tab-padding: 6px; /* Inner padding */
+  --tab-width: 98px; /* Button width */
+  --tab-height: 39px; /* Button height */
+  --tab-font-size: 12px; /* Text font size */
+  --tab-letter-spacing: 0.48px; /* Text letter spacing */
+  --tab-border-width: 4px; /* Active border thickness */
+
+  /* Snap Buttons Variables */
+  --snap-bg-active: #333538; /* Background color for active snap buttons */
+  --snap-bg-inactive: #1e2023; /* Background color for inactive snap buttons */
+  --snap-bg-hover-active: #141518; /* Hover background for active snap buttons */
+  --snap-bg-hover-inactive: #2a2d31; /* Hover background for inactive snap buttons */
+  --snap-text-active: #cfcfcf; /* Text color for active snap buttons */
+  --snap-text-inactive: #cfcfcf; /* Text color for inactive snap buttons */
+  --snap-border-color: #000000; /* Border color */
+  --snap-border-width: 1px; /* Border thickness */
+  --snap-padding: 0px; /* Inner padding */
+  --snap-width: 71px; /* Button width */
+  --snap-height: 39px; /* Button height */
+  --snap-font-size: 10px; /* Text font size */
+  --snap-letter-spacing: 0.4px; /* Text letter spacing */
+}
+
+/* Dark scrollbar styles for dialogs */
+.dialog-container {
+  /* Firefox scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: #525559 #333538;
+}
+
+/* WebKit scrollbar styles for dialogs */
+.dialog-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dialog-container::-webkit-scrollbar-track {
+  background: #333538;
+  border-radius: 4px;
+}
+
+.dialog-container::-webkit-scrollbar-thumb {
+  background: #525559;
+  border-radius: 4px;
+}
+
+.dialog-container::-webkit-scrollbar-thumb:hover {
+  background: #6a6d71;
+}
+
+.dialog-container::-webkit-scrollbar-corner {
+  background: #333538;
+}
+
+/* Apply to all scrollable elements within dialogs */
+.dialog-container * {
+  /* Firefox scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: #525559 #333538;
+}
+
+.dialog-container *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dialog-container *::-webkit-scrollbar-track {
+  background: #333538;
+  border-radius: 4px;
+}
+
+.dialog-container *::-webkit-scrollbar-thumb {
+  background: #525559;
+  border-radius: 4px;
+}
+
+.dialog-container *::-webkit-scrollbar-thumb:hover {
+  background: #6a6d71;
+}
+
+.dialog-container *::-webkit-scrollbar-corner {
+  background: #333538;
 }
 
 /* Snap Controls Button Styles */
@@ -284,9 +399,9 @@ html {
   align-items: center;
   justify-content: center;
   position: relative;
-  height: 39px;
-  width: 71px;
-  padding: 0;
+  height: var(--snap-height);
+  width: var(--snap-width);
+  padding: var(--snap-padding);
   gap: 10px;
   cursor: pointer;
   flex-shrink: 0;
@@ -296,27 +411,38 @@ html {
 
 /* Standard state for active buttons */
 .snap-button--active {
-  background-color: #333538;
+  background-color: var(--snap-bg-active);
 }
 
 /* Hover state for active buttons */
 .snap-button--active:hover {
-  background-color: #141518;
+  background-color: var(--snap-bg-hover-active);
 }
 
 /* Active/pressed state for active buttons */
 .snap-button--active:active {
-  background-color: #141518;
-  text-color: #ffffff;
+  background-color: var(--snap-bg-hover-active);
 }
 
 /* Standard state for inactive buttons */
 .snap-button--inactive {
-  background-color: #1e2023;
-  text-color: #CFCFCF;
+  background-color: var(--snap-bg-inactive);
 }
 
+/* Hover state for inactive buttons */
+.snap-button--inactive:hover {
+  background-color: var(--snap-bg-hover-inactive);
+}
 
+/* Text color for active buttons */
+.snap-button--active .snap-button__text {
+  color: var(--snap-text-active);
+}
+
+/* Text color for inactive buttons */
+.snap-button--inactive .snap-button__text {
+  color: var(--snap-text-inactive);
+}
 
 .snap-button__border {
   position: absolute;
@@ -324,26 +450,21 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  border: 1px solid #000000;
+  border: var(--snap-border-width) solid var(--snap-border-color);
   pointer-events: none;
 }
 
 .snap-button__text {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-weight: 400;
-  font-size: 10px;
+  font-size: var(--snap-font-size);
   line-height: 0;
-  color: #ffffff;
+  color: var(--snap-text-inactive);
   position: relative;
   flex-shrink: 0;
   white-space: nowrap;
-  letter-spacing: 0.4px;
-  font-variation-settings: 'CTGR' 0, 'wdth' 100;
-}
-
-/* Text color for active buttons */
-.snap-button--active .snap-button__text {
-  color: #cfcfcf;
+  letter-spacing: var(--snap-letter-spacing);
+  font-variation-settings: "CTGR" 0, "wdth" 100;
 }
 
 .snap-button__text p {
@@ -352,4 +473,86 @@ html {
   white-space: pre;
 }
 
+/* Tab Buttons (Model/Sheets) Styles */
+.tab-button {
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+  height: var(--tab-height);
+  align-items: center;
+  justify-content: center;
+  padding: var(--tab-padding);
+  position: relative;
+  flex-shrink: 0;
+  width: var(--tab-width);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 
+/* Standard state for active tab buttons */
+.tab-button--active {
+  background-color: var(--tab-bg-active);
+}
+
+/* Standard state for inactive tab buttons */
+.tab-button--inactive {
+  background-color: var(--tab-bg-inactive);
+}
+
+/* Hover state for tab buttons */
+.tab-button:hover {
+  background-color: var(--tab-bg-hover);
+}
+
+/* Active tab buttons override hover */
+.tab-button--active:hover {
+  background-color: var(--tab-bg-active);
+}
+
+/* Active border indicator */
+.tab-button__active-border {
+  position: absolute;
+  border: var(--tab-border-active);
+  border-width: 0px 0px var(--tab-border-width);
+  border-style: solid;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Tab button text */
+.tab-button__text {
+  font-family: "Noto Sans Display", sans-serif;
+  font-weight: 600;
+  line-height: 0;
+  position: relative;
+  flex-shrink: 0;
+  font-size: var(--tab-font-size);
+  white-space: nowrap;
+  letter-spacing: var(--tab-letter-spacing);
+  font-variation-settings: "CTGR" 100, "wdth" 100;
+}
+
+/* Text color for active tab buttons */
+.tab-button--active .tab-button__text {
+  color: var(--tab-text-active);
+}
+
+/* Text color for inactive tab buttons */
+.tab-button--inactive .tab-button__text {
+  color: var(--tab-text-inactive);
+}
+
+.tab-button__text p {
+  display: block;
+  line-height: 16px;
+  white-space: pre;
+}
+
+/* Triangle for Model button */
+.tab-button__triangle {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+}
