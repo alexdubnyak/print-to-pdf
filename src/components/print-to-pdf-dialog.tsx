@@ -1054,7 +1054,13 @@ function ButtonToolbarBottom({
 // LAYOUT EDIT DIALOG COMPONENT
 // ============================================
 
-function LayoutEditDialog({ sheetName, onClose }: { sheetName: string; onClose: () => void }) {
+export function LayoutEditDialog({
+  sheetName,
+  onClose,
+}: {
+  sheetName: string;
+  onClose: () => void;
+}) {
   const [inverse, setInverse] = useState(false);
   const [xOffset, setXOffset] = useState('1');
   const [yOffset, setYOffset] = useState('1');
@@ -1105,12 +1111,37 @@ function LayoutEditDialog({ sheetName, onClose }: { sheetName: string; onClose: 
             />
           </div>
           <div className="mt-auto">
-            <ButtonToolbarBottom
-              onPageLayoutClick={() => console.log('Page layout manager from layout edit')}
-              onPrintClick={() => console.log('Print from layout edit')}
-              isPrintDisabled={false}
-              activeTab="quick"
-            />
+            <div
+              style={{
+                display: 'flex',
+                padding: '10px 20px',
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+                flex: '1 0 0',
+                alignSelf: 'stretch',
+              }}
+            >
+              {/* Help button on the left */}
+              <ButtonIcon
+                icon="help"
+                onClick={() => console.log('Help button clicked')}
+                size="medium"
+              />
+
+              {/* Action buttons on the right */}
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '10px',
+                  alignItems: 'flex-end',
+                }}
+              >
+                <ButtonSecondary onClick={onClose}>Cancel</ButtonSecondary>
+                <ButtonPrimary onClick={() => console.log('Save layout clicked')}>
+                  Save layout
+                </ButtonPrimary>
+              </div>
+            </div>
           </div>
         </div>
       </div>

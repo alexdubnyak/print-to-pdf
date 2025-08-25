@@ -13,12 +13,13 @@ const handleLayoutSelect = (layout: string) => {
   console.log(`\n🔄 Выбран layout: "${layout}"`);
   console.log(`Имеет звездочки: ${isLayoutEnclosedInStars(layout) ? 'ДА ⭐' : 'НЕТ ⚪'}`);
 };
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import svgPaths from '../imports/svg-uo6jg4qcws';
 import { ButtonIcon } from './button-icon';
 import { ButtonSecondary } from './button-secondary';
 import { Checkbox } from './checkbox';
 import { LayoutCreator } from './layout-creator';
+import { LayoutEditDialog } from './print-to-pdf-dialog';
 
 interface PageLayoutManagerProps {
   onClose: () => void;
@@ -74,6 +75,8 @@ export function PageLayoutManager({ onClose, sheets = [] }: PageLayoutManagerPro
   const [isDeletingLayout, setIsDeletingLayout] = useState(false);
   const [editingLayoutName, setEditingLayoutName] = useState('');
   const [deletingLayoutName, setDeletingLayoutName] = useState('');
+  const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
+  const [settingsLayoutName, setSettingsLayoutName] = useState('');
 
   // Ref для контейнера со списком для автопрокрутки
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -365,7 +368,15 @@ export function PageLayoutManager({ onClose, sheets = [] }: PageLayoutManagerPro
   };
 
   const handleImportLayout = () => console.log('Import layout');
-  const handleListLayout = () => console.log('List layouts');
+  const handleListLayout = () => {
+    setSettingsLayoutName(selectedLayout);
+    setIsLayoutSettingsOpen(true);
+  };
+
+  const handleCloseLayoutSettings = () => {
+    setIsLayoutSettingsOpen(false);
+    setSettingsLayoutName('');
+  };
 
   // Функция для активации/деактивации layout'а ТОЛЬКО для Sheet1
   const handleActivateLayout = () => {
@@ -528,262 +539,264 @@ export function PageLayoutManager({ onClose, sheets = [] }: PageLayoutManagerPro
   };
 
   return (
-    <div
-      className="bg-[#333538] box-border content-stretch flex flex-col gap-px items-start justify-start p-0 relative shadow-[0px_4px_64px_0px_rgba(0,0,0,0.25)] h-[362px] w-[770px]"
-      data-name="page layout manager"
-    >
-      {/* Header */}
+    <>
       <div
-        className="relative shrink-0 w-full"
-        style={{ backgroundColor: 'var(--color-dialog-bg-dark)' }}
+        className="bg-[#333538] box-border content-stretch flex flex-col gap-px items-start justify-start p-0 relative shadow-[0px_4px_64px_0px_rgba(0,0,0,0.25)] h-[362px] w-[770px]"
+        data-name="page layout manager"
       >
-        <div className="flex flex-row items-center relative size-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-between px-2.5 py-0 relative w-full">
-            <div
-              className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[11px] text-left text-nowrap uppercase"
-              style={{ color: 'var(--color-text-light)' }}
-            >
-              <p className="block leading-[normal] whitespace-pre">Page layout manager</p>
-            </div>
-            <div
-              className="relative shrink-0 size-[37px] cursor-pointer hover:opacity-80 transition-opacity"
-              data-name="actions"
-              onClick={onClose}
-              title="Закрыть"
-            >
-              <svg
-                className="block size-full"
-                fill="none"
-                preserveAspectRatio="none"
-                viewBox="0 0 37 37"
+        {/* Header */}
+        <div
+          className="relative shrink-0 w-full"
+          style={{ backgroundColor: 'var(--color-dialog-bg-dark)' }}
+        >
+          <div className="flex flex-row items-center relative size-full">
+            <div className="box-border content-stretch flex flex-row items-center justify-between px-2.5 py-0 relative w-full">
+              <div
+                className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[11px] text-left text-nowrap uppercase"
+                style={{ color: 'var(--color-text-light)' }}
               >
-                <g id="actions">
-                  <path d={svgPaths.p4aac200} fill="var(--color-icon-fill, #DFDFDF)" id="Union" />
-                </g>
-              </svg>
+                <p className="block leading-[normal] whitespace-pre">Page layout manager</p>
+              </div>
+              <div
+                className="relative shrink-0 size-[37px] cursor-pointer hover:opacity-80 transition-opacity"
+                data-name="actions"
+                onClick={onClose}
+                title="Закрыть"
+              >
+                <svg
+                  className="block size-full"
+                  fill="none"
+                  preserveAspectRatio="none"
+                  viewBox="0 0 37 37"
+                >
+                  <g id="actions">
+                    <path d={svgPaths.p4aac200} fill="var(--color-icon-fill, #DFDFDF)" id="Union" />
+                  </g>
+                </svg>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative shrink-0 w-full flex-1">
-        <div className="basis-0 box-border content-stretch flex flex-col-reverse gap-4 grow items-start justify-start min-h-px min-w-px pb-0 pt-4 px-0 relative self-stretch shrink-0">
-          {/* Content Area */}
-          <div className="order-2 relative shrink-0 w-full flex-1">
-            <div className="relative size-full">
-              <div className="box-border content-stretch flex flex-row gap-4 items-start justify-start pl-0 pr-4 py-0 relative w-full h-full">
-                {/* Page Layouts Section */}
-                <div className="box-border content-stretch flex flex-col gap-3 items-start justify-start pl-4 pr-0 py-0 relative shrink-0 w-[290px]">
-                  <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#cfcfcf] text-[12px] text-left text-nowrap">
-                    <p className="block leading-[normal] whitespace-pre">Page Layouts</p>
-                  </div>
-
-                  {/* Layouts List с прокруткой */}
-                  <div className="relative shrink-0 w-full h-[160px]">
-                    <div
-                      ref={listContainerRef}
-                      className="box-border content-stretch flex flex-col items-start justify-start overflow-y-auto overflow-x-hidden p-0 relative h-full border border-[#141518]"
-                    >
-                      {layouts.map((layout, index) => (
-                        <div key={`layout-wrapper-${layout}-${index}`} className="w-full">
-                          <SheetLayoutItem
-                            key={`${layout}-${index}`}
-                            name={layout}
-                            isSelected={selectedLayout === layout}
-                            onClick={() => handleLayoutSelect(layout)}
-                            hasStars={isLayoutEnclosedInStars(layout)}
-                            isInDeleteMode={isDeletingLayout}
-                            isDeletingThisItem={isDeletingLayout && deletingLayoutName === layout}
-                          />
-
-                          {/* Layout Deleter - появляется строго под удаляемым элементом */}
-                          {isDeletingLayout && deletingLayoutName === layout && (
-                            <div
-                              key={`layout-deleter-${layout}`}
-                              className="relative shrink-0 w-full h-[58px]"
-                            >
-                              <LayoutCreator
-                                onDelete={handleConfirmDeleteLayout}
-                                onCancel={handleCancelDeleteLayout}
-                                onBasedOnChange={handleLayoutCreatorBasedOnChange}
-                                initialLayoutName={deletingLayoutName}
-                                initialBasedOn={layoutCreatorBasedOn}
-                                availableLayouts={layouts}
-                                className="w-full h-full"
-                                mode="delete"
-                              />
-                            </div>
-                          )}
-
-                          {/* Layout Editor - появляется строго под редактируемым элементом */}
-                          {isEditingLayout && editingLayoutName === layout && (
-                            <div
-                              key={`layout-editor-${layout}`}
-                              className="relative shrink-0 w-full h-[58px]"
-                            >
-                              <LayoutCreator
-                                onApprove={handleApproveEditLayout}
-                                onCancel={handleCancelEditLayout}
-                                onBasedOnChange={handleLayoutCreatorBasedOnChange}
-                                initialLayoutName={editingLayoutName}
-                                initialBasedOn={layoutCreatorBasedOn}
-                                availableLayouts={layouts}
-                                className="w-full h-full"
-                                mode="edit"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      ))}
-
-                      {/* Layout Creator - появляется внизу списка как инлайн элемент для создания */}
-                      {isCreatingLayout && (
-                        <div
-                          key="layout-creator-inline"
-                          className="relative shrink-0 w-full h-[58px]"
-                        >
-                          <LayoutCreator
-                            onApprove={handleApproveLayout}
-                            onCancel={handleCancelLayout}
-                            onBasedOnChange={handleLayoutCreatorBasedOnChange}
-                            initialLayoutName="New Layout"
-                            initialBasedOn={layoutCreatorBasedOn}
-                            availableLayouts={layouts}
-                            className="w-full h-full"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Action Buttons - НЕЗАВИСИМЫЕ КНОПКИ */}
-                  <div className="box-border content-stretch flex flex-row items-start justify-between p-0 relative shrink-0 w-full">
-                    <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
-                      <ButtonIcon
-                        icon="create-layout"
-                        onClick={handleAddLayout}
-                        variant="default"
-                        disabled={!canCreateLayout}
-                        tooltip="Create new layout"
-                      />
-                      <ButtonIcon
-                        icon="import-layout"
-                        onClick={handleImportLayout}
-                        variant="default"
-                        disabled={!canImportLayout}
-                        tooltip="Import layout"
-                      />
-                    </div>
-                    <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
-                      <ButtonIcon
-                        icon="edit-layout"
-                        onClick={handleListLayout}
-                        variant="default"
-                        disabled={!canListLayout}
-                        tooltip="Edit setting"
-                      />
-                      <ButtonIcon
-                        icon={isActivateButtonActive ? 'deactivate' : 'activate'}
-                        onClick={handleActivateLayout}
-                        variant="default"
-                        disabled={!canActivate}
-                        active={isActivateButtonActive}
-                        activeColor="#254CA9"
-                        tooltip={
-                          isActivateButtonActive
-                            ? 'Deactivate layout for Sheet1'
-                            : 'Activate layout for Sheet1'
-                        }
-                      />
-                      <ButtonIcon
-                        icon={isActivateAllButtonActive ? 'deactivate' : 'activate-all-sheets'}
-                        onClick={handleActivateAllSheets}
-                        variant="default"
-                        disabled={!canActivateAllSheets}
-                        active={isActivateAllButtonActive}
-                        activeColor="#254CA9"
-                        tooltip={
-                          isActivateAllButtonActive
-                            ? 'Deactivate layout for all sheets'
-                            : 'Activate layout for all sheets'
-                        }
-                      />
-                      <ButtonIcon
-                        icon="edit"
-                        onClick={handleEditLayout}
-                        variant="default"
-                        disabled={!canEditLayout}
-                        tooltip="Edit layout"
-                      />
-                      <ButtonIcon
-                        icon="delete-layout"
-                        onClick={handleDeleteLayout}
-                        variant="default"
-                        disabled={!canDeleteLayout}
-                        tooltip="Delete layout"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Side Panels */}
-                <div className="basis-0 box-border content-stretch flex flex-col gap-4 grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
-                  {/* General Section */}
-                  <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
+        {/* Main Content */}
+        <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative shrink-0 w-full flex-1">
+          <div className="basis-0 box-border content-stretch flex flex-col-reverse gap-4 grow items-start justify-start min-h-px min-w-px pb-0 pt-4 px-0 relative self-stretch shrink-0">
+            {/* Content Area */}
+            <div className="order-2 relative shrink-0 w-full flex-1">
+              <div className="relative size-full">
+                <div className="box-border content-stretch flex flex-row gap-4 items-start justify-start pl-0 pr-4 py-0 relative w-full h-full">
+                  {/* Page Layouts Section */}
+                  <div className="box-border content-stretch flex flex-col gap-3 items-start justify-start pl-4 pr-0 py-0 relative shrink-0 w-[290px]">
                     <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#cfcfcf] text-[12px] text-left text-nowrap">
-                      <p className="block leading-[normal] whitespace-pre">General</p>
+                      <p className="block leading-[normal] whitespace-pre">Page Layouts</p>
                     </div>
-                    <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
-                      <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-start justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
-                        <div className="relative shrink-0 w-[140px]">
-                          <p className="block leading-[16px]">Apply page layout to:</p>
-                        </div>
-                        <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
-                          <p className="block leading-[normal]">Sheet1</p>
-                        </div>
+
+                    {/* Layouts List с прокруткой */}
+                    <div className="relative shrink-0 w-full h-[160px]">
+                      <div
+                        ref={listContainerRef}
+                        className="box-border content-stretch flex flex-col items-start justify-start overflow-y-auto overflow-x-hidden p-0 relative h-full border border-[#141518]"
+                      >
+                        {layouts.map((layout, index) => (
+                          <div key={`layout-wrapper-${layout}-${index}`} className="w-full">
+                            <SheetLayoutItem
+                              key={`${layout}-${index}`}
+                              name={layout}
+                              isSelected={selectedLayout === layout}
+                              onClick={() => handleLayoutSelect(layout)}
+                              hasStars={isLayoutEnclosedInStars(layout)}
+                              isInDeleteMode={isDeletingLayout}
+                              isDeletingThisItem={isDeletingLayout && deletingLayoutName === layout}
+                            />
+
+                            {/* Layout Deleter - появляется строго под удаляемым элементом */}
+                            {isDeletingLayout && deletingLayoutName === layout && (
+                              <div
+                                key={`layout-deleter-${layout}`}
+                                className="relative shrink-0 w-full h-[58px]"
+                              >
+                                <LayoutCreator
+                                  onDelete={handleConfirmDeleteLayout}
+                                  onCancel={handleCancelDeleteLayout}
+                                  onBasedOnChange={handleLayoutCreatorBasedOnChange}
+                                  initialLayoutName={deletingLayoutName}
+                                  initialBasedOn={layoutCreatorBasedOn}
+                                  availableLayouts={layouts}
+                                  className="w-full h-full"
+                                  mode="delete"
+                                />
+                              </div>
+                            )}
+
+                            {/* Layout Editor - появляется строго под редактируемым элементом */}
+                            {isEditingLayout && editingLayoutName === layout && (
+                              <div
+                                key={`layout-editor-${layout}`}
+                                className="relative shrink-0 w-full h-[58px]"
+                              >
+                                <LayoutCreator
+                                  onApprove={handleApproveEditLayout}
+                                  onCancel={handleCancelEditLayout}
+                                  onBasedOnChange={handleLayoutCreatorBasedOnChange}
+                                  initialLayoutName={editingLayoutName}
+                                  initialBasedOn={layoutCreatorBasedOn}
+                                  availableLayouts={layouts}
+                                  className="w-full h-full"
+                                  mode="edit"
+                                />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+
+                        {/* Layout Creator - появляется внизу списка как инлайн элемент для создания */}
+                        {isCreatingLayout && (
+                          <div
+                            key="layout-creator-inline"
+                            className="relative shrink-0 w-full h-[58px]"
+                          >
+                            <LayoutCreator
+                              onApprove={handleApproveLayout}
+                              onCancel={handleCancelLayout}
+                              onBasedOnChange={handleLayoutCreatorBasedOnChange}
+                              initialLayoutName="New Layout"
+                              initialBasedOn={layoutCreatorBasedOn}
+                              availableLayouts={layouts}
+                              className="w-full h-full"
+                            />
+                          </div>
+                        )}
                       </div>
-                      <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-start justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
-                        <div className="relative shrink-0 text-nowrap">
-                          <p className="block leading-[16px] whitespace-pre">
-                            Page layout for current sheet:
-                          </p>
-                        </div>
-                        <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
-                          <p className="block leading-[normal]">{currentSheetLayout}</p>
-                        </div>
+                    </div>
+
+                    {/* Action Buttons - НЕЗАВИСИМЫЕ КНОПКИ */}
+                    <div className="box-border content-stretch flex flex-row items-start justify-between p-0 relative shrink-0 w-full">
+                      <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
+                        <ButtonIcon
+                          icon="create-layout"
+                          onClick={handleAddLayout}
+                          variant="default"
+                          disabled={!canCreateLayout}
+                          tooltip="Create new layout"
+                        />
+                        <ButtonIcon
+                          icon="import-layout"
+                          onClick={handleImportLayout}
+                          variant="default"
+                          disabled={!canImportLayout}
+                          tooltip="Import layout"
+                        />
+                      </div>
+                      <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
+                        <ButtonIcon
+                          icon="edit-layout"
+                          onClick={handleListLayout}
+                          variant="default"
+                          disabled={!canListLayout}
+                          tooltip="Edit setting"
+                        />
+                        <ButtonIcon
+                          icon={isActivateButtonActive ? 'deactivate' : 'activate'}
+                          onClick={handleActivateLayout}
+                          variant="default"
+                          disabled={!canActivate}
+                          active={isActivateButtonActive}
+                          activeColor="#254CA9"
+                          tooltip={
+                            isActivateButtonActive
+                              ? 'Deactivate layout for Sheet1'
+                              : 'Activate layout for Sheet1'
+                          }
+                        />
+                        <ButtonIcon
+                          icon={isActivateAllButtonActive ? 'deactivate' : 'activate-all-sheets'}
+                          onClick={handleActivateAllSheets}
+                          variant="default"
+                          disabled={!canActivateAllSheets}
+                          active={isActivateAllButtonActive}
+                          activeColor="#254CA9"
+                          tooltip={
+                            isActivateAllButtonActive
+                              ? 'Deactivate layout for all sheets'
+                              : 'Activate layout for all sheets'
+                          }
+                        />
+                        <ButtonIcon
+                          icon="edit"
+                          onClick={handleEditLayout}
+                          variant="default"
+                          disabled={!canEditLayout}
+                          tooltip="Edit layout"
+                        />
+                        <ButtonIcon
+                          icon="delete-layout"
+                          onClick={handleDeleteLayout}
+                          variant="default"
+                          disabled={!canDeleteLayout}
+                          tooltip="Delete layout"
+                        />
                       </div>
                     </div>
                   </div>
 
-                  {/* Settings Section */}
-                  <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
-                    <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#cfcfcf] text-[12px] text-left text-nowrap">
-                      <p className="block leading-[normal] whitespace-pre">Settings</p>
-                    </div>
+                  {/* Right Side Panels */}
+                  <div className="basis-0 box-border content-stretch flex flex-col gap-4 grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
+                    {/* General Section */}
                     <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
-                      <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
-                        <div className="relative shrink-0 w-[140px]">
-                          <p className="block leading-[normal]">Printer type:</p>
+                      <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#cfcfcf] text-[12px] text-left text-nowrap">
+                        <p className="block leading-[normal] whitespace-pre">General</p>
+                      </div>
+                      <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
+                        <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-start justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
+                          <div className="relative shrink-0 w-[140px]">
+                            <p className="block leading-[16px]">Apply page layout to:</p>
+                          </div>
+                          <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
+                            <p className="block leading-[normal]">Sheet1</p>
+                          </div>
                         </div>
-                        <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
-                          <p className="block leading-[normal]">PDF</p>
+                        <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-start justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
+                          <div className="relative shrink-0 text-nowrap">
+                            <p className="block leading-[16px] whitespace-pre">
+                              Page layout for current sheet:
+                            </p>
+                          </div>
+                          <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
+                            <p className="block leading-[normal]">{currentSheetLayout}</p>
+                          </div>
                         </div>
                       </div>
-                      <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
-                        <div className="relative shrink-0 w-[140px]">
-                          <p className="block leading-[normal]">Paper size:</p>
-                        </div>
-                        <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
-                          <p className="block leading-[normal]">ISO A3 (420.00 x 297.00 MM)</p>
-                        </div>
+                    </div>
+
+                    {/* Settings Section */}
+                    <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
+                      <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#cfcfcf] text-[12px] text-left text-nowrap">
+                        <p className="block leading-[normal] whitespace-pre">Settings</p>
                       </div>
-                      <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
-                        <div className="relative shrink-0 w-[140px]">
-                          <p className="block leading-[normal]">Orientation:</p>
+                      <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
+                        <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
+                          <div className="relative shrink-0 w-[140px]">
+                            <p className="block leading-[normal]">Printer type:</p>
+                          </div>
+                          <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
+                            <p className="block leading-[normal]">PDF</p>
+                          </div>
                         </div>
-                        <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
-                          <p className="block leading-[normal]">Landscape</p>
+                        <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
+                          <div className="relative shrink-0 w-[140px]">
+                            <p className="block leading-[normal]">Paper size:</p>
+                          </div>
+                          <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
+                            <p className="block leading-[normal]">ISO A3 (420.00 x 297.00 MM)</p>
+                          </div>
+                        </div>
+                        <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
+                          <div className="relative shrink-0 w-[140px]">
+                            <p className="block leading-[normal]">Orientation:</p>
+                          </div>
+                          <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
+                            <p className="block leading-[normal]">Landscape</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -791,30 +804,42 @@ export function PageLayoutManager({ onClose, sheets = [] }: PageLayoutManagerPro
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Bottom Section */}
-          <div className="order-1 relative shrink-0 w-full">
-            <div className="flex flex-row items-center relative size-full">
-              <div className="box-border content-stretch flex flex-row items-center justify-between px-4 py-2 relative w-full">
-                {/* Checkbox */}
-                <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0">
-                  <Checkbox
-                    checked={showDialogOnCreate}
-                    onChange={setShowDialogOnCreate}
-                    label="Show dialog box on creation of new sheets"
-                  />
+            {/* Bottom Section */}
+            <div className="order-1 relative shrink-0 w-full">
+              <div className="flex flex-row items-center relative size-full">
+                <div className="box-border content-stretch flex flex-row items-center justify-between px-4 py-2 relative w-full">
+                  {/* Checkbox */}
+                  <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0">
+                    <Checkbox
+                      checked={showDialogOnCreate}
+                      onChange={setShowDialogOnCreate}
+                      label="Show dialog box on creation of new sheets"
+                    />
+                  </div>
+
+                  {/* Close Button */}
+                  <ButtonSecondary onClick={onClose} tooltip="Close layout manager">
+                    Close
+                  </ButtonSecondary>
                 </div>
-
-                {/* Close Button */}
-                <ButtonSecondary onClick={onClose} tooltip="Close layout manager">
-                  Close
-                </ButtonSecondary>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Layout Settings Dialog */}
+      {isLayoutSettingsOpen && (
+        <div
+          className="fixed inset-0 z-[6000] flex items-center justify-center p-4 pointer-events-none overflow-auto"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+        >
+          <div className="pointer-events-auto">
+            <LayoutEditDialog sheetName={settingsLayoutName} onClose={handleCloseLayoutSettings} />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
