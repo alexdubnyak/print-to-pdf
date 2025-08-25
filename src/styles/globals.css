@@ -309,9 +309,9 @@ Usage Examples:
   --tab-text-inactive: #cfcfcf; /* Text color for inactive tabs */
   --tab-border-active: #2c4a93; /* Border color for active tab indicator */
   --tab-padding: 6px; /* Inner padding */
-  --tab-width: 98px; /* Button width */
+  --tab-width: 78px; /* Button width */
   --tab-height: 39px; /* Button height */
-  --tab-font-size: 12px; /* Text font size */
+  --tab-font-size: 11px; /* Text font size */
   --tab-letter-spacing: 0.48px; /* Text letter spacing */
   --tab-border-width: 4px; /* Active border thickness */
 
