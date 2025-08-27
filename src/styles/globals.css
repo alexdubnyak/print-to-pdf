@@ -429,10 +429,7 @@ Usage Examples:
   background-color: var(--snap-bg-inactive);
 }
 
-/* Hover state for inactive buttons */
-.snap-button--inactive:hover {
-  background-color: var(--snap-bg-hover-inactive);
-}
+/* Hover state for inactive buttons - removed */
 
 /* Text color for active buttons */
 .snap-button--active .snap-button__text {

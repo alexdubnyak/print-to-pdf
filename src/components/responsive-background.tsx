@@ -80,10 +80,10 @@ function BottomToolbarWrapper({
     snap: true,
     grid: true,
     ortho: true,
-    polar: false,
-    esnap: false,
-    etrack: false,
-    lweight: false,
+    polar: true,
+    esnap: true,
+    etrack: true,
+    lweight: true,
   });
 
   const handleTabClick = (tabId: string) => {
@@ -133,6 +133,7 @@ function BottomToolbarWrapper({
       return;
     }
 
+    // Переключаем состояние только выбранной кнопки
     setSnapStates(prev => ({
       ...prev,
       [snapType]: !prev[snapType as keyof typeof prev],

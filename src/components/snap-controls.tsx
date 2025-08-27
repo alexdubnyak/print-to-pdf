@@ -80,10 +80,10 @@ export default function SnapControls({ onSnapClick, snapStates }: SnapControlsPr
     snap: true,
     grid: true,
     ortho: true,
-    polar: false,
-    esnap: false,
-    etrack: false,
-    lweight: false,
+    polar: true,
+    esnap: true,
+    etrack: true,
+    lweight: true,
   };
 
   const currentSnapStates = snapStates || defaultSnapStates;

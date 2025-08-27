@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import A3Component from './a3-component';
 import NavigationButtons from './navigation-buttons';
 import SnapControls from './snap-controls';
 
@@ -242,6 +243,11 @@ export default function BottomToolbar({
       {/* Right section with Snap Controls */}
       <div className="h-full">
         <SnapControls onSnapClick={onSnapClick} snapStates={snapStates} />
+      </div>
+
+      {/* A3 positioned absolutely in the right edge */}
+      <div className="absolute right-2 top-0 h-full flex items-center z-10">
+        <A3Component onClick={() => console.log('A3 clicked')} />
       </div>
     </div>
   );
