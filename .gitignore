@@ -94,3 +94,6 @@ temp/
 
 # Vite
 .vite/
+
+# Build output for AWS S3 (если нужно игнорировать билд)
+# build
