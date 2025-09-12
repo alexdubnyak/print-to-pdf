@@ -1,8 +1,12 @@
-import imgImage22 from 'figma:asset/0fc685cd8f14f838f09ada3b1204362f5d241faf.png';
-import imgImage3 from 'figma:asset/4f0bad069f1a79526d8fca7a1265e757a1048cd4.png';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import imgImage22 from '../assets/0fc685cd8f14f838f09ada3b1204362f5d241faf.png';
+import imgImage3 from '../assets/4f0bad069f1a79526d8fca7a1265e757a1048cd4.png';
 import ScrollableRibbon from './ScrollableRibbon';
 import BottomToolbar from './bottom-toolbar';
+import OptionsMenu from './options-menu';
+import { PageLayoutManager } from './page-layout-manager';
+import { LayoutEditDialog } from './print-to-pdf-dialog';
 import SheetsManager from './sheets-manager';
 
 interface ResponsiveBackgroundProps {
@@ -76,6 +80,16 @@ function BottomToolbarWrapper({
 
   const [showSheetsManager, setShowSheetsManager] = useState(false);
 
+  // Состояние для контекстного меню табов
+  const [activeContextMenuTabId, setActiveContextMenuTabId] = useState<string | null>(null);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Состояние для диалогов
+  const [isPageLayoutManagerOpen, setIsPageLayoutManagerOpen] = useState(false);
+  const [isLayoutEditOpen, setIsLayoutEditOpen] = useState(false);
+  const [editingSheetName, setEditingSheetName] = useState('');
+
   const [snapStates, setSnapStates] = useState({
     snap: true,
     grid: true,
@@ -116,6 +130,227 @@ function BottomToolbarWrapper({
   const handleSheetsManagerToggle = () => {
     setShowSheetsManager(!showSheetsManager);
   };
+
+  const handleTabContextMenu = (tabId: string, event: React.MouseEvent) => {
+    // Только для sheet-табов, не для model
+    if (tabId === 'model') return;
+
+    const target = event.currentTarget as HTMLElement;
+    const targetRect = target.getBoundingClientRect();
+    const containerRect = containerRef.current?.getBoundingClientRect();
+
+    if (containerRect) {
+      const menuHeight = 200; // Приблизительная высота меню
+      const menuWidth = 160;
+
+      // Позиционируем меню так, чтобы его нижняя граница была ровно над верхней границей таба
+      let menuX = targetRect.left;
+      let menuY = targetRect.top - menuHeight; // Нижняя граница меню = верхняя граница таба
+
+      // Корректируем позицию по X, чтобы меню не выходило за границы экрана
+      if (menuX + menuWidth > window.innerWidth) {
+        menuX = window.innerWidth - menuWidth - 10;
+      }
+      if (menuX < 10) {
+        menuX = 10;
+      }
+
+      // Если меню не помещается сверху, показываем снизу таба
+      if (menuY < 10) {
+        menuY = targetRect.bottom; // Верхняя граница меню = нижняя граница таба
+      }
+
+      setContextMenuPosition({ x: menuX, y: menuY });
+      setActiveContextMenuTabId(tabId);
+    }
+  };
+
+  const handleContextMenuClose = () => {
+    setActiveContextMenuTabId(null);
+  };
+
+  // Обработчики для действий в контекстном меню
+  const handleSheetRename = (sheetId: string) => {
+    // TODO: Реализовать диалог переименования
+    const newName = prompt(
+      'Введите новое имя листа:',
+      sheets.find(s => s.id === sheetId)?.name || ''
+    );
+
+    if (newName && newName.trim()) {
+      // Обновляем имя в sheets
+      const updatedSheets = sheets.map(sheet =>
+        sheet.id === sheetId ? { ...sheet, name: newName.trim() } : sheet
+      );
+      setSheets(updatedSheets);
+
+      // Обновляем label в tabs
+      setTabs(tabs.map(tab => (tab.id === sheetId ? { ...tab, label: newName.trim() } : tab)));
+
+      onSheetsChange?.(updatedSheets);
+    }
+    setActiveContextMenuTabId(null);
+  };
+
+  const handleSheetDuplicate = (sheetId: string) => {
+    const sourceSheet = sheets.find(s => s.id === sheetId);
+    if (sourceSheet) {
+      // Генерируем новый ID
+      const newId = `sheet${Date.now()}`;
+      const newName = `${sourceSheet.name} Copy`;
+
+      // Создаем новый sheet
+      const newSheet = {
+        id: newId,
+        name: newName,
+        isActive: false,
+      };
+
+      // Создаем новый tab
+      const newTab = {
+        id: newId,
+        label: newName,
+        isActive: false,
+        hasCloseButton: true,
+      };
+
+      // Добавляем после оригинального
+      const sheetIndex = sheets.findIndex(s => s.id === sheetId);
+      const tabIndex = tabs.findIndex(t => t.id === sheetId);
+
+      const updatedSheets = [
+        ...sheets.slice(0, sheetIndex + 1),
+        newSheet,
+        ...sheets.slice(sheetIndex + 1),
+      ];
+
+      const updatedTabs = [...tabs.slice(0, tabIndex + 1), newTab, ...tabs.slice(tabIndex + 1)];
+
+      setSheets(updatedSheets);
+      setTabs(updatedTabs);
+      onSheetsChange?.(updatedSheets);
+    }
+    setActiveContextMenuTabId(null);
+  };
+
+  const handleSheetDelete = (sheetId: string) => {
+    // Защита от удаления последнего листа
+    if (sheets.length <= 1) {
+      alert('Нельзя удалить последний лист!');
+      setActiveContextMenuTabId(null);
+      return;
+    }
+
+    const sheetToDelete = sheets.find(s => s.id === sheetId);
+    if (sheetToDelete && confirm(`Удалить лист "${sheetToDelete.name}"?`)) {
+      // Удаляем таб и sheet
+      const updatedTabs = tabs.filter(tab => tab.id !== sheetId);
+      const updatedSheets = sheets.filter(sheet => sheet.id !== sheetId);
+
+      // Если удаляем активный лист, активируем первый доступный
+      const wasActive = sheetToDelete.isActive;
+      if (wasActive && updatedSheets.length > 0) {
+        updatedSheets[0].isActive = true;
+        updatedTabs.find(t => t.id === updatedSheets[0].id)!.isActive = true;
+      }
+
+      setTabs(updatedTabs);
+      setSheets(updatedSheets);
+      onSheetsChange?.(updatedSheets);
+    }
+    setActiveContextMenuTabId(null);
+  };
+
+  const handleSheetEditLayout = (sheetId: string) => {
+    const sheet = sheets.find(s => s.id === sheetId);
+    if (sheet) {
+      setEditingSheetName(sheet.name);
+      setIsLayoutEditOpen(true);
+    }
+    setActiveContextMenuTabId(null);
+  };
+
+  const handleSheetMoveUpContext = (sheetId: string) => {
+    const sheetIndex = sheets.findIndex(s => s.id === sheetId);
+    const tabIndex = tabs.findIndex(t => t.id === sheetId);
+
+    if (sheetIndex > 0 && tabIndex > 0) {
+      // Перемещаем в sheets
+      const newSheets = [...sheets];
+      [newSheets[sheetIndex - 1], newSheets[sheetIndex]] = [
+        newSheets[sheetIndex],
+        newSheets[sheetIndex - 1],
+      ];
+
+      // Перемещаем в tabs (учитываем, что model таб всегда первый)
+      const newTabs = [...tabs];
+      if (tabIndex > 1) {
+        // Не перемещаем на место model таба
+        [newTabs[tabIndex - 1], newTabs[tabIndex]] = [newTabs[tabIndex], newTabs[tabIndex - 1]];
+      }
+
+      setSheets(newSheets);
+      setTabs(newTabs);
+      onSheetsChange?.(newSheets);
+    }
+    setActiveContextMenuTabId(null);
+  };
+
+  const handleSheetMoveDownContext = (sheetId: string) => {
+    const sheetIndex = sheets.findIndex(s => s.id === sheetId);
+    const tabIndex = tabs.findIndex(t => t.id === sheetId);
+
+    if (sheetIndex < sheets.length - 1 && tabIndex < tabs.length - 1) {
+      // Перемещаем в sheets
+      const newSheets = [...sheets];
+      [newSheets[sheetIndex], newSheets[sheetIndex + 1]] = [
+        newSheets[sheetIndex + 1],
+        newSheets[sheetIndex],
+      ];
+
+      // Перемещаем в tabs
+      const newTabs = [...tabs];
+      [newTabs[tabIndex], newTabs[tabIndex + 1]] = [newTabs[tabIndex + 1], newTabs[tabIndex]];
+
+      setSheets(newSheets);
+      setTabs(newTabs);
+      onSheetsChange?.(newSheets);
+    }
+    setActiveContextMenuTabId(null);
+  };
+
+  const handlePageLayoutManager = () => {
+    setIsPageLayoutManagerOpen(true);
+    setActiveContextMenuTabId(null);
+  };
+
+  const handlePageLayoutManagerClose = () => {
+    setIsPageLayoutManagerOpen(false);
+  };
+
+  const handleEditLayoutClose = () => {
+    setIsLayoutEditOpen(false);
+    setEditingSheetName('');
+  };
+
+  // Закрывать контекстное меню при клике вне него
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Проверяем, что клик не был по элементам меню
+      const target = event.target as Element;
+      if (!target.closest('.options-menu')) {
+        setActiveContextMenuTabId(null);
+      }
+    };
+
+    if (activeContextMenuTabId) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeContextMenuTabId]);
 
   const handlePanelManage = () => {
     console.log('Panel manage clicked');
@@ -282,20 +517,24 @@ function BottomToolbarWrapper({
             sheets={sheets}
             onSheetSelect={handleSheetSelect}
             onSheetOptions={handleSheetOptions}
-            onEditLayout={handleEditLayout}
+            onEditLayout={handleSheetEditLayout}
             onNewSheet={handleNewSheet}
             onDeleteSheet={handleDeleteSheet}
-            onSheetMoveUp={handleSheetMoveUp}
-            onSheetMoveDown={handleSheetMoveDown}
+            onSheetMoveUp={() => handleSheetMoveUp()}
+            onSheetMoveDown={() => handleSheetMoveDown()}
           />
         </div>
       )}
 
-      <div className="absolute bg-[#141518] bottom-0 h-[39px] left-0 w-full pointer-events-auto z-30">
+      <div
+        ref={containerRef}
+        className="absolute bg-[#141518] bottom-0 h-[39px] left-0 w-full pointer-events-auto z-30"
+      >
         <BottomToolbar
           tabs={tabs}
           onTabClick={handleTabClick}
           onTabClose={handleTabClose}
+          onTabContextMenu={handleTabContextMenu}
           onSheetsManagerToggle={handleSheetsManagerToggle}
           onPanelManage={handlePanelManage}
           onSnapOptions={handleSnapOptions}
@@ -303,6 +542,57 @@ function BottomToolbarWrapper({
           snapStates={snapStates}
         />
       </div>
+
+      {/* Context Menu для табов */}
+      {activeContextMenuTabId && (
+        <div
+          className="fixed z-[9999] pointer-events-auto"
+          style={{
+            left: contextMenuPosition.x,
+            top: contextMenuPosition.y,
+          }}
+        >
+          <OptionsMenu
+            onRename={() => handleSheetRename(activeContextMenuTabId)}
+            onDuplicate={() => handleSheetDuplicate(activeContextMenuTabId)}
+            onDelete={() => handleSheetDelete(activeContextMenuTabId)}
+            onEditLayout={() => handleSheetEditLayout(activeContextMenuTabId)}
+            onMoveUp={() => handleSheetMoveUpContext(activeContextMenuTabId)}
+            onMoveDown={() => handleSheetMoveDownContext(activeContextMenuTabId)}
+            onPageLayoutManager={handlePageLayoutManager}
+            onClose={handleContextMenuClose}
+          />
+        </div>
+      )}
+
+      {/* Page Layout Manager Dialog - using portal to render at body level */}
+      {isPageLayoutManagerOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 pointer-events-none overflow-auto dialog-container"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          >
+            <div className="pointer-events-auto">
+              <PageLayoutManager onClose={handlePageLayoutManagerClose} sheets={sheets} />
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {/* Layout Edit Dialog - using portal to render at body level */}
+      {isLayoutEditOpen &&
+        editingSheetName &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 pointer-events-none overflow-auto dialog-container"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          >
+            <div className="pointer-events-auto">
+              <LayoutEditDialog sheetName={editingSheetName} onClose={handleEditLayoutClose} />
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
 }

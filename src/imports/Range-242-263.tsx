@@ -1,5 +1,5 @@
-import svgPaths from "./svg-sagx1n90fa";
-import imgImage6 from "figma:asset/a4fd5120b625ecf09a5fd56aaa254b7821704881.png";
+import imgImage6 from '../assets/a4fd5120b625ecf09a5fd56aaa254b7821704881.png';
+import svgPaths from './svg-sagx1n90fa';
 
 function Frame237() {
   return (
@@ -11,21 +11,14 @@ function Frame237() {
           </div>
           <div className="flex items-center justify-center relative shrink-0">
             <div className="flex-none rotate-[180deg] scale-y-[-100%]">
-              <div
-                className="h-[10.021px] relative w-[10.948px]"
-                data-name="Union"
-              >
+              <div className="h-[10.021px] relative w-[10.948px]" data-name="Union">
                 <svg
                   className="block size-full"
                   fill="none"
                   preserveAspectRatio="none"
                   viewBox="0 0 11 11"
                 >
-                  <path
-                    d={svgPaths.p26072c00}
-                    fill="var(--fill-0, #CFCFCF)"
-                    id="Union"
-                  />
+                  <path d={svgPaths.p26072c00} fill="var(--fill-0, #CFCFCF)" id="Union" />
                 </svg>
               </div>
             </div>

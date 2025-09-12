@@ -1,6 +1,5 @@
-import svgPaths from "./svg-fozgx6zh3z";
-import imgImage9 from "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png";
-import imgImage from "figma:asset/be261973d7e3f1732c0223807a6905b27036bd7e.png";
+import imgImage9 from '../assets/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png';
+import svgPaths from './svg-fozgx6zh3z';
 
 function Frame206() {
   return (
@@ -56,18 +55,9 @@ function Frame209() {
 function Actions() {
   return (
     <div className="relative shrink-0 size-[37px]" data-name="actions">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 37 37"
-      >
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 37 37">
         <g id="actions">
-          <path
-            d={svgPaths.p4aac200}
-            fill="var(--fill-0, #DFDFDF)"
-            id="Union"
-          />
+          <path d={svgPaths.p4aac200} fill="var(--fill-0, #DFDFDF)" id="Union" />
         </g>
       </svg>
     </div>
@@ -80,9 +70,7 @@ function Frame210() {
       <div className="flex flex-row items-center relative size-full">
         <div className="box-border content-stretch flex flex-row items-center justify-between px-2.5 py-0 relative w-full">
           <div className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#d5d7e1] text-[11px] text-left text-nowrap uppercase">
-            <p className="block leading-[normal] whitespace-pre">
-              Print to pdf
-            </p>
+            <p className="block leading-[normal] whitespace-pre">Print to pdf</p>
           </div>
           <Actions />
         </div>
@@ -102,18 +90,9 @@ function Frame231() {
 function Arrow() {
   return (
     <div className="absolute left-0 size-[25.587px] top-0" data-name="arrow">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 26 26"
-      >
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 26 26">
         <g id="arrow">
-          <path
-            d={svgPaths.p14664300}
-            fill="var(--fill-0, #8E8F90)"
-            id="Union"
-          />
+          <path d={svgPaths.p14664300} fill="var(--fill-0, #8E8F90)" id="Union" />
         </g>
       </svg>
     </div>
@@ -122,23 +101,11 @@ function Arrow() {
 
 function Arrow1() {
   return (
-    <div
-      className="absolute left-[29.242px] size-[25.587px] top-0"
-      data-name="arrow"
-    >
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 26 26"
-      >
+    <div className="absolute left-[29.242px] size-[25.587px] top-0" data-name="arrow">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 26 26">
         <g id="arrow">
           <rect fill="#555555" height="25.5866" width="25.5866" />
-          <path
-            d={svgPaths.p2dbeeb00}
-            fill="var(--fill-0, #D5D7E1)"
-            id="Union"
-          />
+          <path d={svgPaths.p2dbeeb00} fill="var(--fill-0, #D5D7E1)" id="Union" />
         </g>
       </svg>
     </div>
@@ -149,7 +116,7 @@ function Frame264() {
   return (
     <div
       className="absolute h-[25.587px] opacity-0 top-[261.348px] translate-x-[-50%] w-[54.828px]"
-      style={{ left: "calc(50% + 2.99784px)" }}
+      style={{ left: 'calc(50% + 2.99784px)' }}
     >
       <Arrow />
       <Arrow1 />
@@ -168,8 +135,8 @@ function Frame246() {
       <div
         className="absolute flex h-[239.406px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[310.703px]"
         style={{
-          top: "calc(50% - 0.105309px)",
-          left: "calc(50% + 0.256451px)",
+          top: 'calc(50% - 0.105309px)',
+          left: 'calc(50% + 0.256451px)',
         }}
       >
         <div className="flex-none rotate-[270deg]">
@@ -181,8 +148,8 @@ function Frame246() {
       <div
         className="absolute flex h-[214.734px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[286.938px]"
         style={{
-          top: "calc(50% - 0.105301px)",
-          left: "calc(50% + 0.256451px)",
+          top: 'calc(50% - 0.105301px)',
+          left: 'calc(50% + 0.256451px)',
         }}
       >
         <div className="flex-none rotate-[270deg]">
@@ -239,13 +206,13 @@ function Frame246() {
       </div>
       <div
         className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[9.13805px] text-left text-nowrap top-[-15.535px]"
-        style={{ left: "calc(50% - 18.4765px)" }}
+        style={{ left: 'calc(50% - 18.4765px)' }}
       >
         <p className="block leading-[normal] whitespace-pre">707 mm</p>
       </div>
       <div
         className="absolute flex h-[33px] items-center justify-center top-[106.435px] w-[10.5px]"
-        style={{ left: "calc(50% + 164.621px)" }}
+        style={{ left: 'calc(50% + 164.621px)' }}
       >
         <div className="flex-none rotate-[90deg]">
           <div className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative text-[#d5d7e1] text-[9.13805px] text-left text-nowrap">
@@ -261,11 +228,7 @@ function Frame246() {
             preserveAspectRatio="none"
             viewBox="0 0 136 8"
           >
-            <path
-              d={svgPaths.p38025800}
-              fill="var(--stroke-0, #D5D7E1)"
-              id="Line 14"
-            />
+            <path d={svgPaths.p38025800} fill="var(--stroke-0, #D5D7E1)" id="Line 14" />
           </svg>
         </div>
       </div>
@@ -277,11 +240,7 @@ function Frame246() {
             preserveAspectRatio="none"
             viewBox="0 0 136 8"
           >
-            <path
-              d={svgPaths.p3fa11600}
-              fill="var(--stroke-0, #D5D7E1)"
-              id="Line 15"
-            />
+            <path d={svgPaths.p3fa11600} fill="var(--stroke-0, #D5D7E1)" id="Line 15" />
           </svg>
         </div>
       </div>
@@ -333,11 +292,7 @@ function Frame246() {
                 preserveAspectRatio="none"
                 viewBox="0 0 97 8"
               >
-                <path
-                  d={svgPaths.pd5ba200}
-                  fill="var(--stroke-0, #D5D7E1)"
-                  id="Line 18"
-                />
+                <path d={svgPaths.pd5ba200} fill="var(--stroke-0, #D5D7E1)" id="Line 18" />
               </svg>
             </div>
           </div>
@@ -353,11 +308,7 @@ function Frame246() {
                 preserveAspectRatio="none"
                 viewBox="0 0 97 8"
               >
-                <path
-                  d={svgPaths.pf09200}
-                  fill="var(--stroke-0, white)"
-                  id="Line 19"
-                />
+                <path d={svgPaths.pf09200} fill="var(--stroke-0, white)" id="Line 19" />
               </svg>
             </div>
           </div>
@@ -367,8 +318,8 @@ function Frame246() {
         className="[background-size:167.12%_118.26%] absolute bg-[52.7%_33.61%] bg-no-repeat h-[152.605px] translate-x-[-50%] translate-y-[-50%] w-[88.182px]"
         data-name="image 9"
         style={{
-          top: "calc(50% - 0.105305px)",
-          left: "calc(50% + 0.256424px)",
+          top: 'calc(50% - 0.105305px)',
+          left: 'calc(50% + 0.256424px)',
           backgroundImage: `url('${imgImage9}')`,
         }}
       />
@@ -474,14 +425,9 @@ function Frame243() {
       <div className="flex flex-row items-center relative size-full">
         <div className="box-border content-stretch flex flex-row items-center justify-between px-2.5 py-1.5 relative w-full">
           <div className="font-['Open_Sans_Hebrew:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#d5d7e1] text-[12px] text-left text-nowrap">
-            <p className="block leading-[normal] whitespace-pre">
-              Search sheets
-            </p>
+            <p className="block leading-[normal] whitespace-pre">Search sheets</p>
           </div>
-          <div
-            className="h-[11.52px] relative shrink-0 w-[11.563px]"
-            data-name="Union"
-          >
+          <div className="h-[11.52px] relative shrink-0 w-[11.563px]" data-name="Union">
             <svg
               className="block size-full"
               fill="none"
@@ -527,33 +473,11 @@ function Frame270() {
 function Component3() {
   return (
     <div className="relative shrink-0 size-4" data-name="Component 3">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 16 16"
-      >
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
         <g id="Component 3">
-          <rect
-            fill="var(--fill-0, #141518)"
-            height="15"
-            width="15"
-            x="0.5"
-            y="0.5"
-          />
-          <rect
-            height="15"
-            stroke="var(--stroke-0, black)"
-            width="15"
-            x="0.5"
-            y="0.5"
-          />
-          <path
-            d={svgPaths.p16124b80}
-            fill="var(--fill-0, #D5D7E1)"
-            id="Union"
-            opacity="0"
-          />
+          <rect fill="var(--fill-0, #141518)" height="15" width="15" x="0.5" y="0.5" />
+          <rect height="15" stroke="var(--stroke-0, black)" width="15" x="0.5" y="0.5" />
+          <path d={svgPaths.p16124b80} fill="var(--fill-0, #D5D7E1)" id="Union" opacity="0" />
         </g>
       </svg>
     </div>
@@ -565,9 +489,7 @@ function Frame244() {
     <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start order-3 p-0 relative shrink-0">
       <Component3 />
       <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#d5d7e1] text-[12px] text-left text-nowrap">
-        <p className="block leading-[normal] whitespace-pre">
-          Select all sheets
-        </p>
+        <p className="block leading-[normal] whitespace-pre">Select all sheets</p>
       </div>
     </div>
   );
@@ -576,19 +498,10 @@ function Frame244() {
 function Component4() {
   return (
     <div className="relative shrink-0 size-4" data-name="Component 3">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 16 16"
-      >
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
         <g id="Component 3">
           <rect fill="#214B98" height="16" width="16" />
-          <path
-            d={svgPaths.p16124b80}
-            fill="var(--fill-0, #D5D7E1)"
-            id="Union"
-          />
+          <path d={svgPaths.p16124b80} fill="var(--fill-0, #D5D7E1)" id="Union" />
         </g>
       </svg>
     </div>
@@ -628,14 +541,9 @@ function Dropdown() {
       <div className="flex flex-row items-center relative size-full">
         <div className="box-border content-stretch flex flex-row h-7 items-center justify-between p-[10px] relative w-full">
           <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#d5d7e1] text-[12px] text-left text-nowrap">
-            <p className="block leading-[normal] whitespace-pre">
-              Sheet 1 Layout
-            </p>
+            <p className="block leading-[normal] whitespace-pre">Sheet 1 Layout</p>
           </div>
-          <div
-            className="h-[6.145px] relative shrink-0 w-[10.875px]"
-            data-name="Union"
-          >
+          <div className="h-[6.145px] relative shrink-0 w-[10.875px]" data-name="Union">
             <div className="absolute bottom-[0.001%] left-0 right-0 top-0">
               <svg
                 className="block size-full"
@@ -643,11 +551,7 @@ function Dropdown() {
                 preserveAspectRatio="none"
                 viewBox="0 0 11 7"
               >
-                <path
-                  d={svgPaths.p31f4a400}
-                  fill="var(--fill-0, #D5D7E1)"
-                  id="Union"
-                />
+                <path d={svgPaths.p31f4a400} fill="var(--fill-0, #D5D7E1)" id="Union" />
               </svg>
             </div>
           </div>
@@ -660,34 +564,11 @@ function Dropdown() {
 function Frame321() {
   return (
     <div className="h-[17px] relative shrink-0 w-4">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 16 17"
-      >
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 17">
         <g id="Frame 321">
-          <rect
-            fill="var(--fill-0, #CFCFCF)"
-            height="1"
-            id="Rectangle 39"
-            width="3"
-            y="2.5"
-          />
-          <rect
-            fill="var(--fill-0, #CFCFCF)"
-            height="1"
-            id="Rectangle 42"
-            width="11"
-            y="7.5"
-          />
-          <rect
-            fill="var(--fill-0, #CFCFCF)"
-            height="1"
-            id="Rectangle 45"
-            width="6"
-            y="12.5"
-          />
+          <rect fill="var(--fill-0, #CFCFCF)" height="1" id="Rectangle 39" width="3" y="2.5" />
+          <rect fill="var(--fill-0, #CFCFCF)" height="1" id="Rectangle 42" width="11" y="7.5" />
+          <rect fill="var(--fill-0, #CFCFCF)" height="1" id="Rectangle 45" width="6" y="12.5" />
           <rect
             fill="var(--fill-0, #CFCFCF)"
             height="1"
@@ -712,21 +593,9 @@ function Frame321() {
             x="9"
             y="12.5"
           />
-          <path
-            d={svgPaths.p1a717900}
-            fill="var(--fill-0, #CFCFCF)"
-            id="Rectangle 40 (Stroke)"
-          />
-          <path
-            d={svgPaths.p2b768100}
-            fill="var(--fill-0, #CFCFCF)"
-            id="Rectangle 44 (Stroke)"
-          />
-          <path
-            d={svgPaths.p62ee700}
-            fill="var(--fill-0, #CFCFCF)"
-            id="Rectangle 47 (Stroke)"
-          />
+          <path d={svgPaths.p1a717900} fill="var(--fill-0, #CFCFCF)" id="Rectangle 40 (Stroke)" />
+          <path d={svgPaths.p2b768100} fill="var(--fill-0, #CFCFCF)" id="Rectangle 44 (Stroke)" />
+          <path d={svgPaths.p62ee700} fill="var(--fill-0, #CFCFCF)" id="Rectangle 47 (Stroke)" />
         </g>
       </svg>
     </div>
@@ -758,33 +627,11 @@ function Frame253() {
 function Component5() {
   return (
     <div className="relative shrink-0 size-4" data-name="Component 3">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 16 16"
-      >
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
         <g id="Component 3">
-          <rect
-            fill="var(--fill-0, #141518)"
-            height="15"
-            width="15"
-            x="0.5"
-            y="0.5"
-          />
-          <rect
-            height="15"
-            stroke="var(--stroke-0, black)"
-            width="15"
-            x="0.5"
-            y="0.5"
-          />
-          <path
-            d={svgPaths.p16124b80}
-            fill="var(--fill-0, #D5D7E1)"
-            id="Union"
-            opacity="0"
-          />
+          <rect fill="var(--fill-0, #141518)" height="15" width="15" x="0.5" y="0.5" />
+          <rect height="15" stroke="var(--stroke-0, black)" width="15" x="0.5" y="0.5" />
+          <path d={svgPaths.p16124b80} fill="var(--fill-0, #D5D7E1)" id="Union" opacity="0" />
         </g>
       </svg>
     </div>
@@ -824,14 +671,9 @@ function Dropdown1() {
       <div className="flex flex-row items-center relative size-full">
         <div className="box-border content-stretch flex flex-row h-7 items-center justify-between p-[10px] relative w-full">
           <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#d5d7e1] text-[12px] text-left text-nowrap">
-            <p className="block leading-[normal] whitespace-pre">
-              Sheet 2 Layout
-            </p>
+            <p className="block leading-[normal] whitespace-pre">Sheet 2 Layout</p>
           </div>
-          <div
-            className="h-[6.145px] relative shrink-0 w-[10.875px]"
-            data-name="Union"
-          >
+          <div className="h-[6.145px] relative shrink-0 w-[10.875px]" data-name="Union">
             <div className="absolute bottom-[0.001%] left-0 right-0 top-0">
               <svg
                 className="block size-full"
@@ -839,11 +681,7 @@ function Dropdown1() {
                 preserveAspectRatio="none"
                 viewBox="0 0 11 7"
               >
-                <path
-                  d={svgPaths.p31f4a400}
-                  fill="var(--fill-0, #D5D7E1)"
-                  id="Union"
-                />
+                <path d={svgPaths.p31f4a400} fill="var(--fill-0, #D5D7E1)" id="Union" />
               </svg>
             </div>
           </div>
@@ -856,34 +694,11 @@ function Dropdown1() {
 function Frame322() {
   return (
     <div className="h-[17px] relative shrink-0 w-4">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 16 17"
-      >
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 17">
         <g id="Frame 322">
-          <rect
-            fill="var(--fill-0, #8E8F90)"
-            height="1"
-            id="Rectangle 39"
-            width="3"
-            y="2.5"
-          />
-          <rect
-            fill="var(--fill-0, #8E8F90)"
-            height="1"
-            id="Rectangle 42"
-            width="11"
-            y="7.5"
-          />
-          <rect
-            fill="var(--fill-0, #8E8F90)"
-            height="1"
-            id="Rectangle 45"
-            width="6"
-            y="12.5"
-          />
+          <rect fill="var(--fill-0, #8E8F90)" height="1" id="Rectangle 39" width="3" y="2.5" />
+          <rect fill="var(--fill-0, #8E8F90)" height="1" id="Rectangle 42" width="11" y="7.5" />
+          <rect fill="var(--fill-0, #8E8F90)" height="1" id="Rectangle 45" width="6" y="12.5" />
           <rect
             fill="var(--fill-0, #8E8F90)"
             height="1"
@@ -908,21 +723,9 @@ function Frame322() {
             x="9"
             y="12.5"
           />
-          <path
-            d={svgPaths.p1a717900}
-            fill="var(--fill-0, #8E8F90)"
-            id="Rectangle 40 (Stroke)"
-          />
-          <path
-            d={svgPaths.p2b768100}
-            fill="var(--fill-0, #8E8F90)"
-            id="Rectangle 44 (Stroke)"
-          />
-          <path
-            d={svgPaths.p62ee700}
-            fill="var(--fill-0, #8E8F90)"
-            id="Rectangle 47 (Stroke)"
-          />
+          <path d={svgPaths.p1a717900} fill="var(--fill-0, #8E8F90)" id="Rectangle 40 (Stroke)" />
+          <path d={svgPaths.p2b768100} fill="var(--fill-0, #8E8F90)" id="Rectangle 44 (Stroke)" />
+          <path d={svgPaths.p62ee700} fill="var(--fill-0, #8E8F90)" id="Rectangle 47 (Stroke)" />
         </g>
       </svg>
     </div>
@@ -1117,8 +920,8 @@ function PrintToPdf() {
     <div
       className="absolute bg-[#333538] box-border content-stretch flex flex-col h-[591px] items-start justify-between p-0 rounded-lg border border-[#4a4a4a] top-[147.5px] translate-x-[-50%] w-[971px]"
       data-name="Print to PDF"
-      style={{ 
-        left: "calc(50% - 7.25px)",
+      style={{
+        left: 'calc(50% - 7.25px)',
         boxShadow: `
           0px 8px 32px rgba(0, 0, 0, 0.6),
           0px 4px 16px rgba(0, 0, 0, 0.4),
@@ -1143,7 +946,7 @@ export default function PrintCurrentSheet() {
           backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1496 813"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23404040" stroke-width="0.5"/></pattern></defs><rect width="1496" height="813" fill="%23353535"/><rect width="1496" height="813" fill="url(%23grid)"/><rect x="0" y="0" width="1496" height="65" fill="%232a2a2a"/><rect x="0" y="0" width="300" height="813" fill="%232f2f2f"/><rect x="1200" y="0" width="296" height="813" fill="%232f2f2f"/><text x="150" y="35" text-anchor="middle" font-family="Arial" font-size="14" fill="%23d5d7e1">ARES Kudo - New.dwg</text><rect x="500" y="300" width="200" height="150" fill="none" stroke="%23ffffff" stroke-width="2"/><rect x="300" y="500" width="300" height="200" fill="none" stroke="%234285f4" stroke-width="2"/><polygon points="800,400 750,500 850,500" fill="none" stroke="%234285f4" stroke-width="2"/><circle cx="900" cy="300" r="50" fill="none" stroke="%23ffffff" stroke-width="2"/><text x="1400" y="100" font-family="Arial" font-size="12" fill="%23cfcfcf">PROPERTIES</text><text x="1400" y="130" font-family="Arial" font-size="10" fill="%23888">NO ENTITIES SELECTED</text><text x="1400" y="600" font-family="Arial" font-size="12" fill="%23cfcfcf">LAYERS</text><rect x="1380" y="620" width="16" height="16" fill="%23ffffff"/><text x="1405" y="632" font-family="Arial" font-size="10" fill="%23cfcfcf">ByLayer</text><rect x="0" y="750" width="1496" height="63" fill="%232a2a2a"/><text x="50" y="785" font-family="Arial" font-size="12" fill="%23cfcfcf">Model | Sheet1 | Sheet2</text></svg>')`,
         }}
       />
-      
+
       {/* Enhanced overlay with better darkening */}
       <div
         className="absolute inset-0"
@@ -1156,9 +959,9 @@ export default function PrintCurrentSheet() {
           backdropFilter: 'blur(1px)',
         }}
       />
-      
+
       {/* Additional shadow area behind popup */}
-      <div 
+      <div
         className="absolute bg-black/40 rounded-xl blur-xl"
         style={{
           left: 'calc(50% - 500px)',
@@ -1167,10 +970,10 @@ export default function PrintCurrentSheet() {
           height: '620px',
         }}
       />
-      
+
       {/* Bottom controls bar */}
       <Frame209 />
-      
+
       {/* Main popup with enhanced styling */}
       <PrintToPdf />
     </div>

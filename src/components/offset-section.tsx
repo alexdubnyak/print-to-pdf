@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { CollapsibleSection } from './collapsible-section';
+import imgImage7 from '../assets/1be3d49abdbb316bd48a86a5037772a129eda379.png';
 import { Checkbox } from './checkbox';
+import { CollapsibleSection } from './collapsible-section';
 import { TextInput } from './text-input';
-import imgImage7 from "figma:asset/1be3d49abdbb316bd48a86a5037772a129eda379.png";
 
 interface OffsetSectionProps {
   className?: string;
@@ -15,15 +15,15 @@ interface OffsetSectionProps {
   yOffset?: string;
 }
 
-export function OffsetSection({ 
-  className = "",
+export function OffsetSection({
+  className = '',
   isInitiallyOpen = true,
   onPrintOnCenterChange,
   onXOffsetChange,
   onYOffsetChange,
   printOnCenter = false,
-  xOffset = "0",
-  yOffset = "0"
+  xOffset = '0',
+  yOffset = '0',
 }: OffsetSectionProps) {
   const [internalPrintOnCenter, setInternalPrintOnCenter] = useState(printOnCenter);
   const [internalXOffset, setInternalXOffset] = useState(xOffset);
@@ -45,11 +45,7 @@ export function OffsetSection({
   };
 
   return (
-    <CollapsibleSection 
-      title="Offset" 
-      isInitiallyOpen={isInitiallyOpen}
-      className={className}
-    >
+    <CollapsibleSection title="Offset" isInitiallyOpen={isInitiallyOpen} className={className}>
       <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-[20px] relative w-full">
         {/* Preview Image */}
         <div
@@ -57,17 +53,17 @@ export function OffsetSection({
           data-name="image 7"
           style={{ backgroundImage: `url('${imgImage7}')` }}
         />
-        
+
         {/* Print on center checkbox */}
         <div className="flex flex-col gap-3 w-full">
           <div className="checkbox-row">
-            <Checkbox 
+            <Checkbox
               checked={internalPrintOnCenter}
               onChange={handlePrintOnCenterChange}
               label="Print on center of paper"
             />
           </div>
-          
+
           {/* X/Y Offset inputs */}
           <div className="flex flex-row gap-4 items-center w-full">
             {/* X Offset */}
@@ -76,7 +72,7 @@ export function OffsetSection({
                 <p className="block leading-[normal]">X:</p>
               </div>
               <div className="w-[80px]">
-                <TextInput 
+                <TextInput
                   value={internalXOffset}
                   onChange={handleXOffsetChange}
                   placeholder="0"
@@ -87,14 +83,14 @@ export function OffsetSection({
                 <p className="block leading-[normal]">mm</p>
               </div>
             </div>
-            
+
             {/* Y Offset */}
             <div className="flex flex-row gap-2 items-center">
               <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[12px] text-left">
                 <p className="block leading-[normal]">Y:</p>
               </div>
               <div className="w-[80px]">
-                <TextInput 
+                <TextInput
                   value={internalYOffset}
                   onChange={handleYOffsetChange}
                   placeholder="0"

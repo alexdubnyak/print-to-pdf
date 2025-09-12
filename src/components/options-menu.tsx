@@ -1,12 +1,13 @@
-
-import svgPaths from "../imports/svg-atccxy6td3";
+import svgPaths from '../imports/svg-atccxy6td3';
 
 interface OptionsMenuProps {
   onRename?: () => void;
   onDuplicate?: () => void;
   onDelete?: () => void;
+  onEditLayout?: () => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
+  onPageLayoutManager?: () => void;
   onClose?: () => void;
 }
 
@@ -30,8 +31,8 @@ function MenuItem({ onClick, children }: { onClick?: () => void; children: React
   };
 
   return (
-    <div 
-      className="bg-[#333538] relative shrink-0 w-full cursor-pointer hover:bg-[#404248] transition-colors" 
+    <div
+      className="bg-[#333538] relative shrink-0 w-full cursor-pointer hover:bg-[#404248] transition-colors"
       data-name="menu item"
       onClick={handleClick}
     >
@@ -50,7 +51,12 @@ function Icons1() {
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
         <g clipPath="url(#clip0_6_129)" id="icons">
           <g id="icon">
-            <path clipRule="evenodd" d={svgPaths.p35c37c40} fill="var(--fill-0, #808287)" fillRule="evenodd" />
+            <path
+              clipRule="evenodd"
+              d={svgPaths.p35c37c40}
+              fill="var(--fill-0, #808287)"
+              fillRule="evenodd"
+            />
             <path d={svgPaths.p21ab8700} fill="var(--fill-0, #808287)" />
           </g>
         </g>
@@ -73,7 +79,12 @@ function Icons2() {
             <path d="M6 13H5V7H6V13Z" fill="var(--fill-0, #808287)" />
             <path d="M8.5 13H7.5V7H8.5V13Z" fill="var(--fill-0, #808287)" />
             <path d="M11 13H10V7H11V13Z" fill="var(--fill-0, #808287)" />
-            <path clipRule="evenodd" d={svgPaths.p289fc700} fill="var(--fill-0, #808287)" fillRule="evenodd" />
+            <path
+              clipRule="evenodd"
+              d={svgPaths.p289fc700}
+              fill="var(--fill-0, #808287)"
+              fillRule="evenodd"
+            />
           </g>
         </g>
       </svg>
@@ -105,16 +116,52 @@ function Icons4() {
   );
 }
 
+function Icons5() {
+  return (
+    <div className="relative shrink-0 size-4" data-name="icons">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <g id="icons">
+          <path
+            d="M10 1.5L13.5 5"
+            stroke="var(--stroke-0, #808287)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          <path d="M2 2V14H14V6H10V2H2Z" fill="var(--fill-0, #808287)" />
+          <rect fill="var(--fill-0, #808287)" height="1" width="2" x="11" y="14" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function Icons6() {
+  return (
+    <div className="relative shrink-0 size-4" data-name="icons">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <g id="icons">
+          <path d="M12 5L14 7L8 13L6 13L6 11L12 5Z" fill="var(--fill-0, #808287)" />
+          <path d="M2 2V14H4V12H2V4H12V2H2Z" fill="var(--fill-0, #808287)" />
+          <path d="M6 8V10H8V8H6Z" fill="var(--fill-0, #808287)" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function OptionsMenu({
   onRename,
   onDuplicate,
   onDelete,
+  onEditLayout,
   onMoveUp,
   onMoveDown,
-  onClose
+  onPageLayoutManager,
+  onClose,
 }: OptionsMenuProps) {
   const handleMenuItemClick = (callback?: () => void, action?: string) => {
-    console.log("OptionsMenu:", action);
+    console.log('OptionsMenu:', action);
     callback?.();
     // Меню закрывается автоматически при перемещении листов или по клику вне
   };
@@ -125,45 +172,61 @@ export default function OptionsMenu({
   };
 
   return (
-    <div 
-      className="box-border content-stretch flex flex-col items-start justify-start p-0 relative w-[120px] bg-[#333538] border border-[#525559] shadow-lg z-[100]"
+    <div
+      className="options-menu box-border content-stretch flex flex-col items-start justify-start p-0 relative w-[160px] bg-[#333538] border border-[#525559] shadow-lg z-[100]"
       onClick={handleMenuClick}
     >
-      <MenuItem onClick={() => handleMenuItemClick(onRename, "rename")}>
+      <MenuItem onClick={() => handleMenuItemClick(onRename, 'rename')}>
         <Icons />
         <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#c3c3c3] text-[12px] text-nowrap tracking-[0.36px]">
           <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">Rename</p>
         </div>
       </MenuItem>
-      
-      <MenuItem onClick={() => handleMenuItemClick(onDuplicate, "duplicate")}>
+
+      <MenuItem onClick={() => handleMenuItemClick(onDuplicate, 'duplicate')}>
         <Icons1 />
         <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#c3c3c3] text-[12px] text-nowrap tracking-[0.36px]">
           <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">Duplicate</p>
         </div>
       </MenuItem>
-      
+
       <div className="bg-[#333538] relative shrink-0 w-full" data-name="menu item">
         <div
           aria-hidden="true"
           className="absolute border-[#525559] border-[1px_0px] border-solid inset-0 pointer-events-none"
         />
-        <MenuItem onClick={() => handleMenuItemClick(onDelete, "delete")}>
+        <MenuItem onClick={() => handleMenuItemClick(onDelete, 'delete')}>
           <Icons2 />
           <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#c3c3c3] text-[12px] text-nowrap tracking-[0.36px]">
             <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">Delete</p>
           </div>
         </MenuItem>
       </div>
-      
-      <MenuItem onClick={() => handleMenuItemClick(onMoveUp, "moveUp")}>
+
+      <MenuItem onClick={() => handleMenuItemClick(onEditLayout, 'editLayout')}>
+        <Icons6 />
+        <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#c3c3c3] text-[12px] text-nowrap tracking-[0.36px]">
+          <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">Edit Layout</p>
+        </div>
+      </MenuItem>
+
+      <MenuItem onClick={() => handleMenuItemClick(onPageLayoutManager, 'pageLayoutManager')}>
+        <Icons5 />
+        <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#c3c3c3] text-[12px] text-nowrap tracking-[0.36px]">
+          <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">
+            Page Layout Manager
+          </p>
+        </div>
+      </MenuItem>
+
+      <MenuItem onClick={() => handleMenuItemClick(onMoveUp, 'moveUp')}>
         <Icons3 />
         <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#c3c3c3] text-[12px] text-nowrap tracking-[0.36px]">
           <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">Move Up</p>
         </div>
       </MenuItem>
-      
-      <MenuItem onClick={() => handleMenuItemClick(onMoveDown, "moveDown")}>
+
+      <MenuItem onClick={() => handleMenuItemClick(onMoveDown, 'moveDown')}>
         <Icons4 />
         <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#c3c3c3] text-[12px] text-nowrap tracking-[0.36px]">
           <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">Move Down</p>

@@ -1,5 +1,6 @@
-import imgImage9 from 'figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png';
 import React, { useState } from 'react';
+import imgImage9 from '../assets/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png';
+import blueprintDrawing from '../assets/blueprint.png';
 import svgPathsQuick from '../imports/svg-4xdfr98ovj';
 import svgPaths from '../imports/svg-uo6jg4qcws';
 import { ButtonIcon } from './button-icon';
@@ -26,9 +27,12 @@ const TECHNICAL_DRAWING_SHEET_1 =
 const TECHNICAL_DRAWING_SHEET_2 =
   'https://dwgmodels.com/uploads/posts/2018-08/1534800474_facades-of-the-old-power-station_m.jpg'; // 841x594mm A1 Vertical Technical Drawing
 
+// Model drawing - using blueprint.png
+
 // Direct image URLs replacing Figma assets
 const imgSheet1Drawing = TECHNICAL_DRAWING_SHEET_1;
 const imgSheet2Drawing = TECHNICAL_DRAWING_SHEET_2;
+const imgModelDrawing = blueprintDrawing;
 
 // ============================================
 // SHEET CONFIGURATION
@@ -305,8 +309,28 @@ function PreviewArea({
     }
   };
 
-  // Показываем "No preview available" если ничего не выбрано И (не скрыты стрелки ИЛИ активна вкладка Model)
-  if (selectedCount === 0 && (!hideNavigationArrows || isModelTabActive)) {
+  // Если активна Model вкладка, всегда показываем Model чертеж
+  if (isModelTabActive) {
+    return (
+      <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
+        <SheetPreview
+          image={imgModelDrawing}
+          sheetName="Model"
+          widthMm="1189"
+          heightMm="841"
+          inverse={inverse}
+          xOffset={xOffset}
+          yOffset={yOffset}
+        />
+        <div className="flex flex-col gap-2 items-start">
+          <SettingsSection />
+        </div>
+      </div>
+    );
+  }
+
+  // Показываем "No preview available" если ничего не выбрано И не скрыты стрелки
+  if (selectedCount === 0 && !hideNavigationArrows) {
     return (
       <div className="basis-0 box-border content-stretch flex flex-col grow h-full items-center justify-center min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
         <NoPreview />
@@ -734,10 +758,12 @@ function SheetsConfigGroup({
 // ============================================
 
 function QuickPrintSheetPreview({
+  sheetName = 'Sheet 1',
   inverse = false,
   xOffset = '1',
   yOffset = '1',
 }: {
+  sheetName?: string;
   inverse?: boolean;
   xOffset?: string;
   yOffset?: string;
@@ -805,17 +831,19 @@ function QuickPrintSheetPreview({
         }}
       />
       <div className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] left-[144.39px] not-italic text-[#d5d7e1] text-[10.966px] text-left text-nowrap top-[-37.92px]">
-        <p className="block leading-[normal] whitespace-pre">Sheet 1</p>
+        <p className="block leading-[normal] whitespace-pre">{sheetName}</p>
       </div>
     </div>
   );
 }
 
 function QuickPrintLeftPanel({
+  sheetName = 'Sheet 1',
   inverse = false,
   xOffset = '1',
   yOffset = '1',
 }: {
+  sheetName?: string;
   inverse?: boolean;
   xOffset?: string;
   yOffset?: string;
@@ -823,7 +851,12 @@ function QuickPrintLeftPanel({
   return (
     <div className="bg-[#1e2023] box-border content-stretch flex flex-row gap-2.5 items-stretch justify-start p-[20px] relative shrink-0 w-[400px] self-stretch min-h-0">
       <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
-        <QuickPrintSheetPreview inverse={inverse} xOffset={xOffset} yOffset={yOffset} />
+        <QuickPrintSheetPreview
+          sheetName={sheetName}
+          inverse={inverse}
+          xOffset={xOffset}
+          yOffset={yOffset}
+        />
         <SettingsSection />
       </div>
     </div>
@@ -1084,7 +1117,12 @@ export function LayoutEditDialog({
       {/* Main Content */}
       <div className="basis-0 box-border content-stretch flex flex-row grow items-stretch justify-start min-h-0 min-w-px p-0 relative shrink-0 w-full">
         {/* Left Panel - Quick Print Preview */}
-        <QuickPrintLeftPanel inverse={inverse} xOffset={xOffset} yOffset={yOffset} />
+        <QuickPrintLeftPanel
+          sheetName={sheetName}
+          inverse={inverse}
+          xOffset={xOffset}
+          yOffset={yOffset}
+        />
 
         {/* Right Panel - Settings without tabs */}
         <div className="flex flex-col grow min-h-0 w-full">
@@ -1199,6 +1237,19 @@ export function PrintToPdfDialog({
   const isActivateAllDisabled = selectedCount === sheets.length;
   const isPrintDisabled = activeTab === 'advanced' && selectedCount === 0;
 
+  // Определяем имя активного листа для Quick режима
+  const getActiveSheetName = () => {
+    if (currentSheet > 0) {
+      return `Sheet ${currentSheet}`;
+    }
+    // Если currentSheet = 0, используем первый выбранный лист или Sheet 1 по умолчанию
+    if (selectedSheets.length > 0) {
+      return `Sheet ${selectedSheets[0]}`;
+    }
+    return 'Sheet 1';
+  };
+  const activeSheetName = getActiveSheetName();
+
   // Event handlers
   const handleSelectAllClick = (checked: boolean) => {
     setSelectAllChecked(checked);
@@ -1296,7 +1347,12 @@ export function PrintToPdfDialog({
           <div className="basis-0 box-border content-stretch flex flex-row grow items-stretch justify-start min-h-0 min-w-px p-0 relative shrink-0 w-full">
             {/* Left Panel - используем LeftPreviewPanel для Model вкладки, QuickPrintLeftPanel для обычного Quick print */}
             {effectiveActiveTab === 'quick' && !isModelTabActive ? (
-              <QuickPrintLeftPanel inverse={inverse} xOffset={xOffset} yOffset={yOffset} />
+              <QuickPrintLeftPanel
+                sheetName={activeSheetName}
+                inverse={inverse}
+                xOffset={xOffset}
+                yOffset={yOffset}
+              />
             ) : (
               <LeftPreviewPanel
                 selectedCount={selectedCount}

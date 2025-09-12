@@ -1,4 +1,4 @@
-import imgImage3 from "figma:asset/6be68b1ee5a49380aa2748cf4f6e2f9b13deef28.png";
+import imgImage3 from '../assets/6be68b1ee5a49380aa2748cf4f6e2f9b13deef28.png';
 
 export default function Frame257() {
   return (

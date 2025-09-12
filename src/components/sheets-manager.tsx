@@ -198,7 +198,7 @@ function SheetItem({
   sheet: Sheet;
   onSelect?: () => void;
   onOptions?: (sheetId: string, buttonElement: HTMLDivElement) => void;
-  onEditLayout?: () => void;
+  onEditLayout?: (sheetId: string) => void;
   showOptionsMenu?: boolean;
   onOptionsMenuClose?: () => void;
   onSheetRename?: (sheetId: string) => void;
@@ -232,6 +232,31 @@ function SheetItem({
                 !isActive ? 'opacity-0' : ''
               }`}
             >
+              {/* Edit Layout Button */}
+              <div
+                className={`box-border content-stretch flex gap-2.5 items-center justify-center px-1.5 py-1 relative shrink-0 cursor-pointer ${
+                  isActive ? 'bg-[#306ed1]' : 'bg-[#1e2023]'
+                }`}
+                onClick={() => onEditLayout?.(sheet.id)}
+              >
+                <div
+                  aria-hidden="true"
+                  className={`absolute border ${
+                    isActive ? 'border-[#ffffff]' : 'border-[#000000]'
+                  } border-solid inset-0 pointer-events-none`}
+                />
+                <div
+                  className={`font-['Open_Sans:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[9px] text-nowrap tracking-[0.27px] ${
+                    isActive ? 'text-[#ffffff]' : 'text-[#808287]'
+                  }`}
+                >
+                  <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">
+                    EDIT LAYOUT
+                  </p>
+                </div>
+              </div>
+
+              {/* Options Button */}
               <div
                 className={`box-border content-stretch flex gap-2.5 items-center justify-center px-1.5 py-1 relative shrink-0 cursor-pointer ${
                   isActive ? 'bg-[#306ed1]' : 'bg-[#1e2023]'
@@ -250,28 +275,6 @@ function SheetItem({
                   }`}
                 >
                   <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">OPTIONS</p>
-                </div>
-              </div>
-              <div
-                className={`box-border content-stretch flex gap-2.5 items-center justify-center px-1.5 py-1 relative shrink-0 cursor-pointer ${
-                  isActive ? 'bg-[#306ed1]' : 'bg-[#1e2023]'
-                }`}
-                onClick={onEditLayout}
-              >
-                <div
-                  aria-hidden="true"
-                  className={`absolute border ${
-                    isActive ? 'border-[#ffffff]' : 'border-[#000000]'
-                  } border-solid inset-0 pointer-events-none`}
-                />
-                <div
-                  className={`font-['Open_Sans:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[9px] text-nowrap tracking-[0.27px] uppercase ${
-                    isActive ? 'text-[#ffffff]' : 'text-[#808287]'
-                  }`}
-                >
-                  <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">
-                    Edit layout
-                  </p>
                 </div>
               </div>
             </div>
@@ -369,7 +372,7 @@ function Component65({
           sheet={sheet}
           onSelect={() => onSheetSelect?.(sheet.id)}
           onOptions={onSheetOptions}
-          onEditLayout={() => onEditLayout?.(sheet.id)}
+          onEditLayout={onEditLayout}
           showOptionsMenu={activeOptionsSheetId === sheet.id}
           onOptionsMenuClose={onOptionsMenuClose}
           onSheetRename={onSheetRename}
@@ -461,6 +464,7 @@ export default function SheetsManager({
 
   const handlePageLayoutManagerOpen = () => {
     setIsPageLayoutManagerOpen(true);
+    setActiveOptionsSheetId(null); // Закрываем Options меню при открытии Page Layout Manager
   };
 
   const handlePageLayoutManagerClose = () => {
@@ -468,6 +472,15 @@ export default function SheetsManager({
   };
 
   const handleEditLayoutOpen = (sheetId: string) => {
+    const sheet = sheets.find(s => s.id === sheetId);
+    if (sheet) {
+      setEditingSheetName(sheet.name);
+      setIsLayoutEditOpen(true);
+      setActiveOptionsSheetId(null); // Закрываем Options меню при открытии Edit Layout
+    }
+  };
+
+  const handleDirectEditLayout = (sheetId: string) => {
     const sheet = sheets.find(s => s.id === sheetId);
     if (sheet) {
       setEditingSheetName(sheet.name);
@@ -507,7 +520,8 @@ export default function SheetsManager({
   return (
     <div
       ref={containerRef}
-      className="box-border content-stretch flex flex-col isolate items-center justify-start p-0 relative w-[250px] overflow-visible"
+      className="box-border content-stretch flex flex-col isolate items-center justify-start p-0 relative overflow-visible"
+      style={{ width: '240px' }}
     >
       <Frame284
         onNewSheet={onNewSheet}
@@ -518,7 +532,7 @@ export default function SheetsManager({
         sheets={sheets}
         onSheetSelect={onSheetSelect}
         onSheetOptions={handleSheetOptions}
-        onEditLayout={handleEditLayoutOpen}
+        onEditLayout={handleDirectEditLayout}
         activeOptionsSheetId={activeOptionsSheetId}
         onOptionsMenuClose={handleOptionsMenuClose}
         onSheetRename={handleSheetRename}
@@ -541,8 +555,10 @@ export default function SheetsManager({
             onRename={() => handleSheetRename(activeOptionsSheetId)}
             onDuplicate={() => handleSheetDuplicate(activeOptionsSheetId)}
             onDelete={() => handleSheetDelete(activeOptionsSheetId)}
+            onEditLayout={() => handleEditLayoutOpen(activeOptionsSheetId)}
             onMoveUp={() => handleSheetMoveUp(activeOptionsSheetId)}
             onMoveDown={() => handleSheetMoveDown(activeOptionsSheetId)}
+            onPageLayoutManager={handlePageLayoutManagerOpen}
             onClose={handleOptionsMenuClose}
           />
         </div>

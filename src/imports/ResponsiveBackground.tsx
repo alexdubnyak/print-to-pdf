@@ -1,6 +1,6 @@
-import imgRibbon from "figma:asset/e957f5dba6ea799dcbd1028743c639263f649749.png";
-import imgImage3 from "figma:asset/4f0bad069f1a79526d8fca7a1265e757a1048cd4.png";
-import imgImage22 from "figma:asset/0fc685cd8f14f838f09ada3b1204362f5d241faf.png";
+import imgImage22 from '../assets/0fc685cd8f14f838f09ada3b1204362f5d241faf.png';
+import imgImage3 from '../assets/4f0bad069f1a79526d8fca7a1265e757a1048cd4.png';
+import imgRibbon from '../assets/e957f5dba6ea799dcbd1028743c639263f649749.png';
 
 function RibbonContainer() {
   return (
@@ -37,9 +37,7 @@ function Frame296() {
 }
 
 function Frame294() {
-  return (
-    <div className="absolute h-[37px] left-[619px] top-[868px] w-[1487px]" />
-  );
+  return <div className="absolute h-[37px] left-[619px] top-[868px] w-[1487px]" />;
 }
 
 function Frame295() {
@@ -65,7 +63,7 @@ function Frame298() {
   return (
     <div
       className="absolute bg-[#333538] bottom-0 h-[37px] translate-x-[-50%] w-[1487px]"
-      style={{ left: "calc(50% + 0.5px)" }}
+      style={{ left: 'calc(50% + 0.5px)' }}
     >
       <div
         className="absolute bg-bottom-left bg-no-repeat h-[37px] left-0 top-0 w-[1436px]"
@@ -85,10 +83,7 @@ function Frame298() {
 
 export default function ResponsiveBackground() {
   return (
-    <div
-      className="bg-[#dcdcdc] relative size-full"
-      data-name="responsive background"
-    >
+    <div className="bg-[#dcdcdc] relative size-full" data-name="responsive background">
       <RibbonContainer />
       <Frame296 />
       <Frame294 />
@@ -109,7 +104,7 @@ export default function ResponsiveBackground() {
         style={{ backgroundSize: '631.22% 443.72%' }}
         data-name="image 20"
         style={{
-          left: "calc(50% + 0.5px)",
+          left: 'calc(50% + 0.5px)',
           backgroundImage: `url('${imgImage22}')`,
         }}
       />

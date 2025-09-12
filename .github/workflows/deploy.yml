@@ -32,5 +32,5 @@ jobs:
       
       - name: Deploy to S3
         run: |
-          aws s3 sync your-build-folder/ s3://your-bucket-name/your-project-name/ --delete
-          # aws cloudfront create-invalidation --distribution-id YOUR_CLOUDFRONT_ID --paths "/*"
+          aws s3 sync build/ s3://graebert-dev-projects/print-to-pdf/ --delete --cache-control "max-age=31536000" --exclude "*.html" --exclude "*.json"
+          aws s3 sync build/ s3://graebert-dev-projects/print-to-pdf/ --exclude "*" --include "*.html" --include "*.json" --cache-control "max-age=300"

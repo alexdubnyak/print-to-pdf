@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import imgImage6 from '../assets/a4fd5120b625ecf09a5fd56aaa254b7821704881.png';
 import { CollapsibleSection } from './collapsible-section';
 import { RadioButton } from './radio-button';
 import { Select } from './select';
-import imgImage6 from "figma:asset/a4fd5120b625ecf09a5fd56aaa254b7821704881.png";
 
 export type RangeType = 'all-geometry' | 'sheet' | 'specify' | 'named-view' | 'current-view';
 
@@ -17,15 +17,15 @@ interface RangeSectionProps {
   availableNamedViews?: string[];
 }
 
-export function RangeSection({ 
-  className = "",
+export function RangeSection({
+  className = '',
   isInitiallyOpen = true,
   onRangeChange,
   onSpecifyWindowClick,
   onNamedViewChange,
   selectedRange = 'sheet',
   selectedNamedView = '',
-  availableNamedViews = ['View 1', 'View 2', 'View 3']
+  availableNamedViews = ['View 1', 'View 2', 'View 3'],
 }: RangeSectionProps) {
   const [internalSelectedRange, setInternalSelectedRange] = useState(selectedRange);
   const [internalSelectedNamedView, setInternalSelectedNamedView] = useState(selectedNamedView);
@@ -60,15 +60,11 @@ export function RangeSection({
     { value: 'sheet', label: 'Sheet' },
     { value: 'specify', label: 'Specify' },
     { value: 'named-view', label: 'Named view' },
-    { value: 'current-view', label: 'Current view' }
+    { value: 'current-view', label: 'Current view' },
   ];
 
   return (
-    <CollapsibleSection 
-      title="Range" 
-      isInitiallyOpen={isInitiallyOpen}
-      className={className}
-    >
+    <CollapsibleSection title="Range" isInitiallyOpen={isInitiallyOpen} className={className}>
       <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-[20px] relative w-full">
         {/* Preview Image */}
         <div
@@ -76,14 +72,14 @@ export function RangeSection({
           data-name="image 6"
           style={{ backgroundImage: `url('${imgImage6}')` }}
         />
-        
+
         {/* Range Options */}
         <div className="flex flex-col gap-4 w-full">
-          {rangeOptions.map((option) => (
+          {rangeOptions.map(option => (
             <div key={option.value} className="flex flex-col gap-2 w-full">
               {/* Radio Button Row */}
               <div className="flex flex-row gap-2 items-center">
-                <RadioButton 
+                <RadioButton
                   value={option.value}
                   checked={internalSelectedRange === option.value}
                   onChange={handleRangeChange}
@@ -91,11 +87,11 @@ export function RangeSection({
                   name="range-selection"
                 />
               </div>
-              
+
               {/* Additional controls for specific options */}
               {option.value === 'specify' && internalSelectedRange === 'specify' && (
                 <div className="ml-6">
-                  <button 
+                  <button
                     className="bg-[#333538] border border-[#666] px-4 py-2 text-[#d5d7e1] text-[12px] hover:bg-[#3a3c3f] transition-colors cursor-pointer"
                     onClick={handleSpecifyWindowClick}
                   >
@@ -103,10 +99,10 @@ export function RangeSection({
                   </button>
                 </div>
               )}
-              
+
               {option.value === 'named-view' && internalSelectedRange === 'named-view' && (
                 <div className="ml-6 max-w-[200px] relative z-40">
-                  <Select 
+                  <Select
                     itemCount={availableNamedViews.length}
                     itemName1={availableNamedViews[0] || ''}
                     itemName2={availableNamedViews[1] || ''}

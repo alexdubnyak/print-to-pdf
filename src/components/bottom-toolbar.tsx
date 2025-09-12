@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import A3Component from './a3-component';
 import NavigationButtons from './navigation-buttons';
 import SnapControls from './snap-controls';
@@ -14,6 +14,7 @@ interface BottomToolbarProps {
   tabs?: Tab[];
   onTabClick?: (tabId: string) => void;
   onTabClose?: (tabId: string) => void;
+  onTabContextMenu?: (tabId: string, event: React.MouseEvent) => void;
   onSheetsManagerToggle?: () => void;
   onPanelManage?: () => void;
   onSnapOptions?: () => void;
@@ -62,9 +63,7 @@ function CloseIcon({ onClick }: { onClick?: (e?: React.MouseEvent) => void }) {
       onClick={onClick}
       data-name="Component 69"
     >
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 6 6">
-        <path d="M6 6H0L6 0V6Z" fill="white" />
-      </svg>
+      {/* Треугольник убран из CloseIcon для sheet-табов */}
     </div>
   );
 }
@@ -73,31 +72,33 @@ function TabComponent({
   tab,
   onClick,
   onClose,
+  onContextMenu,
 }: {
   tab: Tab;
   onClick?: () => void;
   onClose?: () => void;
+  onContextMenu?: (event: React.MouseEvent) => void;
 }) {
   const isActive = tab.isActive;
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onContextMenu?.(e);
+  };
 
   return (
     <div
       className={`tab-button ${isActive ? 'tab-button--active' : 'tab-button--inactive'}`}
       data-name="tab"
       onClick={onClick}
+      onContextMenu={handleContextMenu}
     >
       {isActive && <div aria-hidden="true" className="tab-button__active-border" />}
       <div className="tab-button__text">
         <p className="adjustLetterSpacing block leading-[16px] whitespace-pre">{tab.label}</p>
       </div>
-      {/* Треугольник для кнопки Model */}
-      {tab.id === 'model' && (
-        <div className="tab-button__triangle">
-          <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
-            <path d="M6 6H0L6 0V6Z" fill="white" />
-          </svg>
-        </div>
-      )}
+
       {tab.hasCloseButton && (
         <CloseIcon
           onClick={e => {
@@ -114,6 +115,7 @@ export default function BottomToolbar({
   tabs = [],
   onTabClick,
   onTabClose,
+  onTabContextMenu,
   onSheetsManagerToggle,
   onPanelManage,
   onSnapOptions,
@@ -214,6 +216,7 @@ export default function BottomToolbar({
               tab={tab}
               onClick={() => handleTabClick(tab.id)}
               onClose={() => handleTabClose(tab.id)}
+              onContextMenu={e => onTabContextMenu?.(tab.id, e)}
             />
           ))}
 
@@ -224,6 +227,7 @@ export default function BottomToolbar({
               tab={tab}
               onClick={() => handleTabClick(tab.id)}
               onClose={() => handleTabClose(tab.id)}
+              onContextMenu={e => onTabContextMenu?.(tab.id, e)}
             />
           ))}
         </div>

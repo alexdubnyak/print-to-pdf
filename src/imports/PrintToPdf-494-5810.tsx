@@ -1,5 +1,5 @@
-import svgPaths from "./svg-4xdfr98ovj";
-import imgImage9 from "figma:asset/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png";
+import imgImage9 from '../assets/7570a0196b27f18f336a34f1c7ff7a1826dd64a5.png';
+import svgPaths from './svg-4xdfr98ovj';
 
 function Actions() {
   return (
@@ -65,7 +65,7 @@ function Frame264() {
   return (
     <div
       className="absolute h-[25.587px] opacity-0 top-[261.35px] translate-x-[-50%] w-[54.828px]"
-      style={{ left: "calc(50% + 2.998px)" }}
+      style={{ left: 'calc(50% + 2.998px)' }}
     >
       <Arrow />
       <Arrow1 />
@@ -83,7 +83,7 @@ function Frame246() {
       </div>
       <div
         className="absolute flex h-[239.406px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[310.703px]"
-        style={{ top: "calc(50% - 0.105px)", left: "calc(50% + 0.256px)" }}
+        style={{ top: 'calc(50% - 0.105px)', left: 'calc(50% + 0.256px)' }}
       >
         <div className="flex-none rotate-[270deg]">
           <div className="bg-[#ffffff] h-[310.707px] relative w-[239.417px]">
@@ -96,7 +96,7 @@ function Frame246() {
       </div>
       <div
         className="absolute flex h-[214.734px] items-center justify-center translate-x-[-50%] translate-y-[-50%] w-[286.938px]"
-        style={{ top: "calc(50% - 0.105px)", left: "calc(50% + 0.256px)" }}
+        style={{ top: 'calc(50% - 0.105px)', left: 'calc(50% + 0.256px)' }}
       >
         <div className="flex-none rotate-[270deg]">
           <div className="bg-[#ffffff] h-[286.948px] relative w-[214.744px]">
@@ -111,7 +111,12 @@ function Frame246() {
         <div className="flex-none rotate-[270deg]">
           <div className="h-0 relative w-[15.535px]">
             <div className="absolute bottom-0 left-0 right-0 top-[-0.91px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 1">
+              <svg
+                className="block size-full"
+                fill="none"
+                preserveAspectRatio="none"
+                viewBox="0 0 16 1"
+              >
                 <line
                   id="Line 12"
                   stroke="var(--stroke-0, #D5D7E1)"
@@ -129,7 +134,12 @@ function Frame246() {
         <div className="flex-none rotate-[270deg]">
           <div className="h-0 relative w-[15.535px]">
             <div className="absolute bottom-0 left-0 right-0 top-[-0.91px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 1">
+              <svg
+                className="block size-full"
+                fill="none"
+                preserveAspectRatio="none"
+                viewBox="0 0 16 1"
+              >
                 <line
                   id="Line 12"
                   stroke="var(--stroke-0, #D5D7E1)"
@@ -145,13 +155,13 @@ function Frame246() {
       </div>
       <div
         className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[9.138px] text-left text-nowrap top-[-15.54px]"
-        style={{ left: "calc(50% - 18.477px)" }}
+        style={{ left: 'calc(50% - 18.477px)' }}
       >
         <p className="block leading-[normal] whitespace-pre">707 mm</p>
       </div>
       <div
         className="absolute flex h-[35.953px] items-center justify-center top-[106.44px] w-[12.5px]"
-        style={{ left: "calc(50% + 164.621px)" }}
+        style={{ left: 'calc(50% + 164.621px)' }}
       >
         <div className="flex-none rotate-[90deg]">
           <div className="font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] not-italic relative text-[#d5d7e1] text-[9.138px] text-left text-nowrap">
@@ -161,21 +171,36 @@ function Frame246() {
       </div>
       <div className="absolute h-[0.914px] left-[1.38px] top-[-7.77px] w-[134.329px]">
         <div className="absolute bottom-[-268.2%] left-[-0.34%] right-0 top-[-368.2%]">
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 136 8">
+          <svg
+            className="block size-full"
+            fill="none"
+            preserveAspectRatio="none"
+            viewBox="0 0 136 8"
+          >
             <path d={svgPaths.p38025800} fill="var(--stroke-0, #D5D7E1)" id="Line 14" />
           </svg>
         </div>
       </div>
       <div className="absolute h-0 left-[186.88px] top-[-7.77px] w-[135.243px]">
         <div className="absolute bottom-[-3.36px] left-0 right-[-0.34%] top-[-3.36px]">
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 136 8">
+          <svg
+            className="block size-full"
+            fill="none"
+            preserveAspectRatio="none"
+            viewBox="0 0 136 8"
+          >
             <path d={svgPaths.p3fa11600} fill="var(--stroke-0, #D5D7E1)" id="Line 15" />
           </svg>
         </div>
       </div>
       <div className="absolute h-0 left-[324.86px] top-[1.83px] w-[11.88px]">
         <div className="absolute bottom-0 left-0 right-0 top-[-0.91px]">
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 1">
+          <svg
+            className="block size-full"
+            fill="none"
+            preserveAspectRatio="none"
+            viewBox="0 0 12 1"
+          >
             <line
               id="Line 16"
               stroke="var(--stroke-0, #D5D7E1)"
@@ -189,7 +214,12 @@ function Frame246() {
       </div>
       <div className="absolute h-0 left-[324.86px] top-[251.3px] w-[11.88px]">
         <div className="absolute bottom-0 left-0 right-0 top-[-0.91px]">
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 1">
+          <svg
+            className="block size-full"
+            fill="none"
+            preserveAspectRatio="none"
+            viewBox="0 0 12 1"
+          >
             <line
               id="Line 16"
               stroke="var(--stroke-0, #D5D7E1)"
@@ -205,7 +235,12 @@ function Frame246() {
         <div className="flex-none rotate-[90deg]">
           <div className="h-0 relative w-[95.95px]">
             <div className="absolute bottom-[-3.36px] left-[-0.48%] right-0 top-[-3.36px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 97 8">
+              <svg
+                className="block size-full"
+                fill="none"
+                preserveAspectRatio="none"
+                viewBox="0 0 97 8"
+              >
                 <path d={svgPaths.pd5ba200} fill="var(--stroke-0, #D5D7E1)" id="Line 18" />
               </svg>
             </div>
@@ -216,7 +251,12 @@ function Frame246() {
         <div className="flex-none rotate-[90deg]">
           <div className="h-0 relative w-[95.95px]">
             <div className="absolute bottom-[-3.36px] left-0 right-[-0.48%] top-[-3.36px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 97 8">
+              <svg
+                className="block size-full"
+                fill="none"
+                preserveAspectRatio="none"
+                viewBox="0 0 97 8"
+              >
                 <path d={svgPaths.pf09200} fill="var(--stroke-0, white)" id="Line 19" />
               </svg>
             </div>
@@ -226,7 +266,11 @@ function Frame246() {
       <div
         className="absolute bg-[52.7%_33.61%] bg-no-repeat bg-size-[167.12%_118.26%] h-[152.605px] translate-x-[-50%] translate-y-[-50%] w-[88.182px]"
         data-name="image 9"
-        style={{ top: "calc(50% - 0.105px)", left: "calc(50% + 0.256px)", backgroundImage: `url('${imgImage9}')` }}
+        style={{
+          top: 'calc(50% - 0.105px)',
+          left: 'calc(50% + 0.256px)',
+          backgroundImage: `url('${imgImage9}')`,
+        }}
       />
       <Frame264 />
       <div className="absolute font-['Open_Sans_Hebrew:Bold',_sans-serif] leading-[0] left-[144.39px] not-italic text-[#d5d7e1] text-[10.966px] text-left text-nowrap top-[-37.92px]">
@@ -588,7 +632,10 @@ function Dropdown3() {
 
 function Dropdown4() {
   return (
-    <div className="basis-0 bg-[#141518] grow h-7 min-h-px min-w-px relative shrink-0" data-name="dropdown">
+    <div
+      className="basis-0 bg-[#141518] grow h-7 min-h-px min-w-px relative shrink-0"
+      data-name="dropdown"
+    >
       <div
         aria-hidden="true"
         className="absolute border border-[#000000] border-solid inset-[-1px] pointer-events-none"
@@ -730,7 +777,10 @@ function Frame831() {
 
 function Dropdown7() {
   return (
-    <div className="basis-0 bg-[#141518] grow h-7 min-h-px min-w-px relative shrink-0" data-name="dropdown">
+    <div
+      className="basis-0 bg-[#141518] grow h-7 min-h-px min-w-px relative shrink-0"
+      data-name="dropdown"
+    >
       <div
         aria-hidden="true"
         className="absolute border border-[#000000] border-solid inset-[-1px] pointer-events-none"
@@ -762,7 +812,10 @@ function Frame825() {
 
 function Dropdown8() {
   return (
-    <div className="basis-0 bg-[#141518] grow h-7 min-h-px min-w-px relative shrink-0" data-name="dropdown">
+    <div
+      className="basis-0 bg-[#141518] grow h-7 min-h-px min-w-px relative shrink-0"
+      data-name="dropdown"
+    >
       <div
         aria-hidden="true"
         className="absolute border border-[#000000] border-solid inset-[-1px] pointer-events-none"
@@ -981,12 +1034,18 @@ function Tooltip() {
       className="absolute bg-[#1f2022] box-border content-stretch flex flex-col gap-2.5 items-start justify-start left-0 opacity-0 p-[10px] top-[34px]"
       data-name="tooltip"
     >
-      <div aria-hidden="true" className="absolute border border-[#5e6062] border-solid inset-0 pointer-events-none" />
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#5e6062] border-solid inset-0 pointer-events-none"
+      />
       <div
         className="font-['Roboto:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#cfcfcf] text-[0px] text-center text-nowrap"
         style={{ fontVariationSettings: "'wdth' 100" }}
       >
-        <p className="block leading-[12px] text-[12px] whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
+        <p
+          className="block leading-[12px] text-[12px] whitespace-pre"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
           Compare settings
         </p>
       </div>
@@ -1008,7 +1067,10 @@ function Buttons() {
 
 function Component35() {
   return (
-    <div className="basis-0 bg-[#254ca9] grow h-full min-h-px min-w-px relative shrink-0" data-name="Component 34">
+    <div
+      className="basis-0 bg-[#254ca9] grow h-full min-h-px min-w-px relative shrink-0"
+      data-name="Component 34"
+    >
       <div className="flex flex-row items-center justify-center relative size-full">
         <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-center px-3 py-1 relative size-full">
           <div className="font-['Open_Sans:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[12px] text-left text-nowrap">
@@ -1026,12 +1088,18 @@ function Tooltip1() {
       className="absolute bg-[#1f2022] box-border content-stretch flex flex-col gap-2.5 items-start justify-start left-0 opacity-0 p-[10px] top-[34px]"
       data-name="tooltip"
     >
-      <div aria-hidden="true" className="absolute border border-[#5e6062] border-solid inset-0 pointer-events-none" />
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#5e6062] border-solid inset-0 pointer-events-none"
+      />
       <div
         className="font-['Roboto:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#cfcfcf] text-[0px] text-center text-nowrap"
         style={{ fontVariationSettings: "'wdth' 100" }}
       >
-        <p className="block leading-[12px] text-[12px] whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
+        <p
+          className="block leading-[12px] text-[12px] whitespace-pre"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
           Compare settings
         </p>
       </div>

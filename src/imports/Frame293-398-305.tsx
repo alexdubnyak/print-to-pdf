@@ -1,5 +1,5 @@
-import imgImage20 from "figma:asset/0fc685cd8f14f838f09ada3b1204362f5d241faf.png";
-import imgImage21 from "figma:asset/fc1aa20fa288627bfb8f77e052e2670c57b8a968.png";
+import imgImage20 from '../assets/0fc685cd8f14f838f09ada3b1204362f5d241faf.png';
+import imgImage21 from '../assets/fc1aa20fa288627bfb8f77e052e2670c57b8a968.png';
 
 function Frame294() {
   return (
@@ -7,17 +7,17 @@ function Frame294() {
       <div
         className="absolute bg-[0%_11.27%] bg-no-repeat h-[93px] left-0 top-px w-[1496px]"
         data-name="image 20"
-        style={{ 
+        style={{
           backgroundImage: `url('${imgImage20}')`,
-          backgroundSize: '100% 873.12%'
+          backgroundSize: '100% 873.12%',
         }}
       />
       <div
         className="absolute bg-[100%_79.25%] bg-no-repeat h-[92px] left-[1294px] top-0 w-[551px]"
         data-name="image 21"
-        style={{ 
+        style={{
           backgroundImage: `url('${imgImage21}')`,
-          backgroundSize: '271.51% 157.61%'
+          backgroundSize: '271.51% 157.61%',
         }}
       />
     </div>
@@ -26,10 +26,7 @@ function Frame294() {
 
 function Ribbon() {
   return (
-    <div
-      className="absolute h-[92px] left-0 top-20 w-[1496px]"
-      data-name="ribbon"
-    >
+    <div className="absolute h-[92px] left-0 top-20 w-[1496px]" data-name="ribbon">
       <Frame294 />
     </div>
   );
@@ -47,9 +44,9 @@ export default function Frame293() {
       <div
         className="absolute bg-bottom-right bg-no-repeat h-[39px] right-0 top-[773px] w-[57px]"
         data-name="image 19"
-        style={{ 
+        style={{
           backgroundImage: `url('${imgImage20}')`,
-          backgroundSize: '2624.56% 2082.05%'
+          backgroundSize: '2624.56% 2082.05%',
         }}
       />
       <div className="absolute bg-[#dcdcdc] h-[591px] left-[1117px] top-[182px] w-[2449px]" />
@@ -59,25 +56,25 @@ export default function Frame293() {
       <div
         className="absolute bg-no-repeat bg-top-right h-20 right-0 top-0 w-[314px]"
         data-name="image 20"
-        style={{ 
+        style={{
           backgroundImage: `url('${imgImage20}')`,
-          backgroundSize: '476.43% 1015%'
+          backgroundSize: '476.43% 1015%',
         }}
       />
       <div
         className="absolute bg-no-repeat bg-top-left h-[47px] left-0 top-0 w-[873px]"
         data-name="image 21"
-        style={{ 
+        style={{
           backgroundImage: `url('${imgImage20}')`,
-          backgroundSize: '171.36% 1727.66%'
+          backgroundSize: '171.36% 1727.66%',
         }}
       />
       <div
         className="absolute bg-[100%_82.96%] bg-no-repeat h-[589px] right-0 top-[185px] w-[314px]"
         data-name="image 19"
-        style={{ 
+        style={{
           backgroundImage: `url('${imgImage20}')`,
-          backgroundSize: '476.43% 137.86%'
+          backgroundSize: '476.43% 137.86%',
         }}
       />
       <Ribbon />
