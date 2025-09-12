@@ -55,6 +55,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:s3": "vite build --base=/print-to-pdf/",
     "deploy": "./deploy.sh",
     "deploy:aws": "npm run build && aws s3 sync build/ s3://graebert-dev-projects/print-to-pdf/ --delete"
   }

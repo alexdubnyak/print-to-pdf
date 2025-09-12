@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Конфигурация проекта
-BUCKET_NAME="graebert-dev-projects"
-S3_PATH="print-to-pdf"
-CLOUDFRONT_DISTRIBUTION_ID=""
-BUILD_DIR="build"
+BUCKET_NAME="graebert-dev-projects"      # S3 bucket
+S3_PATH="print-to-pdf"                   # путь в bucket  
+CLOUDFRONT_DISTRIBUTION_ID=""            # CloudFront ID (опционально)
+BUILD_DIR="build"                        # папка билда
 
-echo "🚀 Начинаем деплой Print to PDF..."
+echo "🚀 Начинаем деплой..."
 
 # Проверяем, что AWS CLI установлен
 if ! command -v aws &> /dev/null; then
@@ -20,13 +20,19 @@ if ! aws sts get-caller-identity &> /dev/null; then
   exit 1
 fi
 
-# Создаем билд
-echo "📦 Создаем production билд..."
-npm run build
-
-if [ $? -ne 0 ]; then
-    echo "❌ Ошибка при создании билда"
-    exit 1
+# Проверяем готовый билд (для проектов с Figma assets)
+if [ -d "$BUILD_DIR" ] && [ -f "$BUILD_DIR/index.html" ]; then
+    echo "📦 Используем готовый билд в папке $BUILD_DIR/"
+    echo "ℹ️  Сборка пропущена (Figma assets требуют Dev Mode)"
+else
+    echo "📦 Создаем production билд..."
+    npm run build
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ Ошибка при создании билда"
+        echo "💡 Для проектов с Figma assets используйте готовый билд"
+        exit 1
+    fi
 fi
 
 # Загружаем в S3
@@ -61,4 +67,3 @@ fi
 
 echo "✅ Деплой завершен успешно!"
 echo "🌐 Ваш сайт доступен по адресу: https://projects.dev.graebert.com/print-to-pdf/"
-
