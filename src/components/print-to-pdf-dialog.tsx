@@ -314,8 +314,8 @@ function PreviewArea({
     );
   }
 
-  // In Quick print mode, always show Sheet 1 even if nothing is selected (но только если НЕ активна вкладка Model)
-  if (hideNavigationArrows && selectedCount === 0 && !isModelTabActive) {
+  // In Quick print mode or Model tab, always show Sheet 1 even if nothing is selected
+  if (hideNavigationArrows && selectedCount === 0) {
     const sheet1Data = sheets[0]; // Always show first sheet in Quick print
     return (
       <div className="basis-0 box-border content-stretch flex flex-col gap-10 grow items-center justify-start min-h-px min-w-px pb-0 pt-10 px-0 relative shrink-0 self-stretch">
