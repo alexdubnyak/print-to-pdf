@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Input } from './input';
-import { Select } from './select';
+import { useEffect, useState } from 'react';
 import { Checkbox } from './checkbox';
+import { Input } from './input';
 import { RadioButton } from './radio-button';
+import { Select } from './select';
 
 export type OrientationType = 'portrait' | 'landscape' | 'inverse';
 
@@ -14,7 +14,7 @@ interface PaperAndScaleContentProps {
   onUnitsValueChange?: (value: string) => void;
   onScaleLineWeightsChange?: (checked: boolean) => void;
   onFitToPaperSizeChange?: (checked: boolean) => void;
-  
+
   // Current values
   orientation?: OrientationType;
   paperSize?: string;
@@ -33,14 +33,14 @@ export function PaperAndScaleContent({
   onUnitsValueChange,
   onScaleLineWeightsChange,
   onFitToPaperSizeChange,
-  
+
   orientation = 'portrait',
   paperSize = 'iso-a3',
   scaleType = 'User-defined',
   scaleValue = '1',
   unitsValue = '3.027',
   scaleLineWeights = false,
-  fitToPaperSize = true
+  fitToPaperSize = true,
 }: PaperAndScaleContentProps) {
   const [internalOrientation, setInternalOrientation] = useState(orientation);
   const [internalPaperSize, setInternalPaperSize] = useState(paperSize);
@@ -63,10 +63,12 @@ export function PaperAndScaleContent({
     // Map paperSize to select value
     const paperSizeToSelectMap = {
       'iso-a3': 'item1',
-      'iso-a4': 'item2', 
-      'us-letter': 'item3'
+      'iso-a4': 'item2',
+      'us-letter': 'item3',
     };
-    setInternalPaperSizeSelect(paperSizeToSelectMap[paperSize as keyof typeof paperSizeToSelectMap] || 'item1');
+    setInternalPaperSizeSelect(
+      paperSizeToSelectMap[paperSize as keyof typeof paperSizeToSelectMap] || 'item1'
+    );
   }, [orientation, paperSize, scaleType, scaleValue, unitsValue, scaleLineWeights, fitToPaperSize]);
   const [internalScaleLineWeights, setInternalScaleLineWeights] = useState(scaleLineWeights);
   const [internalFitToPaperSize, setInternalFitToPaperSize] = useState(fitToPaperSize);
@@ -78,11 +80,11 @@ export function PaperAndScaleContent({
 
   const handlePaperSizeChange = (value: string) => {
     setInternalPaperSizeSelect(value);
-    // Map item values to actual paper size identifiers  
+    // Map item values to actual paper size identifiers
     const paperSizeMap = {
-      'item1': 'iso-a3',
-      'item2': 'iso-a4', 
-      'item3': 'us-letter'
+      item1: 'iso-a3',
+      item2: 'iso-a4',
+      item3: 'us-letter',
     };
     const paperSize = paperSizeMap[value as keyof typeof paperSizeMap] || value;
     setInternalPaperSize(paperSize);
@@ -93,9 +95,9 @@ export function PaperAndScaleContent({
     setInternalUnitsType(value);
     // Map item values to actual unit types if needed
     const unitTypeMap = {
-      'item1': 'millimeters',
-      'item2': 'inches',
-      'item3': 'centimeters'
+      item1: 'millimeters',
+      item2: 'inches',
+      item3: 'centimeters',
     };
     const unitType = unitTypeMap[value as keyof typeof unitTypeMap] || value;
     console.log('Units type changed to:', unitType);
@@ -134,35 +136,6 @@ export function PaperAndScaleContent({
 
   return (
     <div className="box-border content-stretch flex flex-col gap-4 items-start justify-start p-[20px] relative w-full">
-      
-      {/* Orientation Section */}
-      <div className="flex flex-row gap-4 items-center">
-        <RadioButton 
-          value="portrait"
-          checked={internalOrientation === 'portrait'}
-          onChange={handleOrientationRadioChange}
-          label="Portrait"
-          name="orientation"
-          shape="circle"
-        />
-        <RadioButton 
-          value="landscape"
-          checked={internalOrientation === 'landscape'}
-          onChange={handleOrientationRadioChange}
-          label="Landscape"
-          name="orientation"
-          shape="circle"
-        />
-        <RadioButton 
-          value="inverse"
-          checked={internalOrientation === 'inverse'}
-          onChange={handleOrientationRadioChange}
-          label="Inverse"
-          name="orientation"
-          shape="circle"
-        />
-      </div>
-
       {/* Paper Section */}
       <div className="w-full relative z-30">
         <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[12px] text-left mb-2">
@@ -180,12 +153,54 @@ export function PaperAndScaleContent({
         />
       </div>
 
+      {/* Orientation Section */}
+      <div className="flex flex-row gap-4 items-center">
+        <RadioButton
+          value="portrait"
+          checked={internalOrientation === 'portrait'}
+          onChange={handleOrientationRadioChange}
+          label="Portrait"
+          name="orientation"
+          shape="circle"
+        />
+        <RadioButton
+          value="landscape"
+          checked={internalOrientation === 'landscape'}
+          onChange={handleOrientationRadioChange}
+          label="Landscape"
+          name="orientation"
+          shape="circle"
+        />
+        <RadioButton
+          value="inverse"
+          checked={internalOrientation === 'inverse'}
+          onChange={handleOrientationRadioChange}
+          label="Inverse"
+          name="orientation"
+          shape="circle"
+        />
+      </div>
+
+      {/* Fit to paper size */}
+      <div className="w-full">
+        <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[12px] text-left mb-3">
+          Fit to paper size
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={internalFitToPaperSize}
+            onChange={handleFitToPaperSizeChange}
+            label="Fit to paper size"
+          />
+        </div>
+      </div>
+
       {/* Scale Section */}
       <div className="w-full">
         <div className="font-['Open_Sans:SemiBold',_sans-serif] leading-[0] not-italic text-[#d5d7e1] text-[12px] text-left mb-3">
           Scale
         </div>
-        
+
         <div className="flex flex-row gap-4 items-start mb-4">
           <div className="basis-0 grow">
             <Input
@@ -243,17 +258,7 @@ export function PaperAndScaleContent({
             </div>
           </div>
         </div>
-
-        {/* Fit to paper size */}
-        <div className="flex items-center gap-2">
-          <Checkbox
-            checked={internalFitToPaperSize}
-            onChange={handleFitToPaperSizeChange}
-            label="Fit to paper size"
-          />
-        </div>
       </div>
-
     </div>
   );
 }

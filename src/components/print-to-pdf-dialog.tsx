@@ -1071,7 +1071,9 @@ function ButtonToolbarBottom({
         }}
       >
         {activeTab === 'quick' && (
-          <ButtonSecondary onClick={handleSaveLayoutClick}>Save layout</ButtonSecondary>
+          <ButtonSecondary onClick={handleSaveLayoutClick} disabled={true}>
+            Save layout
+          </ButtonSecondary>
         )}
         <ButtonSecondary onClick={onPageLayoutClick}>Page layout manager</ButtonSecondary>
 

@@ -1,18 +1,3 @@
-const handleLayoutSelect = (layout: string) => {
-  // Блокируем выбор других элементов в режиме удаления
-  if (isDeletingLayout) {
-    console.log('🚫 Выбор заблокирован: идет процесс удаления');
-    return;
-  }
-
-  setSelectedLayout(layout);
-
-  // Сбрасываем состояние кнопок при смене layout
-  setActivatedBy('none');
-
-  console.log(`\n🔄 Выбран layout: "${layout}"`);
-  console.log(`Имеет звездочки: ${isLayoutEnclosedInStars(layout) ? 'ДА ⭐' : 'НЕТ ⚪'}`);
-};
 import React, { useEffect, useRef, useState } from 'react';
 import svgPaths from '../imports/svg-uo6jg4qcws';
 import { ButtonIcon } from './button-icon';
@@ -600,7 +585,6 @@ export function PageLayoutManager({ onClose, sheets = [] }: PageLayoutManagerPro
                         {layouts.map((layout, index) => (
                           <div key={`layout-wrapper-${layout}-${index}`} className="w-full">
                             <SheetLayoutItem
-                              key={`${layout}-${index}`}
                               name={layout}
                               isSelected={selectedLayout === layout}
                               onClick={() => handleLayoutSelect(layout)}
@@ -776,18 +760,18 @@ export function PageLayoutManager({ onClose, sheets = [] }: PageLayoutManagerPro
                       <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
                         <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
                           <div className="relative shrink-0 w-[140px]">
-                            <p className="block leading-[normal]">Printer type:</p>
-                          </div>
-                          <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
-                            <p className="block leading-[normal]">PDF</p>
-                          </div>
-                        </div>
-                        <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
-                          <div className="relative shrink-0 w-[140px]">
                             <p className="block leading-[normal]">Paper size:</p>
                           </div>
                           <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
                             <p className="block leading-[normal]">ISO A3 (420.00 x 297.00 MM)</p>
+                          </div>
+                        </div>
+                        <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">
+                          <div className="relative shrink-0 w-[140px]">
+                            <p className="block leading-[normal]">Printer type:</p>
+                          </div>
+                          <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
+                            <p className="block leading-[normal]">PDF</p>
                           </div>
                         </div>
                         <div className="box-border content-stretch flex flex-row font-['Open_Sans_Hebrew:Regular',_sans-serif] gap-2.5 items-center justify-center leading-[0] not-italic p-0 relative shrink-0 text-[#cfcfcf] text-[12px] text-left w-full">

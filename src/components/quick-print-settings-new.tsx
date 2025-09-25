@@ -54,85 +54,7 @@ export function QuickPrintSettingsNew({
           className="box-border content-stretch flex flex-row gap-2 items-start justify-start p-0 relative shrink-0 w-full"
           data-node-id="894:6390"
         >
-          {/* Left Column: Scale, Units, Range */}
-          <div
-            className="basis-0 bg-[#292b2d] box-border content-stretch flex flex-col gap-4 grow items-start justify-start min-h-px min-w-px p-[10px] relative shrink-0"
-            data-name="second row"
-            data-node-id="894:6233"
-          >
-            {/* Fit to paper size checkbox */}
-            <Checkbox
-              checked={fitToPaper}
-              onChange={setFitToPaper}
-              label="Fit to paper size"
-              disabled={!isModelTab}
-            />
-
-            {/* Scale */}
-            <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
-              <label className="text-[#d5d7e1] text-xs font-semibold block">Scale</label>
-              <Select
-                options={[
-                  { value: '1:1', label: '1:1' },
-                  { value: '1:2', label: '1:2' },
-                  { value: '2:1', label: '2:1' },
-                  { value: '1:4', label: '1:4' },
-                  { value: 'custom', label: 'Custom' },
-                ]}
-                value={scale}
-                onChange={setScale}
-                placeholder="Select scale"
-                disabled={fitToPaper}
-                className="w-full"
-              />
-            </div>
-
-            {/* Units */}
-            <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
-              <label className="text-[#d5d7e1] text-xs font-semibold block">Units</label>
-              <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0 w-full">
-                <div className="flex-1">
-                  <TextInput
-                    value={unitsValue}
-                    onChange={setUnitsValue}
-                    placeholder="1"
-                    disabled={fitToPaper}
-                    className="w-full"
-                  />
-                </div>
-                <Select
-                  options={[
-                    { value: 'Milimetres', label: 'Milimetres' },
-                    { value: 'Inches', label: 'Inches' },
-                    { value: 'Points', label: 'Points' },
-                  ]}
-                  value={unitsType}
-                  onChange={setUnitsType}
-                  placeholder="Units"
-                  disabled={fitToPaper}
-                  className="w-[120px]"
-                />
-                <span className="text-[#d5d7e1] text-xs">=</span>
-                <div className="flex-1">
-                  <TextInput
-                    value={unitsResult}
-                    onChange={setUnitsResult}
-                    placeholder="0"
-                    disabled={fitToPaper}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-              <Checkbox
-                checked={scaleLineweights}
-                onChange={setScaleLineweights}
-                label="Scale line-weights"
-                disabled={fitToPaper}
-              />
-            </div>
-          </div>
-
-          {/* Right Column: Paper size, Orientation */}
+          {/* Left Column: Paper size, Orientation */}
           <div
             className="basis-0 bg-[#292b2d] box-border content-stretch flex flex-col gap-4 grow items-start justify-start min-h-px min-w-px p-[10px] relative self-stretch shrink-0"
             data-name="first row"
@@ -290,6 +212,84 @@ export function QuickPrintSettingsNew({
                 checked={inverse}
                 onChange={onInverseChange || (() => {})}
                 label="Inverse"
+              />
+            </div>
+          </div>
+
+          {/* Right Column: Fit to paper size, Scale, Units */}
+          <div
+            className="basis-0 bg-[#292b2d] box-border content-stretch flex flex-col gap-4 grow items-start justify-start min-h-px min-w-px p-[10px] relative shrink-0"
+            data-name="second row"
+            data-node-id="894:6233"
+          >
+            {/* Fit to paper size checkbox */}
+            <Checkbox
+              checked={fitToPaper}
+              onChange={setFitToPaper}
+              label="Fit to paper size"
+              disabled={!isModelTab}
+            />
+
+            {/* Scale */}
+            <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
+              <label className="text-[#d5d7e1] text-xs font-semibold block">Scale</label>
+              <Select
+                options={[
+                  { value: '1:1', label: '1:1' },
+                  { value: '1:2', label: '1:2' },
+                  { value: '2:1', label: '2:1' },
+                  { value: '1:4', label: '1:4' },
+                  { value: 'custom', label: 'Custom' },
+                ]}
+                value={scale}
+                onChange={setScale}
+                placeholder="Select scale"
+                disabled={fitToPaper}
+                className="w-full"
+              />
+            </div>
+
+            {/* Units */}
+            <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
+              <label className="text-[#d5d7e1] text-xs font-semibold block">Units</label>
+              <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0 w-full">
+                <div className="flex-1">
+                  <TextInput
+                    value={unitsValue}
+                    onChange={setUnitsValue}
+                    placeholder="1"
+                    disabled={fitToPaper}
+                    className="w-full"
+                  />
+                </div>
+                <Select
+                  options={[
+                    { value: 'Milimetres', label: 'Milimetres' },
+                    { value: 'Inches', label: 'Inches' },
+                    { value: 'Points', label: 'Points' },
+                  ]}
+                  value={unitsType}
+                  onChange={setUnitsType}
+                  placeholder="Units"
+                  disabled={fitToPaper}
+                  className="w-[120px]"
+                />
+                <span className="text-[#d5d7e1] text-xs">=</span>
+                <div className="flex-1">
+                  <TextInput
+                    value={unitsResult}
+                    onChange={setUnitsResult}
+                    placeholder="0"
+                    disabled={fitToPaper}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+              <Checkbox
+                checked={scaleLineweights}
+                onChange={setScaleLineweights}
+                label="Scale line-weights"
+                disabled={fitToPaper}
               />
             </div>
           </div>
